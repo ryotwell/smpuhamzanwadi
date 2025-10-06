@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Religion {
+  ISLAM
+  CHRISTIAN
+  CATHOLIC
+  HINDU
+  BUDDHA
+  KONGHUCU
+  OTHER
+}
+
+enum KeadaanOrtu {
+  LENGKAP
+  YATIM
+  PIATU
+  YATIM_PIATU
+}
+
+enum StatusKeluarga {
+  ANAK_KANDUNG
+  ANAK_TIRI
+  ANAK_ANGKAT
+}
+
+enum TinggalBersama {
+  ORANG_TUA
+  KAKEK_NENEK
+  PAMAN_BIBI
+  SAUDARA_KANDUNG
+  KERABAT
+  PANTI_PONTREN
+  LAINNYA
+}
+
+enum BloodType {
+  A
+  B
+  AB
+  O
+  UNKNOWN
+}
+
+model Student {
+  id                   Int           @id @default(autoincrement())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  // -- A. Data Pribadi
+  fullName             String
+  nisn                 String?       @unique
+  nik                  String?       @unique
+  asalSekolah          String?
+  gender               Gender
+  tempatLahir          String?
+  tanggalLahir         DateTime?
+  agama                Religion?
+  keadaanOrtu          KeadaanOrtu?
+  statusKeluarga       StatusKeluarga?
+  anakKe               Int?
+  dariBersaudara       Int?          // misal: dari X bersaudara
+  tinggalBersama       TinggalBersama?
+  tinggalBersamaLainnya String?      // jika pilih LAINNYA, detail teks
+  kewarganegaraan      String?       // misal: "Indonesia"
+  alamatJalan          String?
+  rt                   String?
+  rw                   String?
+  desaKel              String?
+  kecamatan            String?
+  kabupaten            String?
+  provinsi             String?
+  kodePos              String?
+  phone                String?       // No. Hp (Jika Ada)
+  email                String?       // Email (Jika Ada)
+
+  // -- C. Riwayat Kesehatan (SEMUA OPSIONAL)
+  bloodType            BloodType?    // nullable -> opsional
+  beratKg              Int?          // bb dalam kg (opsional)
+  tinggiCm             Int?          // tb dalam cm (opsional)
+  riwayatPenyakit      String?       // teks panjang (opsional)
+
+  // -- Relasi ke orang tua / wali (optional)
+  parent               Parent?       @relation(fields: [parentId], references: [id])
+  parentId             Int?          @unique
+}
+
+model Parent {
+  id                  Int      @id @default(autoincrement())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  fatherName          String?
+  fatherEducation     String?
+  fatherJob           String?
+  fatherIncome        String?
+
+  motherName          String?
+  motherEducation     String?
+  motherJob           String?
+  motherIncome        String?
+
+  parentEmail         String?
+
+  // Wali
+  waliName            String?
+  alamatOrtuWali      String?
+  noHpOrtuWali        String?
+
+  // Relasi ke student (one-to-one atau one-to-many sesuai kebutuhan)
+  student             Student?
+}
