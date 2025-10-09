@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -128,4 +128,45 @@ model Parent {
 
   // Relasi ke student (one-to-one atau one-to-many sesuai kebutuhan)
   student             Student?
+}
+
+// Fasilitas Sekolah
+model Facility {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String?   // URL gambar fasilitas
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Ekstrakurikuler
+model Extracurricular {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String?   // URL gambar ekstrakurikuler
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Berita, Artikel & Informasi
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  image       String?   // URL gambar utama
+  content     String
+  excerpt     String?
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  category    PostCategory?
+}
+
+enum PostCategory {
+  BERITA
+  ARTIKEL
+  INFORMASI
 }
