@@ -36,6 +36,7 @@
     "lucide-react": "^0.544.0",
     "next": "15.5.4",
     "next-auth": "^4.24.11",
+    "quill": "^2.0.3",
     "react": "19.1.0",
     "react-apexcharts": "^1.7.0",
     "react-dnd": "^16.0.1",
