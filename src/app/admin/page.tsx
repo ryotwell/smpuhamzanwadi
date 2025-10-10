@@ -10,8 +10,7 @@ import Quill from 'quill';
 import Editor from "./Editor";
 
 export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
+  title: "Someone",
   description: "This is Next.js Home for TailAdmin Dashboard Template",
 };
 

@@ -32,66 +32,66 @@ const navItems: NavItem[] = [
     name: "Dashboard",
     subItems: [{ name: "Ecommerce", path: "/admin/", pro: false }],
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/admin/calendar",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/admin/profile",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Calendar",
+  //   path: "/admin/calendar",
+  // },
+  // {
+  //   icon: <UserCircleIcon />,
+  //   name: "User Profile",
+  //   path: "/admin/profile",
+  // },
 
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/admin/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/admin/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [
-      { name: "Blank Page", path: "/admin/blank", pro: false },
-      { name: "404 Error", path: "/admin/error-404", pro: false },
-    ],
-  },
+  // {
+  //   name: "Forms",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "Form Elements", path: "/admin/form-elements", pro: false }],
+  // },
+  // {
+  //   name: "Tables",
+  //   icon: <TableIcon />,
+  //   subItems: [{ name: "Basic Tables", path: "/admin/basic-tables", pro: false }],
+  // },
+  // {
+  //   name: "Pages",
+  //   icon: <PageIcon />,
+  //   subItems: [
+  //     { name: "Blank Page", path: "/admin/blank", pro: false },
+  //     { name: "404 Error", path: "/admin/error-404", pro: false },
+  //   ],
+  // },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/admin/line-chart", pro: false },
-      { name: "Bar Chart", path: "/admin/bar-chart", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/admin/alerts", pro: false },
-      { name: "Avatar", path: "/admin/avatars", pro: false },
-      { name: "Badge", path: "/admin/badge", pro: false },
-      { name: "Buttons", path: "/admin/buttons", pro: false },
-      { name: "Images", path: "/admin/images", pro: false },
-      { name: "Videos", path: "/admin/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/admin/signin", pro: false },
-      { name: "Sign Up", path: "/admin/signup", pro: false },
-    ],
-  },
+  // {
+  //   icon: <PieChartIcon />,
+  //   name: "Charts",
+  //   subItems: [
+  //     { name: "Line Chart", path: "/admin/line-chart", pro: false },
+  //     { name: "Bar Chart", path: "/admin/bar-chart", pro: false },
+  //   ],
+  // },
+  // {
+  //   icon: <BoxCubeIcon />,
+  //   name: "UI Elements",
+  //   subItems: [
+  //     { name: "Alerts", path: "/admin/alerts", pro: false },
+  //     { name: "Avatar", path: "/admin/avatars", pro: false },
+  //     { name: "Badge", path: "/admin/badge", pro: false },
+  //     { name: "Buttons", path: "/admin/buttons", pro: false },
+  //     { name: "Images", path: "/admin/images", pro: false },
+  //     { name: "Videos", path: "/admin/videos", pro: false },
+  //   ],
+  // },
+  // {
+  //   icon: <PlugInIcon />,
+  //   name: "Authentication",
+  //   subItems: [
+  //     { name: "Sign In", path: "/admin/signin", pro: false },
+  //     { name: "Sign Up", path: "/admin/signup", pro: false },
+  //   ],
+  // },
 ];
 
 const AppSidebar: React.FC = () => {
@@ -313,17 +313,21 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/assets/images/smp-unggulan-hamzanwadi.jpg"
                 alt="Logo"
-                width={150}
+                width={40}
                 height={40}
+                // width={150}
+                // height={40}
               />
               <Image
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/assets/images/smp-unggulan-hamzanwadi.jpg"
                 alt="Logo"
-                width={150}
+                width={40}
                 height={40}
+                // width={150}
+                // height={40}
               />
             </>
           ) : (
@@ -374,7 +378,7 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+        {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}
       </div>
     </aside>
   );

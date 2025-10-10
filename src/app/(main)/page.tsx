@@ -14,8 +14,9 @@ import {
     NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
 import { ThemeToggleButton } from '@/components/common/ThemeToggleButton'
+import { Button } from '@/components/ui/button'
+import { ImageSlider } from '@/components/ui/ImageSlider'
 
-// --- SLIDER DATA ---
 const slides = [
     {
         image: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80",
@@ -37,7 +38,6 @@ const slides = [
     }
 ]
 
-// --- SLIDER DATA: UNGGULAN (Bahasa Inggris, Pendidikan Karakter, Al-Qur'an) ---
 const unggulanSlides = [
     // Bahasa Inggris
     {
@@ -387,6 +387,7 @@ export default function Example() {
                 </Dialog>
             </header>
 
+            {/* Hero */}
             <div className="relative isolate px-6 pt-14 lg:px-8 h-svh flex items-center">
                 {/* Full background video */}
                 <video
@@ -432,6 +433,30 @@ export default function Example() {
                             </a>
                         </div>
                     </div>
+                </div>
+
+                <div className="absolute bottom-10 left-1/2 translate-x-[-50%] mb-4 flex justify-center md:hidden">
+                    <Button className="flex flex-col items-center justify-center gap-1 text-primary/80" variant="ghost">
+                        <div>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="size-6 animate-bounce"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                                />
+                            </svg>
+                        </div>
+                        {/* <div>
+                            Scrolldown
+                        </div> */}
+                    </Button>
                 </div>
             </div>
 
@@ -484,36 +509,55 @@ export default function Example() {
                 </div>
             </section>
 
-            <div className="max-w-4xl mx-auto mt-24 px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
-                    Sorotan Sekolah
-                </h2>
-                <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                    Lihat berbagai kegiatan, prestasi, dan momen terbaik di SMP Unggulan Hamzanwadi melalui galeri sorotan berikut.
-                </p>
+            {/* Section Sorotan Sekolah */}
+            <div className="max-w-3xl mx-auto mt-24">
+                <div className="px-4">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
+                        Sorotan Sekolah
+                    </h2>
+                    <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                        Lihat berbagai kegiatan, prestasi, dan momen terbaik di SMP Unggulan Hamzanwadi melalui galeri sorotan berikut.
+                    </p>
+                </div>
+                <ImageSlider slides={slides} />
             </div>
-            <HeroImageSlider />
 
             {/* Section Unggulan */}
-            <div className="max-w-4xl mx-auto mt-24 px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
-                    Program Unggulan
-                </h2>
-                <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                    Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur'an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur'an.
-                </p>
+            <div className="relative max-w-3xl mx-auto mt-24 isolate">
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+                >
+                    <div
+                        style={{
+                            clipPath:
+                                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+                        }}
+                        className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-primary opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
+                    />
+                </div>
+                <div className="px-4">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
+                        Program Unggulan
+                    </h2>
+                    <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                        Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur'an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur'an.
+                    </p>
+                </div>
+                <ImageSlider slides={unggulanSlides} />
             </div>
-            <UnggulanSlider slides={unggulanSlides} />
 
             {/* Section Fasilitas Sekolah */}
-            <section className="max-w-5xl mx-auto mt-24 px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
-                    Fasilitas Sekolah
-                </h2>
-                <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                    SMP Unggulan Hamzanwadi menyediakan berbagai fasilitas modern dan lengkap untuk mendukung proses belajar mengajar dan pengembangan diri siswa.
-                </p>
-                <div className="flex gap-8 overflow-x-auto pb-4">
+            <section className="max-w-5xl mx-auto mt-24">
+                <div className="px-4">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
+                        Fasilitas Sekolah
+                    </h2>
+                    <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                        SMP Unggulan Hamzanwadi menyediakan berbagai fasilitas modern dan lengkap untuk mendukung proses belajar mengajar dan pengembangan diri siswa.
+                    </p>
+                </div>
+                <div className="flex gap-8 overflow-x-auto pb-4 px-4">
                     {fasilitasList.map((fasilitas) => (
                         <div
                             key={fasilitas.name}
@@ -631,148 +675,5 @@ export default function Example() {
                 </div>
             </section> */}
         </div>
-    )
-}
-
-// --- HERO SLIDER (Sorotan Sekolah) ---
-function HeroImageSlider() {
-    const [current, setCurrent] = React.useState(0)
-    const total = slides.length
-
-    const goToPrev = () => setCurrent((prev) => (prev === 0 ? total - 1 : prev - 1))
-    const goToNext = () => setCurrent((prev) => (prev === total - 1 ? 0 : prev + 1))
-    const goTo = (idx: number) => setCurrent(idx)
-
-    return (
-        <section className="relative w-full max-w-4xl mx-auto mt-20 md:rounded-3xl overflow-hidden shadow-2xl group bg-white dark:bg-gray-900 transition-colors duration-300">
-            {/* Gambar */}
-            <div className="relative h-[340px] sm:h-[420px] md:h-[500px] transition-all duration-500">
-                {slides.map((slide, idx) => (
-                    <img
-                        key={slide.image}
-                        src={slide.image}
-                        alt={slide.title}
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        draggable={false}
-                    />
-                ))}
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 dark:to-transparent z-20 pointer-events-none" />
-            </div>
-            {/* Konten */}
-            <div className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-12 flex flex-col items-start
-                text-white dark:text-white">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{slides[current].title}</h2>
-                <p className="mb-6 text-base sm:text-lg font-medium drop-shadow">{slides[current].desc}</p>
-                <a
-                    href={slides[current].cta.href}
-                    className="inline-block rounded-md bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary/90 transition"
-                >
-                    {slides[current].cta.label}
-                </a>
-            </div>
-            {/* Tombol navigasi */}
-            <button
-                onClick={goToPrev}
-                aria-label="Sebelumnya"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/40 dark:bg-gray-700/40 hover:bg-black/70 dark:hover:bg-gray-700/70 text-white dark:text-white rounded-full p-2 transition"
-            >
-                <ChevronLeftIcon className="w-6 h-6" />
-            </button>
-            <button
-                onClick={goToNext}
-                aria-label="Selanjutnya"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-40 bg-black/40 dark:bg-gray-700/40 hover:bg-black/70 dark:hover:bg-gray-700/70 text-white dark:text-white rounded-full p-2 transition"
-            >
-                <ChevronRightIcon className="w-6 h-6" />
-            </button>
-            {/* Dots */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-40">
-                {slides.map((_, idx) => (
-                    <button
-                        key={idx}
-                        onClick={() => goTo(idx)}
-                        aria-label={`Slide ${idx + 1}`}
-                        className={`w-3 h-3 rounded-full border-2 border-white dark:border-white transition-all duration-200 ${current === idx ? 'bg-white dark:bg-white' : 'bg-white/40 dark:bg-white/30'}`}
-                    />
-                ))}
-            </div>
-        </section>
-    )
-}
-
-// --- SLIDER FOR PROGRAM UNGGULAN (Bahasa Inggris, Karakter, Al-Qur'an) ---
-function UnggulanSlider({ slides }: { slides: typeof unggulanSlides }) {
-    const [current, setCurrent] = React.useState(0)
-    const total = slides.length
-
-    const goToPrev = () => setCurrent((prev) => (prev === 0 ? total - 1 : prev - 1))
-    const goToNext = () => setCurrent((prev) => (prev === total - 1 ? 0 : prev + 1))
-    const goTo = (idx: number) => setCurrent(idx)
-
-    // Untuk label program di bawah slider
-    const getProgramLabel = (idx: number) => {
-        if (idx < 3) return "Bahasa Inggris"
-        if (idx < 6) return "Pendidikan Karakter"
-        return "Al-Qur'an"
-    }
-
-    return (
-        <section className="relative w-full max-w-4xl mx-auto mt-10 md:rounded-3xl overflow-hidden shadow-2xl group bg-white dark:bg-gray-900 transition-colors duration-300">
-            {/* Gambar */}
-            <div className="relative h-[340px] sm:h-[420px] md:h-[500px] transition-all duration-500">
-                {slides.map((slide, idx) => (
-                    <img
-                        key={slide.image + idx}
-                        src={slide.image}
-                        alt={slide.title}
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        draggable={false}
-                    />
-                ))}
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 dark:to-transparent z-20 pointer-events-none" />
-            </div>
-            {/* Konten */}
-            <div className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-12 flex flex-col items-start text-white dark:text-white">
-                <span className="mb-2 px-3 py-1 rounded-full bg-primary/80 text-xs font-semibold uppercase tracking-wider">
-                    {getProgramLabel(current)}
-                </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{slides[current].title}</h2>
-                <p className="mb-6 text-base sm:text-lg font-medium drop-shadow">{slides[current].desc}</p>
-                <a
-                    href={slides[current].cta.href}
-                    className="inline-block rounded-md bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary/90 transition"
-                >
-                    {slides[current].cta.label}
-                </a>
-            </div>
-            {/* Tombol navigasi */}
-            <button
-                onClick={goToPrev}
-                aria-label="Sebelumnya"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/40 dark:bg-gray-700/40 hover:bg-black/70 dark:hover:bg-gray-700/70 text-white dark:text-white rounded-full p-2 transition"
-            >
-                <ChevronLeftIcon className="w-6 h-6" />
-            </button>
-            <button
-                onClick={goToNext}
-                aria-label="Selanjutnya"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-40 bg-black/40 dark:bg-gray-700/40 hover:bg-black/70 dark:hover:bg-gray-700/70 text-white dark:text-white rounded-full p-2 transition"
-            >
-                <ChevronRightIcon className="w-6 h-6" />
-            </button>
-            {/* Dots */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-40">
-                {slides.map((_, idx) => (
-                    <button
-                        key={idx}
-                        onClick={() => goTo(idx)}
-                        aria-label={`Slide ${idx + 1}`}
-                        className={`w-3 h-3 rounded-full border-2 border-white dark:border-white transition-all duration-200 ${current === idx ? 'bg-white dark:bg-white' : 'bg-white/40 dark:bg-white/30'}`}
-                    />
-                ))}
-            </div>
-        </section>
     )
 }

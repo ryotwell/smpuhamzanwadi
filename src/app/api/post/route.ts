@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     console.log({ body });
-    
 
     // Here you would typically save the post to a database
     // For demonstration, just echo back the content
