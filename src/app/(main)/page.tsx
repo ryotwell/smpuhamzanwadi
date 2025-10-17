@@ -16,6 +16,7 @@ import {
 import { ThemeToggleButton } from '@/components/common/ThemeToggleButton'
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
+import { config } from '@/config'
 
 const slides = [
     {
@@ -251,18 +252,19 @@ export default function Example() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
-        <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300">
+        <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300 min-h-screen flex flex-col">
+
             <header className="absolute inset-x-0 top-0 z-50">
                 <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
                     <div className="flex items-center gap-3 lg:flex-1">
                         <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
-                            <span className="sr-only">SMP Unggulan Hamzanwadi</span>
+                            <span className="sr-only">{config.appName}</span>
                             <img
-                                alt="SMP Unggulan Hamzanwadi"
-                                src="/assets/images/smp-unggulan-hamzanwadi.jpg"
+                                alt={config.appName}
+                                src={config.appLogo}
                                 className="h-8 w-auto"
                             />
-                            <span className="ml-2 text-gray-900 dark:text-white sm:text-white font-semibold text-base hidden sm:inline">SMP Unggulan Hamzanwadi</span>
+                            <span className="ml-2 text-gray-900 dark:text-white sm:text-white font-semibold text-base hidden sm:inline">{config.appName}</span>
                         </a>
                     </div>
                     <div className="flex items-center gap-2 lg:hidden">
@@ -270,13 +272,12 @@ export default function Example() {
                         <button
                             type="button"
                             onClick={() => setMobileMenuOpen(true)}
-                            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+                            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-500 dark:text-gray-400"
                         >
                             <span className="sr-only">Open main menu</span>
                             <Bars3Icon aria-hidden="true" className="size-6" />
                         </button>
                     </div>
-                    {/* Replace with shadcn navigation menu */}
                     <div className="hidden lg:flex lg:gap-x-12">
                         <NavigationMenu>
                             <NavigationMenuList>
@@ -323,13 +324,13 @@ export default function Example() {
                     <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-700/30">
                         <div className="flex items-center justify-between">
                             <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
-                                <span className="sr-only">SMP Unggulan Hamzanwadi</span>
+                                <span className="sr-only">{config.appName}</span>
                                 <img
-                                    alt="SMP Unggulan Hamzanwadi"
-                                    src="/assets/images/smp-unggulan-hamzanwadi.jpg"
+                                    alt={config.appName}
+                                    src={config.appLogo}
                                     className="h-8 w-auto"
                                 />
-                                <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">SMP Unggulan Hamzanwadi</span>
+                                <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span>
                             </a>
                             <div className="flex items-center gap-2">
                                 <ThemeToggleButton />
@@ -674,6 +675,30 @@ export default function Example() {
                     `}</style>
                 </div>
             </section> */}
+
+            <footer className="mt-32 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="flex items-center gap-3">
+                        <img
+                            src={config.appLogo}
+                            alt={config.appName}
+                            className="h-10 w-10 object-contain rounded bg-white p-1 shadow"
+                        />
+                        <span className="font-semibold text-lg text-gray-900 dark:text-white">{config.appName}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-6 text-gray-700 dark:text-gray-300 text-sm font-medium justify-center">
+                        <a href="#" className="hover:underline">Beranda</a>
+                        <a href="#" className="hover:underline">Profil</a>
+                        <a href="#" className="hover:underline">Guru &amp; Staf</a>
+                        <a href="#" className="hover:underline">Kontak</a>
+                        <a href="#" className="hover:underline">PPDB</a>
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">&copy; {new Date().getFullYear()} {config.appName}.</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-600">Dibuat dengan <span role="img" aria-label="love">❤️</span> di Lombok Timur.</div>
+                    </div>
+                </div>
+            </footer>
         </div>
     )
 }
