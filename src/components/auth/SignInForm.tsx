@@ -33,7 +33,7 @@ export default function SignInForm() {
         email,
         password,
       });
-      login(res.data.token);
+      login(res.data.data, res.data.data.token);
       router.push("/admin");
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {

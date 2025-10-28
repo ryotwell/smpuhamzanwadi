@@ -8,15 +8,15 @@ import {
 import api from "@/lib/axios";
 
 interface User {
-  id: string;
-  fullname: string;
+  user_id: string;
+  fullname?: string;
   email: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (token: string) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
   loading: boolean;
 }
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       api
         .get("/user/profile")
         .then((res) => {
-          setUser(res.data);
+          setUser(res.data.data);
           setIsAuthenticated(true);
         })
         .catch(() => {
@@ -55,18 +55,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (token: string) => {
+  const login = (user: User, token: string) => {
     localStorage.setItem("token", token);
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    api
-      .get("/user/profile")
-      .then((res) => {
-        setUser(res.data);
-        setIsAuthenticated(true);
-      })
-      .catch(() => {
-        localStorage.removeItem("token");
-      });
+    setUser(user);
+    setIsAuthenticated(true);
   };
 
   const logout = () => {

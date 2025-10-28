@@ -255,6 +255,8 @@ export default function Example() {
         <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300 min-h-screen flex flex-col">
 
             <header className="absolute inset-x-0 top-0 z-50">
+                {/* ...header content tetap... */}
+                {/* ...header code di atas tetap tidak berubah... */}
                 <nav aria-label="Global" className="flex flex-col gap-0 p-6 lg:px-8">
                     {/* Bar Atas: Logo & tombol mobile/menu */}
                     <div className="flex items-center justify-between">
@@ -323,10 +325,10 @@ export default function Example() {
                         </NavigationMenu>
                     </div>
                 </nav>
-                
                 <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
                     <div className="fixed inset-0 z-50" />
                     <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-700/30">
+                        {/* ...mobile nav... */}
                         <div className="flex items-center justify-between">
                             <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
                                 <span className="sr-only">{config.appName}</span>
@@ -409,7 +411,6 @@ export default function Example() {
                 </video>
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/60 -z-10" />
-                {/* <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 bg-accent"> */}
                 <div className="mx-auto max-w-2xl">
                     <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                         <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-100 dark:text-gray-200 ring-1 ring-gray-200 dark:ring-gray-700 bg-black/30 dark:bg-black/40 hover:ring-gray-300 dark:hover:ring-gray-500">
@@ -442,7 +443,6 @@ export default function Example() {
                         </div>
                     </div>
                 </div>
-
                 <div className="absolute bottom-10 left-1/2 translate-x-[-50%] mb-4 flex justify-center md:hidden">
                     <Button className="flex flex-col items-center justify-center gap-1 text-primary/80" variant="ghost">
                         <div>
@@ -461,9 +461,6 @@ export default function Example() {
                                 />
                             </svg>
                         </div>
-                        {/* <div>
-                            Scrolldown
-                        </div> */}
                     </Button>
                 </div>
             </div>
@@ -556,8 +553,8 @@ export default function Example() {
             </div>
 
             {/* Section Fasilitas Sekolah */}
-            <section className="max-w-5xl mx-auto mt-24">
-                <div className="px-4">
+            <section className="max-w-5xl mx-auto mt-24 px-4">
+                <div>
                     <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
                         Fasilitas Sekolah
                     </h2>
@@ -565,11 +562,21 @@ export default function Example() {
                         SMP Unggulan Hamzanwadi menyediakan berbagai fasilitas modern dan lengkap untuk mendukung proses belajar mengajar dan pengembangan diri siswa.
                     </p>
                 </div>
-                <div className="flex gap-8 overflow-x-auto pb-4 px-4">
+                {/* Responsive grid for Fasilitas Sekolah */}
+                <div
+                  className="
+                    grid gap-8
+                    grid-cols-1
+                    sm:grid-cols-2
+                    md:grid-cols-3
+                    xl:grid-cols-3
+                    2xl:grid-cols-3
+                  "
+                >
                     {fasilitasList.map((fasilitas) => (
                         <div
                             key={fasilitas.name}
-                            className="min-w-[320px] max-w-sm flex-shrink-0 group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-64 w-full overflow-hidden">
                                 <img

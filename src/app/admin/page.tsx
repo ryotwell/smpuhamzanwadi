@@ -1,3 +1,4 @@
+"use client";
 import type { Metadata } from "next";
 // import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
@@ -8,15 +9,17 @@ import RecentOrders from "@/components/ecommerce/RecentOrders";
 import DemographicCard from "@/components/ecommerce/DemographicCard";
 // import Quill from 'quill';
 import Editor from "./Editor";
-
-export const metadata: Metadata = {
-  title: "Someone",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
-};
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Ecommerce() {
+  const { user } = useAuth();
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
+      <div className="col-span-12">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+          Welcome, {user?.fullname}!
+        </h1>
+      </div>
       <div className="col-span-12 space-y-6 xl:col-span-7">
 
 
