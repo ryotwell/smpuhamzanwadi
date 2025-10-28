@@ -1,0 +1,38 @@
+### Register
+POST https://projectsdu-production.up.railway.app/user/register
+Content-Type: application/json
+
+{
+    "fullname": "admin",
+    "email": "admin@mail.com",
+    "password": "admin123"
+}
+
+### Login
+POST https://projectsdu-production.up.railway.app/user/login
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin123"
+}
+
+### Logout
+POST https://projectsdu-production.up.railway.app/user/logout
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin123"
+}
+
+### Refresh Token
+POST https://projectsdu-production.up.railway.app/user/refresh-token
+Content-Type: application/json
+Authorization: Bearer <your_access_token_here>
+
+{}
+
+### Get Profile
+GET https://projectsdu-production.up.railway.app/user/profile
+Cookie: session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJleHAiOjE3NjE1NjY3NTZ9.3xqYqO2wLlC-4uak-UmTI03cflsWuRX9i1B_r1Vn1EU; Path=/; Max-Age=3600; HttpOnly

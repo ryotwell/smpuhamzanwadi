@@ -1,5 +1,5 @@
 {
-  "name": "free-nextjs-admin-dashboard",
+  "name": "SMP Unggulan Hamzanwadi",
   "version": "2.0.2",
   "private": true,
   "scripts": {
@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "npx prisma generate",
-    "reset-prisma": "npx prisma migrate dev && npx prisma generate && npx prisma migrate reset"
+    "reset-prisma": "npx prisma migrate dev && npx prisma generate && npx prisma migrate reset",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:prod": "docker-compose --profile production up --build",
+    "docker:dev:clean": "docker-compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up --build",
+    "docker:prod:clean": "docker-compose --profile production down -v && docker-compose --profile production up --build"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.19",
