@@ -8,12 +8,17 @@ import Link from "next/link";
 import React, { useState } from "react";
 import axios from "@/lib/axios";
 
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("admin@mail.com");
   const [password, setPassword] = useState("admin123");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -28,10 +33,8 @@ export default function SignInForm() {
         email,
         password,
       });
-      // Handle successful login: data = res.data
-      console.log("Login success:", res.data);
-      // localStorage.setItem("token", res.data.token); // if your API returns a token
-      // window.location.href = "/"; // redirect if needs
+      login(res.data.token);
+      router.push("/admin");
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);

@@ -25,20 +25,12 @@ function Editor() {
         });
     };
 
-    // Helper: upload image to server and return URL
     const uploadImage = async (file: File): Promise<string> => {
-        // You should implement your own image upload endpoint
-        // For demonstration, we'll use a mock endpoint and return a placeholder
-        // Replace this with your actual upload logic
         const formData = new FormData();
         formData.append('image', file);
 
         try {
-            // Example: const res = await axios.post('/api/upload', formData);
-            // return res.data.url;
-            // For now, use a placeholder image
-            // throw new Error('No upload endpoint implemented');
-            // Uncomment above and implement your own logic
+            // Simulate upload
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve('https://smkn01selong.sch.id/wp-content/uploads/2025/09/539991532_1360216509442925_5983155205812494973_n-1100x600.jpg');
@@ -50,7 +42,12 @@ function Editor() {
     };
 
     useEffect(() => {
-        if (typeof window !== "undefined" && editorRef.current && !quillRef.current) {
+        // Only initialize quill once -- don't do double init!
+        if (
+            typeof window !== "undefined" &&
+            editorRef.current &&
+            !quillRef.current
+        ) {
             import('quill').then((QuillModule) => {
                 require('quill/dist/quill.snow.css');
                 const Quill = QuillModule.default;
@@ -72,31 +69,46 @@ function Editor() {
                     });
                 }
 
-                quillRef.current = new Quill(editorRef.current!, {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: {
-                            container: [
-                                [{ 'font': [] }, { 'size': [] }],
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'color': [] }, { 'background': [] }],
-                                [{ 'script': 'sub'}, { 'script': 'super' }],
-                                [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
-                                [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
-                                [{ 'direction': 'rtl' }, { 'align': [] }],
-                                ['link', 'image', 'video', 'formula'],
-                                ['clean']
-                            ],
-                            handlers: {
-                                image: imageHandler
+                // Do not clear or re-initialize if already initialized
+                if (!quillRef.current && editorRef.current) {
+                    // Make sure container is empty before init
+                    editorRef.current.innerHTML = '';
+                    const quillInstance = new Quill(editorRef.current, {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: {
+                                container: [
+                                    [{ 'font': [] }, { 'size': [] }],
+                                    ['bold', 'italic', 'underline', 'strike'],
+                                    [{ 'color': [] }, { 'background': [] }],
+                                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                                    [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
+                                    [
+                                        { 'list': 'ordered' }, { 'list': 'bullet' },
+                                        { 'indent': '-1'}, { 'indent': '+1' }
+                                    ],
+                                    [{ 'direction': 'rtl' }, { 'align': [] }],
+                                    ['link', 'image', 'video', 'formula'],
+                                    ['clean']
+                                ],
+                                handlers: {
+                                    image: imageHandler
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                    quillRef.current = quillInstance;
+                }
             });
         }
         return () => {
-            quillRef.current = null;
+            // Clean up on unmount: only if quillRef.current exists
+            if (quillRef.current) {
+                if (editorRef.current) {
+                    editorRef.current.innerHTML = '';
+                }
+                quillRef.current = null;
+            }
         };
     }, []);
 
