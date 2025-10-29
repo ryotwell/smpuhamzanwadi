@@ -5,7 +5,7 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "@/lib/axios";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -15,16 +15,10 @@ export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("admin@mail.com");
   const [password, setPassword] = useState("admin123");
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, isAuthenticated, loading: authLoading } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      router.push("/admin");
-    }
-  }, [authLoading, isAuthenticated, router]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -32,7 +26,7 @@ export default function SignInForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitLoading(true);
+    setLoading(true);
     setError(null);
     try {
       const res = await axios.post("/user/login", {
@@ -48,7 +42,7 @@ export default function SignInForm() {
         setError("Login failed");
       }
     } finally {
-      setSubmitLoading(false);
+      setLoading(false);
     }
   };
 
@@ -116,8 +110,8 @@ export default function SignInForm() {
                   <div className="text-error-500 text-sm">{error}</div>
                 )}
                 <div>
-                  <Button className="w-full" size="sm" disabled={submitLoading}>
-                    {submitLoading ? "Signing in..." : "Sign in"}
+                  <Button className="w-full" size="sm" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
               </div>
