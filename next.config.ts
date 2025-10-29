@@ -4,7 +4,16 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
   images: {
-    domains: ["smkn01selong.sch.id"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'smkn01selong.sch.id',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
   },
   webpack(config) {
     config.module.rules.push({
