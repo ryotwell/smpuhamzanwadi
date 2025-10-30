@@ -17,7 +17,7 @@ import {
   // TableIcon,
   UserCircleIcon,
 } from "../icons/index";
-import { UsersIcon, FileTextIcon, UserPlusIcon } from "lucide-react";
+import { FileTextIcon, UserPlusIcon } from "lucide-react";
 import { config } from "@/config";
 // import SidebarWidget from "./SidebarWidget";
 
