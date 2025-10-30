@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
 import React, { useEffect, useRef } from 'react';
 import Quill from 'quill';
-import axios from '@/lib/axios';
-import { Button } from '@/components/ui/button';
 import 'quill/dist/quill.snow.css';
 
-function Editor() {
+type EditorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    className?: string;
+};
+
+const Editor: React.FC<EditorProps> = ({ value, onChange, placeholder = "", className = "" }) => {
     const editorRef = useRef<HTMLDivElement>(null);
     const quillRef = useRef<Quill | null>(null);
 
@@ -31,20 +36,16 @@ function Editor() {
         const formData = new FormData();
         formData.append('image', file);
 
-        try {
-            // Simulate upload
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('https://smkn01selong.sch.id/wp-content/uploads/2025/09/539991532_1360216509442925_5983155205812494973_n-1100x600.jpg');
-                }, 1000);
-            });
-        } catch {
-            throw new Error('Image upload failed');
-        }
+        // Simulate upload, replace with actual upload API if needed
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('http://localhost:3000/assets/images/sd-unggulan-hamzanwadi.jpg');
+            }, 1000);
+        });
     };
 
+    // Initialize Quill and setup handlers
     useEffect(() => {
-        // Only initialize quill once -- don't do double init!
         if (
             typeof window !== "undefined" &&
             editorRef.current &&
@@ -53,8 +54,6 @@ function Editor() {
             import('quill').then((QuillModule) => {
                 const Quill = QuillModule.default;
 
-                // Custom image handler
-                // disable @ts-expect-error
                 function imageHandler(this: { quill: Quill }) {
                     const quill = this.quill;
                     selectImageFile().then(async (file) => {
@@ -71,10 +70,9 @@ function Editor() {
                     });
                 }
 
-                // Do not clear or re-initialize if already initialized
                 if (!quillRef.current && editorRef.current) {
-                    // Make sure container is empty before init
                     editorRef.current.innerHTML = '';
+
                     const quillInstance = new Quill(editorRef.current, {
                         theme: 'snow',
                         modules: {
@@ -87,7 +85,7 @@ function Editor() {
                                     [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
                                     [
                                         { 'list': 'ordered' }, { 'list': 'bullet' },
-                                        { 'indent': '-1'}, { 'indent': '+1' }
+                                        { 'indent': '-1' }, { 'indent': '+1' }
                                     ],
                                     [{ 'direction': 'rtl' }, { 'align': [] }],
                                     ['link', 'image', 'video', 'formula'],
@@ -97,8 +95,28 @@ function Editor() {
                                     image: imageHandler
                                 }
                             }
+                        },
+                        placeholder: placeholder,
+                    });
+
+                    // Set initial value
+                    if (value) {
+                        quillInstance.root.innerHTML = value;
+                    }
+
+                    // Only call onChange if content was actually changed by user
+                    quillInstance.on('text-change', () => {
+                        const html = quillInstance.root.innerHTML;
+                        if (html !== value) {
+                            onChange(html);
                         }
                     });
+
+                    // Prevent Quill making parent page scroll on first toolbar use
+                    quillInstance.root.addEventListener('focus', () => {
+                        window.scrollTo({ top: window.scrollY });
+                    });
+
                     quillRef.current = quillInstance;
                 }
             });
@@ -113,32 +131,30 @@ function Editor() {
                 quillRef.current = null;
             }
         };
+        // Don't include 'value' in deps: see below for sync logic
+        // eslint-disable-next-line
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (quillRef.current) {
-            const content = quillRef.current.root.innerHTML;
-            try {
-                await axios.post('/api/post', { content });
-            } catch {
-                alert('Failed to submit post.');
+    // If value changes from outside (e.g. parent, form reset), sync Quill content
+    useEffect(() => {
+        if (quillRef.current && quillRef.current.root.innerHTML !== value) {
+            // To prevent moving the caret, set the content only if it's different
+            const sel = quillRef.current.getSelection();
+            quillRef.current.root.innerHTML = value || "";
+            // Optionally restore caret
+            if (sel) {
+                quillRef.current.setSelection(sel.index, sel.length, 'silent');
             }
         }
-    };
+    }, [value]);
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-                <div ref={editorRef} style={{ minHeight: 200 }} />
-                <Button
-                    className="mt-4"
-                >
-                    Submit
-                </Button>
-            </div>
-        </form>
+        <div
+            className={`quill-editor-wrapper ${className}`}
+        >
+            <div ref={editorRef} style={{ minHeight: 200 }} />
+        </div>
     );
-}
+};
 
 export default Editor;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState,useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -12,11 +12,13 @@ import {
   HorizontaLDots,
   // ListIcon,
   // PageIcon,
-  // PieChartIcon,
+  PieChartIcon,
   // PlugInIcon,
   // TableIcon,
-  // UserCircleIcon,
+  UserCircleIcon,
 } from "../icons/index";
+import { UsersIcon, FileTextIcon, UserPlusIcon } from "lucide-react";
+import { config } from "@/config";
 // import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -31,6 +33,30 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/admin/",
+  },
+  {
+    icon: <FileTextIcon />,
+    name: "Posts",
+    subItems: [
+      { name: "Posts", path: "/admin/posts", pro: false },
+      { name: "Create a new Post", path: "/admin/posts/create", pro: false },
+    ],
+  },
+  {
+    icon: <UserPlusIcon />,
+    name: "Registrants",
+    subItems: [
+      { name: "Registrants", path: "/admin/registrants", pro: false },
+      { name: "Add a new Registrant", path: "/admin/registrants/create", pro: false },
+    ],
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "Users",
+    subItems: [
+      { name: "Users", path: "/admin/users", pro: false },
+      { name: "Add a new Registrant", path: "/admin/users/create", pro: false },
+    ],
   },
   // {
   //   icon: <CalenderIcon />,
@@ -313,26 +339,26 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/assets/images/smp-unggulan-hamzanwadi.jpg"
+                src={config.appLogoPanjang}
                 alt="Logo"
-                width={40}
-                height={40}
+                width={150}
+                height={150}
                 // width={150}
                 // height={40}
               />
               <Image
                 className="hidden dark:block"
-                src="/assets/images/smp-unggulan-hamzanwadi.jpg"
+                src={config.appLogoPanjangBw}
                 alt="Logo"
-                width={40}
-                height={40}
+                width={150}
+                height={150}
                 // width={150}
                 // height={40}
               />
             </>
           ) : (
             <Image
-              src="/images/logo/logo-icon.svg"
+              src={config.appLogoPanjang}
               alt="Logo"
               width={32}
               height={32}

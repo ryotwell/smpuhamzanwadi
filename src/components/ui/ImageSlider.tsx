@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export interface Slide {
     image: string;
@@ -33,12 +34,15 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
             {/* Gambar */}
             <div className="relative h-[340px] sm:h-[420px] md:h-[500px] transition-all duration-500">
                 {slides.map((slide, idx) => (
-                    <img
+                    <Image
                         key={slide.image + idx}
                         src={slide.image}
                         alt={slide.title}
+                        fill
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                         draggable={false}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 100vw"
+                        priority={idx === 0}
                     />
                 ))}
                 {/* Overlay gradient */}

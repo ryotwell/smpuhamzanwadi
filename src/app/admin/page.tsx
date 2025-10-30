@@ -1,5 +1,5 @@
 "use client";
-import type { Metadata } from "next";
+
 // import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
 import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
@@ -22,15 +22,11 @@ export default function Ecommerce() {
       </div>
       <div className="col-span-12 space-y-6 xl:col-span-7">
 
-
         <Editor />
 
-
-        {/* <EcommerceMetrics />
-        <MonthlySalesChart /> */}
       </div>
 
-      <div className="col-span-12 xl:col-span-5">
+      {/* <div className="col-span-12 xl:col-span-5">
         <MonthlyTarget />
       </div>
 
@@ -44,7 +40,7 @@ export default function Ecommerce() {
 
       <div className="col-span-12 xl:col-span-7">
         <RecentOrders />
-      </div>
+      </div> */}
     </div>
   );
 }

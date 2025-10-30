@@ -1,12 +1,12 @@
-# ### Register
-# POST http://localhost:8080/user/register
-# Content-Type: application/json
+### Register
+POST http://localhost:8080/user/register
+Content-Type: application/json
 
-# {
-#     "fullname": "admin",
-#     "email": "admin@mail.com",
-#     "password": "admin123"
-# }
+{
+    "fullname": "admin",
+    "email": "admin@mail.com",
+    "password": "admin123"
+}
 
 # example api response:
 
@@ -19,18 +19,18 @@ Content-Type: application/json
     "password": "admin123"
 }
 
-Example APi Response:
-{
-  "success": true,
-  "status": 200,
-  "message": "Login successful",
-  "data": {
-    "email": "admin@mail.com",
-    "fullname": "admin",
-    "id": 1,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjE2NDQ5NDZ9.WvLEA4qVEX_6u3-I_FP-Gt63N4KKMkf9-0D1p5UOz8A"
-  }
-}
+# Example APi Response:
+# {
+#   "success": true,
+#   "status": 200,
+#   "message": "Login successful",
+#   "data": {
+#     "email": "admin@mail.com",
+#     "fullname": "admin",
+#     "id": 1,
+#     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjE2NDQ5NDZ9.WvLEA4qVEX_6u3-I_FP-Gt63N4KKMkf9-0D1p5UOz8A"
+#   }
+# }
 
 ### Logout
 POST http://localhost:8080/user/logout
@@ -44,13 +44,16 @@ POST http://localhost:8080/user/logout
 
 ### Get Profile
 GET http://localhost:8080/user/profile
-Example APi Response:
-{
-  "success": true,
-  "status": 200,
-  "message": "Retrived user profile succesfully",
-  "data": {
-    "email": "admin@mail.com",
-    "user_id": 1
-  }
-}
+# Example APi Response:
+# {
+#   "success": true,
+#   "status": 200,
+#   "message": "Retrived user profile succesfully",
+#   "data": {
+#     "email": "admin@mail.com",
+#     "user_id": 1
+#   }
+# }
+
+###
+POST http://localhost:8080/posts

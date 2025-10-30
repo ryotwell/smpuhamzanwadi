@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 // Import shadcn navigation menu components
 import {
@@ -81,14 +82,14 @@ const unggulanSlides = [
     // Al-Qur'an
     {
         image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80",
-        title: "Tahfidz Al-Qur'an",
-        desc: "Program menghafal Al-Qur'an dengan bimbingan guru berpengalaman.",
+        title: "Tahfidz Al-Qur&apos;an",
+        desc: "Program menghafal Al-Qur&apos;an dengan bimbingan guru berpengalaman.",
         cta: { label: "Program Tahfidz", href: "#" }
     },
     {
         image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
         title: "Tartil & Tilawah",
-        desc: "Pembelajaran membaca Al-Qur'an dengan tartil dan tajwid yang benar.",
+        desc: "Pembelajaran membaca Al-Qur&apos;an dengan tartil dan tajwid yang benar.",
         cta: { label: "Pelajari Tartil", href: "#" }
     },
     {
@@ -263,12 +264,13 @@ export default function Example() {
                         <div className="flex items-center gap-3 lg:flex-1">
                             <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
                                 <span className="sr-only">{config.appName}</span>
-                                <img
+                                <Image
                                     alt={config.appName}
-                                    src={config.appLogo}
-                                    className="h-8 w-auto"
+                                    src={config.appLogoPanjang}
+                                    width={100}
+                                    height={100}
+                                    className="h-13 w-auto"
                                 />
-                                <span className="ml-2 text-gray-900 dark:text-white sm:text-white font-semibold text-base hidden sm:inline">{config.appName}</span>
                             </a>
                         </div>
                         <div className="flex items-center gap-2 lg:hidden">
@@ -332,9 +334,11 @@ export default function Example() {
                         <div className="flex items-center justify-between">
                             <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
                                 <span className="sr-only">{config.appName}</span>
-                                <img
+                                <Image
                                     alt={config.appName}
                                     src={config.appLogo}
+                                    width={32}
+                                    height={32}
                                     className="h-8 w-auto"
                                 />
                                 <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span>
@@ -414,17 +418,15 @@ export default function Example() {
                 <div className="mx-auto max-w-2xl">
                     <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                         <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-100 dark:text-gray-200 ring-1 ring-gray-200 dark:ring-gray-700 bg-black/30 dark:bg-black/40 hover:ring-gray-300 dark:hover:ring-gray-500">
-                            Penerimaan Peserta Didik Baru (PPDB) Tahun 2024.{' '}
-                            <a href="#" className="font-semibold text-primary">
-                                <span aria-hidden="true" className="absolute inset-0" />
-                                Info Selengkapnya <span aria-hidden="true">&rarr;</span>
-                            </a>
+                            Penerimaan Peserta Didik Baru (PPDB) Tahun 2024.&nbsp;
                         </div>
                     </div>
                     <div className="text-center">
-                        <img
+                        <Image
                             src={config.appLogoPanjang}
                             alt="Logo SMP Unggulan Hamzanwadi"
+                            width={500}
+                            height={100}
                             className="w-full"
                         />
                         <p className="mt-8 text-lg font-medium text-pretty text-gray-100 dark:text-gray-200 sm:text-xl/8 drop-shadow">
@@ -473,9 +475,11 @@ export default function Example() {
                 <div className="flex flex-col sm:flex-row items-center gap-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
                     <div className="flex-shrink-0 flex items-center justify-center">
                         <div className="w-32 h-32 rounded-full border-4 border-primary shadow overflow-hidden flex items-center justify-center bg-white dark:bg-gray-900">
-                            <img
+                            <Image
                                 src={sambutanKepalaSekolah.foto}
                                 alt={sambutanKepalaSekolah.nama}
+                                width={128}
+                                height={128}
                                 className="w-full h-full object-cover rounded-full"
                                 style={{ aspectRatio: "1 / 1" }}
                             />
@@ -546,7 +550,7 @@ export default function Example() {
                         Program Unggulan
                     </h2>
                     <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                        Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur'an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur'an.
+                        Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur&apos;an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur&apos;an.
                     </p>
                 </div>
                 <ImageSlider slides={unggulanSlides} />
@@ -579,9 +583,11 @@ export default function Example() {
                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-64 w-full overflow-hidden">
-                                <img
+                                <Image
                                     src={fasilitas.image}
                                     alt={fasilitas.name}
+                                    width={800}
+                                    height={600}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                             </div>
@@ -611,9 +617,11 @@ export default function Example() {
                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-40 w-full overflow-hidden">
-                                <img
+                                <Image
                                     src={ekskul.image}
                                     alt={ekskul.name}
+                                    width={800}
+                                    height={600}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                             </div>
@@ -644,9 +652,11 @@ export default function Example() {
                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-48 w-full overflow-hidden">
-                                <img
+                                <Image
                                     src={news.image}
                                     alt={news.title}
+                                    width={800}
+                                    height={600}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                             </div>
@@ -693,9 +703,11 @@ export default function Example() {
             <footer className="mt-32 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
                 <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div className="flex items-center gap-3">
-                        <img
+                        <Image
                             src={config.appLogo}
                             alt={config.appName}
+                            width={40}
+                            height={40}
                             className="h-10 w-10 object-contain rounded bg-white p-1 shadow"
                         />
                         <span className="font-semibold text-lg text-gray-900 dark:text-white">{config.appName}</span>
