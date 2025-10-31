@@ -34,14 +34,24 @@ const Editor: React.FC<EditorProps> = ({ value, onChange, placeholder = "", clas
 
     const uploadImage = async (file: File): Promise<string> => {
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('file', file);
 
-        // Simulate upload, replace with actual upload API if needed
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve('http://localhost:3000/assets/images/sd-unggulan-hamzanwadi.jpg');
-            }, 1000);
-        });
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+
+            if (response.ok && data.status === 200 && data.data?.path) {
+                const imagePath: string = data.data.path;
+                return imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+            } else {
+                throw new Error(data.message || 'Image upload failed');
+            }
+        } catch (err) {
+            throw new Error('Image upload failed');
+        }
     };
 
     // Initialize Quill and setup handlers

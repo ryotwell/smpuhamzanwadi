@@ -57,3 +57,15 @@ GET http://localhost:8080/user/profile
 
 ###
 POST http://localhost:8080/posts
+
+### Upload Image
+POST http://localhost:3000/api/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="coba.jpg"
+Content-Type: image/jpeg
+
+< /Users/ryotwell/Projects/smpuhamzanwadi/public/assets/images/coba.jpg
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
