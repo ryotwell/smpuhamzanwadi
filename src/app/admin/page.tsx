@@ -2,13 +2,12 @@
 
 // import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
-import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
+// import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
 // import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
-import StatisticsChart from "@/components/ecommerce/StatisticsChart";
-import RecentOrders from "@/components/ecommerce/RecentOrders";
-import DemographicCard from "@/components/ecommerce/DemographicCard";
+// import StatisticsChart from "@/components/ecommerce/StatisticsChart";
+// import RecentOrders from "@/components/ecommerce/RecentOrders";
+// import DemographicCard from "@/components/ecommerce/DemographicCard";
 // import Quill from 'quill';
-import Editor from "./Editor";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Ecommerce() {
@@ -22,7 +21,7 @@ export default function Ecommerce() {
       </div>
       <div className="col-span-12 space-y-6 xl:col-span-7">
 
-        <Editor />
+        Something
 
       </div>
 
