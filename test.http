@@ -1,3 +1,5 @@
+@session_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjIyNzc3NTh9.bObcSC8xYRa2fPGKc3cR2LESZHt-tBb1y862grDWc0Q
+
 ### Register
 POST http://localhost:8080/user/register
 Content-Type: application/json
@@ -25,15 +27,13 @@ GET http://localhost:8080/user/profile
 
 ### Get Profile with cookies
 GET http://localhost:8080/user/profile
-Cookie: session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjIyNzc3NTh9.bObcSC8xYRa2fPGKc3cR2LESZHt-tBb1y862grDWc0Q
+Cookie: session_token={{session_token}}
 
 ### Refresh token
 POST http://localhost:8080/user/refresh
 
 ### Create Post
 POST http://localhost:8080/posts
-Content-Type: application/json
-Accept: application/json
 
 {
     "title": "I am a new post and published",
@@ -46,10 +46,7 @@ Accept: application/json
 }
 
 ### Get Posts
-GET http://localhost:8080/posts?page=2&limit=2
-Content-Type: application/json
-Accept: application/json
-Cookie: session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjIyNzc3NTh9.bObcSC8xYRa2fPGKc3cR2LESZHt-tBb1y862grDWc0Q
+GET http://localhost:8080/posts?page=1&limit=10
 
 
 ### Upload Image

@@ -36,7 +36,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Post } from "@/types/post"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export const columns: ColumnDef<Post>[] = [
     {
@@ -130,6 +131,8 @@ export const columns: ColumnDef<Post>[] = [
 
 export function DataTable({ data, meta }: { data: Post[], meta: any }) {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -168,9 +171,28 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
                     }
                     className="max-w-sm"
                 />
+                <Select
+                    onValueChange={(value) => {
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.set('limit', value);
+                        params.set('page', '1');
+                        router.push(`/admin/posts?${params.toString()}`);
+                    }}
+                    value={meta.limit.toString()}
+                >
+                    <SelectTrigger className="w-[100px] ml-auto">
+                        <SelectValue placeholder="Limit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="5">5</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="15">15</SelectItem>
+                    </SelectContent>
+                </Select>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
+                        <Button variant="outline" className="ml-2">
                             Columns <ChevronDown />
                         </Button>
                     </DropdownMenuTrigger>
@@ -254,7 +276,11 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => router.push(`/admin/posts?page=${meta.page - 1}`)}
+                        onClick={() => {
+                            const params = new URLSearchParams(searchParams.toString());
+                            params.set('page', (meta.page - 1).toString());
+                            router.push(`/admin/posts?${params.toString()}`);
+                        }}
                         disabled={meta.page <= 1}
                     >
                         Previous
@@ -262,7 +288,11 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => router.push(`/admin/posts?page=${meta.page + 1}`)}
+                        onClick={() => {
+                            const params = new URLSearchParams(searchParams.toString());
+                            params.set('page', (meta.page + 1).toString());
+                            router.push(`/admin/posts?${params.toString()}`);
+                        }}
                         disabled={!meta.limit || table.getFilteredRowModel().rows.length < meta.limit}
                     >
                         Next
