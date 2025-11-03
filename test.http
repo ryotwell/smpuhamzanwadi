@@ -23,8 +23,32 @@ POST http://localhost:8080/user/logout
 ### Get Profile
 GET http://localhost:8080/user/profile
 
+### Get Profile with cookies
+GET http://localhost:8080/user/profile
+Cookie: session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjIwMjE1NTB9.Y1NRifPdegmHlJo4BT_QrcvgU7pGXXZ2GAqzN4lNrrc
+
 ### Refresh token
 POST http://localhost:8080/user/refresh
+
+### Create Post
+POST http://localhost:8080/posts
+Content-Type: application/json
+Accept: application/json
+
+{
+    "title": "I am a new post and published",
+    "thumbnail": null,
+    "description": "Quis voluptas dolore",
+    "content": "<p>ssasasasjaoijsajisas</p>",
+    "published": true,
+    "publishedAt": null,
+    "category": "BERITA"
+}
+
+### Get Posts
+GET http://localhost:8080/posts
+Content-Type: application/json
+Accept: application/json
 
 ### Upload Image
 POST http://localhost:3000/api/upload
