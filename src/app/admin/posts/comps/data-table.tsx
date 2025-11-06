@@ -132,7 +132,9 @@ export const columns: ColumnDef<Post>[] = [
 export function DataTable({ data, meta }: { data: Post[], meta: any }) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const q = searchParams.get('q') ?? '';
 
+    const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -141,20 +143,31 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
+    React.useEffect(() => {
+        const timeout = setTimeout(() => {
+            const params = new URLSearchParams(searchParams.toString());
+            if (query) {
+                params.set('q', query);
+            } else {
+                params.delete('q');
+            }
+            router.push(`/admin/posts?${params.toString()}`);
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [query, router, searchParams]);
+
     const table = useReactTable({
         data,
         columns,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         state: {
             sorting,
-            columnFilters,
             columnVisibility,
             rowSelection,
         },
@@ -165,10 +178,8 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter titles..."
-                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("title")?.setFilterValue(event.target.value)
-                    }
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
                     className="max-w-sm"
                 />
                 <Select
@@ -269,8 +280,8 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="text-muted-foreground flex-1 text-sm">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getSelectedRowModel().rows.length} of{" "}
+                    {table.getRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="space-x-2">
                     <Button
@@ -293,7 +304,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: any }) {
                             params.set('page', (meta.page + 1).toString());
                             router.push(`/admin/posts?${params.toString()}`);
                         }}
-                        disabled={!meta.limit || table.getFilteredRowModel().rows.length < meta.limit}
+                        disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
                     >
                         Next
                     </Button>
