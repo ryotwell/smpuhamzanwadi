@@ -116,33 +116,31 @@ function ListItem({ title, href, children }: { title: string, href: string, chil
 
 // Menu utama sekolah
 const navigation = [
-    { name: 'Beranda', href: '#' },
-    { name: 'Profil', href: '#' },
-    { name: 'Guru & Staf', href: '#' },
-    { name: 'Kontak', href: '#' },
+    { name: 'Home', href: '#' },
+    { name: 'About Us', href: '#' },
+    { name: 'News and Event', href: '#' },
+    { name: 'Achievements', href: '#' },
+    // { name: 'Profil', href: '#' },
+    // { name: 'Guru & Staf', href: '#' },
+    // { name: 'Kontak', href: '#' },
 ]
 
 // Dropdown menu sekolah
 const components = [
     {
-        title: "Visi & Misi",
-        href: "#",
-        description: "Tujuan dan cita-cita sekolah untuk masa depan.",
-    },
-    {
-        title: "Sejarah Sekolah",
-        href: "#",
-        description: "Perjalanan dan perkembangan sekolah dari masa ke masa.",
-    },
-    {
         title: "Ekstrakurikuler",
         href: "#",
-        description: "Kegiatan tambahan untuk mengembangkan bakat dan minat siswa.",
+        description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
     },
     {
-        title: "Prestasi",
+        title: "Program Unggulan",
         href: "#",
-        description: "Daftar penghargaan dan pencapaian sekolah.",
+        description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
+    },
+    {
+        title: "KO-Kulikuler",
+        href: "#",
+        description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
     },
 ]
 
@@ -307,7 +305,7 @@ export default function Example() {
                                 ))}
                                 <NavigationMenuItem className="list-none">
                                     <NavigationMenuTrigger className="text-sm font-semibold text-gray-900 dark:text-white px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 sm:text-white transition-colors bg-transparent">
-                                        Tentang Sekolah
+                                        Kurikulum
                                     </NavigationMenuTrigger>
                                     <NavigationMenuContent className="bg-white dark:bg-gray-900 ring-0">
                                         <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px] p-4 m-0 list-none">
@@ -369,7 +367,7 @@ export default function Example() {
                                     ))}
                                     {/* Dropdown menu for mobile */}
                                     <div className="mt-4">
-                                        <div className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-2">Tentang Sekolah</div>
+                                        <div className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-2">Kurikulum</div>
                                         <ul>
                                             {components.map((component) => (
                                                 <li key={component.title}>

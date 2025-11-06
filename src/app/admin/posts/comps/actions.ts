@@ -17,7 +17,7 @@ export async function getPosts(page: number = 1, limit: number = 10, q: string) 
         limit: number;
         page: number;
       };
-    }>(`/posts?page=${page}&limit=${limit}&q=${q}`, {
+    }>(`/post/get-all?page=${page}&limit=${limit}&q=${q}`, {
       headers: sessionCookie
         ? {
             Cookie: `session_token=${sessionCookie}`,

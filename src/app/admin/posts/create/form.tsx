@@ -173,7 +173,7 @@ export default function CreatePostForm() {
         console.log(JSON.stringify(payload, null, 2));
 
         try {
-            await axios.post("/posts", payload);
+            await axios.post("/post/add", payload);
             toast.success("Post created successfully!");
             reset(defaultValues);
             setFiles([]);
