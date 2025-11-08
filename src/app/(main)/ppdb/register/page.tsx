@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input";
 import { config } from "@/config";
 import Image from "next/image";
 
+// Import FilePondUploader untuk upload gambar/berkas
+import FilePondUploader from "@/components/ui/filepond";
+import { Test } from "@/components/ui/test";
+
 // Langkah-langkah Stepper
 const steps = [
     {
@@ -172,6 +176,32 @@ type BiodataFields = {
     email: string;
 };
 
+// Dokumen persyaratan yang harus diupload
+const dokumenList = [
+    {
+        label: "Pas Foto 3x4 (JPG/PNG)",
+        field: "pasfoto",
+        hint: "Wajib background merah atau biru. Max 2MB.",
+    },
+    {
+        label: "Scan Kartu Keluarga (JPG/PNG)",
+        field: "kk",
+        hint: "Jelas dan terbaca.",
+    },
+    {
+        label: "Scan Akta Kelahiran (JPG/PNG)",
+        field: "akta",
+        hint: "Pastikan dokumen asli.",
+    },
+    // Tambahkan berkas lain jika diperlukan
+];
+
+type BerkasFields = {
+    pasfoto: string | null;
+    kk: string | null;
+    akta: string | null;
+};
+
 export default function PPDBPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [biodata, setBiodata] = useState<BiodataFields>({
@@ -182,6 +212,12 @@ export default function PPDBPage() {
         alamat: "",
         noHP: "",
         email: "",
+    });
+
+    const [berkas, setBerkas] = useState<BerkasFields>({
+        pasfoto: null,
+        kk: null,
+        akta: null,
     });
 
     function handlePrev() {
@@ -201,6 +237,34 @@ export default function PPDBPage() {
                 data={biodata}
                 onChange={fields => setBiodata(prev => ({ ...prev, ...fields }))}
             />
+        );
+    } else if (currentStep === 1) {
+        // Step: Upload Berkas
+        stepContent = (
+            <div>
+                <h2 className="font-semibold text-lg mb-2">{steps[currentStep].title}</h2>
+                <p className="mb-4 hidden sm:block">{steps[currentStep].description}</p>
+                <div className="space-y-6">
+                    {dokumenList.map(dokumen => (
+                        <div key={dokumen.field} className="flex flex-col gap-1">
+                            <label className="font-medium text-sm mb-1">
+                                {dokumen.label}
+                            </label>
+                            <FilePondUploader
+                                value={berkas[dokumen.field as keyof BerkasFields] ?? ""}
+                                onChange={url =>
+                                    setBerkas(prev => ({
+                                        ...prev,
+                                        [dokumen.field]: url,
+                                    }))
+                                }
+                                label={dokumen.label}
+                            />
+                            <div className="text-xs text-gray-400">{dokumen.hint}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         );
     } else {
         stepContent = (

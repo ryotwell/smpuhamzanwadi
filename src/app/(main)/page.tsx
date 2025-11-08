@@ -412,7 +412,7 @@ export default function Example() {
                     {/* Fallback for browsers that don't support the video tag */}
                 </video>
                 {/* Overlay for better text contrast */}
-                <div className="absolute inset-0 bg-black/40 dark:bg-black/60 -z-10" />
+                <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
                 <div className="mx-auto max-w-2xl">
                     <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                         <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-100 dark:text-gray-200 ring-1 ring-gray-200 dark:ring-gray-700 bg-black/30 dark:bg-black/40 hover:ring-gray-300 dark:hover:ring-gray-500">

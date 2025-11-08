@@ -3,6 +3,7 @@
 import axios from "@/lib/axios";
 import { cookies } from "next/headers";
 import { Post } from "@/types/post";
+import { APIPATHS } from "@/lib/constants";
 
 export async function getPosts(page: number = 1, limit: number = 10, q: string) {
   try {
@@ -17,7 +18,7 @@ export async function getPosts(page: number = 1, limit: number = 10, q: string) 
         limit: number;
         page: number;
       };
-    }>(`/post/get-all?page=${page}&limit=${limit}&q=${q}`, {
+    }>(`${APIPATHS.FETCHPOSTS}?page=${page}&limit=${limit}&q=${q}`, {
       headers: sessionCookie
         ? {
             Cookie: `session_token=${sessionCookie}`,

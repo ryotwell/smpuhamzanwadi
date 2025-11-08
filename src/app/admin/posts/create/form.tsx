@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { APIPATHS } from "@/lib/constants";
 
 // Register FilePond plugin
 registerPlugin(FilePondPluginImagePreview);
@@ -173,7 +174,7 @@ export default function CreatePostForm() {
         console.log(JSON.stringify(payload, null, 2));
 
         try {
-            await axios.post("/post/add", payload);
+            await axios.post(APIPATHS.STOREPOST, payload);
             toast.success("Post created successfully!");
             reset(defaultValues);
             setFiles([]);

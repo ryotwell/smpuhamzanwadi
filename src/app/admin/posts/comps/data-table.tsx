@@ -38,6 +38,99 @@ import {
 import { Post } from "@/types/post"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import axios from "@/lib/axios"
+import { toast } from "sonner";
+
+// Import shadcn/ui dialog
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog"
+
+async function deletePost(slug: string) {
+    if (!slug) return;
+    try {
+        await axios.delete(`/posts/${slug}`);
+        toast.success("Post deleted successfully.");
+    } catch (error) {
+        toast.error("Failed to delete post.");
+    }
+}
+
+// Extract the delete actions cell to its own component to manage dialog state
+function PostDeleteActions({ post }: { post: Post }) {
+    const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const router = useRouter();
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem
+                        onClick={() => navigator.clipboard.writeText(post.id.toString())}
+                    >
+                        Copy post ID
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>View post</DropdownMenuItem>
+                    <DialogTrigger asChild>
+                        <DropdownMenuItem
+                            className="text-red-600 focus:text-red-600"
+                            onSelect={e => e.preventDefault()}
+                        >
+                            Delete post
+                        </DropdownMenuItem>
+                    </DialogTrigger>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>
+                        Delete post
+                    </DialogTitle>
+                    <DialogDescription>
+                        Are you sure you want to delete the post "<b>{post.title}</b>"? This action cannot be undone.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="flex justify-end gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => setOpen(false)}
+                        disabled={loading}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={async () => {
+                            setLoading(true);
+                            await deletePost(post.slug);
+                            setLoading(false);
+                            setOpen(false);
+                            router.refresh?.();
+                        }}
+                        disabled={loading ? true : false}
+                    >
+                        Delete
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 export const columns: ColumnDef<Post>[] = [
     {
@@ -103,28 +196,7 @@ export const columns: ColumnDef<Post>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const post = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(post.id.toString())}
-                        >
-                            Copy post ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View post</DropdownMenuItem>
-                        <DropdownMenuItem>Delete post</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            return <PostDeleteActions post={post} />;
         },
     },
 ]

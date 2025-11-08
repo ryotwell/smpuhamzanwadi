@@ -46,7 +46,10 @@ POST http://localhost:8080/posts
 }
 
 ### Get Posts
-GET http://localhost:8080/post/get-all?page=1&limit=10&q=
+GET http://localhost:8080/posts
+
+### Delete Post
+DELETE http://localhost:8080/posts/eveniet-cumque-volu
 
 
 ### Upload Image
