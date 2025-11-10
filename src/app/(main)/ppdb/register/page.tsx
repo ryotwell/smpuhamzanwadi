@@ -9,7 +9,7 @@ import Image from "next/image";
 
 // Import FilePondUploader untuk upload gambar/berkas
 import FilePondUploader from "@/components/ui/filepond";
-import { Test } from "@/components/ui/test";
+
 
 // Langkah-langkah Stepper
 const steps = [
@@ -259,6 +259,7 @@ export default function PPDBPage() {
                                     }))
                                 }
                                 label={dokumen.label}
+                                allowMultiple={false}
                             />
                             <div className="text-xs text-gray-400">{dokumen.hint}</div>
                         </div>

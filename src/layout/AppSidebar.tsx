@@ -12,7 +12,7 @@ import {
   HorizontaLDots,
   // ListIcon,
   // PageIcon,
-  PieChartIcon,
+  // PieChartIcon,
   // PlugInIcon,
   // TableIcon,
   UserCircleIcon,

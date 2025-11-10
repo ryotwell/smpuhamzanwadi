@@ -5,7 +5,6 @@ type EditorProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  className?: string;
 };
 
 const plugins = [
@@ -13,7 +12,12 @@ const plugins = [
   'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
 ];
 
-function handleTinyMceImageUpload(blobInfo: any, progress: (percent: number) => void) {
+interface BlobInfo {
+  blob: () => Blob;
+  filename: () => string;
+}
+
+function handleTinyMceImageUpload(blobInfo: BlobInfo, progress: (percent: number) => void) {
   return new Promise<string>(async (resolve, reject) => {
     const formData = new FormData();
     formData.append('file', blobInfo.blob(), blobInfo.filename());
@@ -45,7 +49,7 @@ function handleTinyMceImageUpload(blobInfo: any, progress: (percent: number) => 
                 'Upload failed, server did not return a valid image URL'
               );
             }
-          } catch (err) {
+          } catch {
             reject('Upload failed: Invalid JSON response');
           }
         } else {
@@ -53,7 +57,7 @@ function handleTinyMceImageUpload(blobInfo: any, progress: (percent: number) => 
           try {
             const resData = JSON.parse(xhr.responseText);
             message = resData.message || message;
-          } catch (e) {}
+          } catch {}
           reject(`HTTP error: ${xhr.status} ${message}`);
         }
       };
@@ -63,13 +67,14 @@ function handleTinyMceImageUpload(blobInfo: any, progress: (percent: number) => 
       };
 
       xhr.send(formData);
-    } catch (err: any) {
-      reject(`Upload failed: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      reject(`Upload failed: ${message}`);
     }
   });
 }
 
-export default function EditorComponent({ value, onChange, placeholder, className }: EditorProps) {
+export default function EditorComponent({ value, onChange, placeholder }: EditorProps) {
   return (
     <Editor
       apiKey='unuiemd4czonhcsa3vt235khp53wbkiwbv2m92bo47outejr'
@@ -81,25 +86,27 @@ export default function EditorComponent({ value, onChange, placeholder, classNam
         tinycomments_author: 'Author name',
         mergetags_list: [
           { value: 'First.Name', title: 'First Name' },
-          { value: 'Email', title: 'Email' },
+          { value: 'Email', title: 'Email' }
         ],
         placeholder,
         images_upload_handler: handleTinyMceImageUpload,
         file_picker_types: 'image media',
-        file_picker_callback: (callback: (url: string, meta: any) => void, value: any, meta: any) => {
+        file_picker_callback: (
+          callback: (url: string, meta: { title: string }) => void,
+          _: unknown,
+          meta: { filetype: string }
+        ) => {
           const input = document.createElement('input');
           input.setAttribute('type', 'file');
           if (meta.filetype === 'image') {
             input.setAttribute('accept', 'image/*');
           }
-          input.onchange = (e: Event) => {
-            const target = e.target as HTMLInputElement;
-            if (!target.files || !target.files[0]) return;
-            const file = target.files[0];
+          input.onchange = () => {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
             const formData = new FormData();
             formData.append('file', file, file.name);
 
-            // Use XMLHttpRequest in file_picker_callback too so progress could be added if needed
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/upload', true);
             xhr.onload = function () {
@@ -121,7 +128,7 @@ export default function EditorComponent({ value, onChange, placeholder, classNam
                         : "Upload failed: no URL (media embed 400 error?)"
                     );
                   }
-                } catch (e) {
+                } catch {
                   callback('', { title: '' });
                   alert("Upload failed: Invalid JSON response");
                 }
@@ -130,7 +137,9 @@ export default function EditorComponent({ value, onChange, placeholder, classNam
                 try {
                   const data = JSON.parse(xhr.responseText);
                   message = data && data.message ? data.message : message;
-                } catch (e) {}
+                } catch {
+                  // error parsing response
+                }
                 callback('', { title: '' });
                 alert(`HTTP error: ${xhr.status} ${message}`);
               }
@@ -143,7 +152,7 @@ export default function EditorComponent({ value, onChange, placeholder, classNam
           };
           input.click();
         },
-        automatic_uploads: true,
+        automatic_uploads: true
       }}
       value={value}
       onEditorChange={onChange}

@@ -27,7 +27,7 @@ async function checkAuthenticated() {
             }
         });
         return { isAuthenticated: true };
-    } catch (err) {
+    } catch {
         return { isAuthenticated: false, error: 'Unauthorized: Invalid session token' };
     }
 }
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
                 size: file.size
             }
         }, { status: 200 })
-    } catch (error: any) {
+    } catch {
         return NextResponse.json({
             success: false,
             status: 500,

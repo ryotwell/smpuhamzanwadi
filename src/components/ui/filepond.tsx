@@ -1,123 +1,148 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import type { FilePondFile, FilePondInitialFile } from "filepond";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
-// Simple FilePond component for image upload
+// Register FilePond plugins
 registerPlugin(FilePondPluginImagePreview);
 
-type FilePondUploaderProps = {
-    value?: string | null;
+export type FilePondUploaderProps = {
+    value?: string | null; // url gambar terupload, atau null
     onChange?: (url: string | null) => void;
-    label?: string;
+    /**
+     * File yg sedang dikontrol, jika ingin controlled
+     */
+    files?: (File | FilePondInitialFile)[];
+    /**
+     * Boleh pilih banyak file? Default: false
+     */
+    allowMultiple?: boolean;
+    /**
+     * Tipe file yang diperbolehkan
+     */
+    acceptedFileTypes?: string[];
+    /**
+     * Label idle FilePond (HTML string)
+     */
+    labelIdle?: string;
+    /**
+     * Nama input (default="filepond-upload")
+     */
+    name?: string;
+    /**
+     * Disabled
+     */
+    disabled?: boolean;
+    /**
+     * Props tambahan ke FilePond
+     */
+    [key: string]: any;
 };
 
 const FilePondUploader: React.FC<FilePondUploaderProps> = ({
-    value = "",
+    value,
     onChange,
-    label = "Upload File"
+    files: filesProp,
+    allowMultiple = false,
+    acceptedFileTypes = ["image/*"],
+    labelIdle = 'Drag & Drop atau <span class="filepond--label-action">Browse</span>',
+    name = "filepond-upload",
+    disabled = false,
+    ...rest
 }) => {
-    const [files, setFiles] = useState<any[]>([]);
-    const [uploading, setUploading] = useState(false);
-
-    // Sync uploaded value (e.g. after a reload) to the FilePond preview
-    useEffect(() => {
-        if (value && !uploading && files.length === 0) {
-            setFiles([
+    // Internal files state jika un-controlled
+    const [internalFiles, setInternalFiles] = useState<(File | FilePondInitialFile)[]>(
+        filesProp ??
+        (value
+            ? [
                 {
                     source: value,
                     options: {
-                        type: "local"
-                    }
-                }
-            ]);
+                        type: "local",
+                    },
+                } as FilePondInitialFile,
+            ]
+            : [])
+    );
+    // Untuk track file sedang upload
+    const uploadingRef = useRef(false);
+
+    // Gunakan prop files kalau ada, else internal
+    const pondFiles =
+        filesProp !== undefined
+            ? filesProp
+            : internalFiles;
+
+    // Untuk single file, sync url thumbnail
+    const handleUpdateFiles = async (fileItems: FilePondFile[]) => {
+        setInternalFiles(fileItems.map(f => f.file ?? f).filter(Boolean) as (File | FilePondInitialFile)[]);
+        // Hanya handle satu file, ambil yg pertama
+        if (!fileItems.length) {
+            if (onChange) onChange(null);
+            return;
         }
-        if (!value && files.length > 0 && !uploading) {
-            setFiles([]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
-
-    const handleUpdateFiles = async (fileItems: any[]) => {
-        setFiles(fileItems);
-
-        if (uploading) return;
-
-        // If a file is just removed, call onChange with null
-        if (fileItems.length === 0) {
-            onChange && onChange(null);
+        const file = fileItems[0].file;
+        if (!file) {
+            if (onChange) onChange(null);
             return;
         }
 
-        // If the file is local (already uploaded), skip uploading
-        const firstItem = fileItems[0];
-        if (firstItem?.file === undefined && firstItem?.source && value === firstItem.source) {
+        // Only upload new file (skip local initialFile [has .source])
+        if ((file as any).source) {
+            // Tidak perlu upload. Sudah ada url.
+            if (onChange && typeof (file as any).source === "string") {
+                onChange((file as any).source);
+            }
             return;
         }
+        // Prevent overlapped
+        if (uploadingRef.current) return;
+        uploadingRef.current = true;
 
-        if (fileItems.length > 0) {
-            const file = fileItems[0].file;
-            if (!file) {
+        try {
+            const formData = new FormData();
+            formData.append("file", file, file.name);
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const json = await res.json();
+            if (json.status === 200 && json.data && json.data.path) {
+                // Biasakan /api/upload mengembalikan {path, fullUrl}
+                onChange && onChange(json.data.fullUrl || json.data.path);
+            } else {
                 onChange && onChange(null);
-                return;
+                // Show toast jika ingin, tapi di sini tidak (presentational)
             }
-            setUploading(true);
-            try {
-                const formData = new FormData();
-                formData.append("file", file, file.name);
-                const res = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData
-                });
-                const json = await res.json();
-                if (json.status === 200 && json.data && json.data.path) {
-                    onChange && onChange(json.data.path);
-                } else {
-                    onChange && onChange(null);
-                }
-            } catch (err) {
-                onChange && onChange(null);
-            } finally {
-                setUploading(false);
-            }
-        } else {
+        } catch {
             onChange && onChange(null);
+        } finally {
+            uploadingRef.current = false;
         }
     };
 
     return (
-        <div>
-            {/* 
-                Hapus label di sini agar tidak double.
-                Label Berkas sudah diberikan di parent.
-                Jadi, di sini label di FilePond saja.
-            */}
+        <>
             <FilePond
-                files={files}
+                files={pondFiles as (string | Blob | FilePondInitialFile)[]}
                 onupdatefiles={handleUpdateFiles}
-                allowMultiple={false}
-                name="filepond"
-                labelIdle={
-                    label
-                        ? `Drag & Drop your image or <span class="filepond--label-action">Browse</span><br/><span class="font-medium">${label}</span>`
-                        : 'Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
-                }
-                acceptedFileTypes={["image/*"]}
+                allowMultiple={allowMultiple}
+                name={name}
+                labelIdle={labelIdle}
+                acceptedFileTypes={acceptedFileTypes}
                 imagePreviewHeight={190}
-                required={false}
-                maxFiles={1}
-                disabled={uploading}
+                maxFiles={allowMultiple ? 5 : 1}
+                credits={false}
+                disabled={disabled}
+                {...rest}
             />
-            {uploading && (
-                <div className="text-xs text-gray-500 mt-2">Uploading...</div>
-            )}
-            {value && !uploading && (
-                <div className="text-xs text-green-600 mt-2">File uploaded</div>
-            )}
-        </div>
+        </>
     );
 };
 

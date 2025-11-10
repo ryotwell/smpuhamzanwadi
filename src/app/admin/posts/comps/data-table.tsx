@@ -3,10 +3,8 @@
 import * as React from "react"
 import {
     ColumnDef,
-    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     SortingState,
@@ -57,7 +55,7 @@ async function deletePost(slug: string) {
     try {
         await axios.delete(`/posts/${slug}`);
         toast.success("Post deleted successfully.");
-    } catch (error) {
+    } catch {
         toast.error("Failed to delete post.");
     }
 }
@@ -102,7 +100,7 @@ function PostDeleteActions({ post }: { post: Post }) {
                         Delete post
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to delete the post "<b>{post.title}</b>"? This action cannot be undone.
+                        Are you sure you want to delete the post &quot;<b>{post.title}</b>&quot;? This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex justify-end gap-2">
@@ -201,16 +199,18 @@ export const columns: ColumnDef<Post>[] = [
     },
 ]
 
-export function DataTable({ data, meta }: { data: Post[], meta: any }) {
+interface Meta {
+    limit: number;
+    page: number;
+}
+
+export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const q = searchParams.get('q') ?? '';
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})

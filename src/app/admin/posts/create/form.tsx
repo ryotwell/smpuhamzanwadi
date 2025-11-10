@@ -13,6 +13,7 @@ import {
 import axios from "@/lib/axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import type { FilePondFile } from "filepond";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import Editor from "./comps/Editor";
@@ -62,12 +63,11 @@ const defaultValues: CreatePostValues = {
     content: "",
     published: false,
     publishedAt: "",
-    category: "" as any,
+    category: "BERITA",
 };
 
 export default function CreatePostForm() {
-    // filepond states
-    const [files, setFiles] = useState<any[]>([]);
+    const [files, setFiles] = useState<(File)[]>([]);
     const [uploading, setUploading] = useState(false);
     const uploadingRef = useRef(false);
     const lastUploadedFileName = useRef<string | null>(null);
@@ -93,8 +93,11 @@ export default function CreatePostForm() {
     const watchingThumbnail = watch("thumbnail");
 
     // FilePond handler for single thumbnail upload
-    const handleThumbnailUpdate = async (fileItems: any[]) => {
-        setFiles(fileItems);
+    // FilePond always gives us FilePondFile[], but FilePond's `files` prop expects different types.
+    // Instead, manage FilePondFiles for events, but map to base type for prop.
+    const handleThumbnailUpdate = async (fileItems: FilePondFile[]) => {
+        // setFiles must update with type compatible with FilePondProp, i.e. files.map(f => f.file)
+        setFiles(fileItems.map(f => f.file).filter(Boolean) as File[]);
 
         // Prevent duplicate/overlapping uploads
         if (uploadingRef.current) {
@@ -102,7 +105,7 @@ export default function CreatePostForm() {
         }
 
         if (fileItems.length > 0) {
-            const file = fileItems[0].file;
+            const file = fileItems[0]?.file;
 
             if (!file) {
                 setValue("thumbnail", "");
@@ -136,7 +139,7 @@ export default function CreatePostForm() {
                     lastUploadedFileName.current = null;
                     toast.error(json.message || "Failed to upload thumbnail");
                 }
-            } catch (error) {
+            } catch {
                 setValue("thumbnail", "");
                 lastUploadedFileName.current = null;
                 toast.error("Failed to upload thumbnail");
@@ -179,10 +182,15 @@ export default function CreatePostForm() {
             reset(defaultValues);
             setFiles([]);
             lastUploadedFileName.current = null;
-        } catch (err: any) {
-            toast.error(
-                err?.response?.data?.message || "Failed to create post"
-            );
+        } catch (err: unknown) {
+            const message =
+                err && typeof err === "object" && "response" in err &&
+                    err.response && typeof err.response === "object" && "data" in err.response &&
+                    err.response.data && typeof err.response.data === "object" && "message" in err.response.data &&
+                    typeof err.response.data.message === "string"
+                    ? err.response.data.message
+                    : "Failed to create post";
+            toast.error(message);
         }
     };
 
@@ -289,7 +297,6 @@ export default function CreatePostForm() {
                                         value={field.value}
                                         onChange={(val: string) => field.onChange(val)}
                                         placeholder="Tulis konten di sini..."
-                                        className="mb-2"
                                     />
                                 )}
                             />
