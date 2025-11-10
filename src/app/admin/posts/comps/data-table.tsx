@@ -199,7 +199,7 @@ export const columns: ColumnDef<Post>[] = [
     },
 ]
 
-interface Meta {
+export interface Meta {
     limit: number;
     page: number;
 }
