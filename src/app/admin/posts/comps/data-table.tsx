@@ -38,6 +38,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import axios from "@/lib/axios"
 import { toast } from "sonner";
+import Link from "next/link";
 
 // Import shadcn/ui dialog
 import {
@@ -84,6 +85,11 @@ function PostDeleteActions({ post }: { post: Post }) {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View post</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={`/admin/posts/${post.slug}/edit`} scroll={true}>
+                            Edit post
+                        </Link>
+                    </DropdownMenuItem>
                     <DialogTrigger asChild>
                         <DropdownMenuItem
                             className="text-red-600 focus:text-red-600"

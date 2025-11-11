@@ -1,23 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Dialog, DialogPanel } from '@headlessui/react'
 import Image from 'next/image'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
-// Import shadcn navigation menu components
-import {
-    NavigationMenu,
-    NavigationMenuList,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuTrigger,
-    NavigationMenuContent,
-} from "@/components/ui/navigation-menu"
-import { ThemeToggleButton } from '@/components/common/ThemeToggleButton'
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
 import { config } from '@/config'
+import { Header } from './header'
 
 const slides = [
     {
@@ -129,17 +118,17 @@ const navigation = [
 const components = [
     {
         title: "Ekstrakurikuler",
-        href: "#",
+        href: "#ekstrakurikuler",
         description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
     },
     {
         title: "Program Unggulan",
-        href: "#",
+        href: "#unggulan",
         description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
     },
     {
         title: "KO-Kulikuler",
-        href: "#",
+        href: "#ko-kulikuler",
         description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
     },
 ]
@@ -172,38 +161,83 @@ const newsArticles = [
     },
 ]
 
-// Data Ekstrakurikuler
-const ekstrakurikulerList = [
+// Data Kurikulum
+const kurikulumData = [
     {
-        name: "Pramuka",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-        desc: "Kegiatan kepramukaan untuk membentuk karakter, kepemimpinan, dan kemandirian siswa."
+        category: "Ekstrakurikuler",
+        data: [
+            {
+                name: "Pramuka",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                desc: "Kegiatan kepramukaan untuk membentuk karakter, kepemimpinan, dan kemandirian siswa."
+            },
+            {
+                name: "Paskibra",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                desc: "Pasukan Pengibar Bendera, melatih kedisiplinan dan rasa cinta tanah air."
+            },
+            {
+                name: "Seni Musik",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                desc: "Ekstrakurikuler musik untuk menyalurkan bakat seni dan kreativitas siswa."
+            },
+            {
+                name: "Olahraga (Futsal, Basket, dll)",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                desc: "Berbagai pilihan olahraga untuk menjaga kebugaran dan semangat sportivitas."
+            },
+            {
+                name: "Karya Ilmiah Remaja (KIR)",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                desc: "Mengembangkan minat dan bakat siswa dalam bidang penelitian dan karya ilmiah."
+            },
+            {
+                name: "Seni Tari",
+                image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
+                desc: "Ekstrakurikuler tari tradisional dan modern untuk menumbuhkan kecintaan pada budaya."
+            }
+        ]
     },
     {
-        name: "Paskibra",
-        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
-        desc: "Pasukan Pengibar Bendera, melatih kedisiplinan dan rasa cinta tanah air."
+        category: "Program Unggulan",
+        data: [
+            {
+                name: "Bahasa Inggris",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+                desc: "Program intensif Bahasa Inggris melalui English Club, pelatihan, dan lomba."
+            },
+            {
+                name: "Pendidikan Karakter",
+                image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
+                desc: "Mengasah karakter siswa dengan pembiasaan positif, budi pekerti, kegiatan sosial."
+            },
+            {
+                name: "Tahfidz Al-Qur'an",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                desc: "Membina siswa menghafal Al-Qur'an, serta pembelajaran tartil dan tilawah yang baik."
+            }
+        ]
     },
     {
-        name: "Seni Musik",
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
-        desc: "Ekstrakurikuler musik untuk menyalurkan bakat seni dan kreativitas siswa."
-    },
-    {
-        name: "Olahraga (Futsal, Basket, dll)",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-        desc: "Berbagai pilihan olahraga untuk menjaga kebugaran dan semangat sportivitas."
-    },
-    {
-        name: "Karya Ilmiah Remaja (KIR)",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-        desc: "Mengembangkan minat dan bakat siswa dalam bidang penelitian dan karya ilmiah."
-    },
-    {
-        name: "Seni Tari",
-        image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
-        desc: "Ekstrakurikuler tari tradisional dan modern untuk menumbuhkan kecintaan pada budaya."
-    },
+        category: "KO-Kulikuler",
+        data: [
+            {
+                name: "Praktikum IPTEK",
+                image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
+                desc: "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
+            },
+            {
+                name: "Kegiatan Bahasa dan Sastra",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                desc: "Lomba pidato, puisi, debat, dan karya ilmiah bahasa Indonesia & Inggris."
+            },
+            {
+                name: "Workshop & Bimbingan",
+                image: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80",
+                desc: "Workshop, seminar, serta bimbingan konseling yang menunjang seluruh potensi siswa."
+            }
+        ]
+    }
 ]
 
 // Data Fasilitas Sekolah
@@ -248,154 +282,10 @@ const sambutanKepalaSekolah = {
 }
 
 export default function Example() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
     return (
         <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300 min-h-screen flex flex-col">
 
-            <header className="absolute inset-x-0 top-0 z-50">
-                {/* ...header content tetap... */}
-                {/* ...header code di atas tetap tidak berubah... */}
-                <nav aria-label="Global" className="flex flex-col gap-0 p-6 lg:px-8">
-                    {/* Bar Atas: Logo & tombol mobile/menu */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 lg:flex-1">
-                            <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
-                                <span className="sr-only">{config.appName}</span>
-                                <Image
-                                    alt={config.appName}
-                                    src={config.appLogoPanjang}
-                                    width={100}
-                                    height={100}
-                                    className="h-13 w-auto"
-                                />
-                            </a>
-                        </div>
-                        <div className="flex items-center gap-2 lg:hidden">
-                            <ThemeToggleButton />
-                            <button
-                                type="button"
-                                onClick={() => setMobileMenuOpen(true)}
-                                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-500 dark:text-gray-400"
-                            >
-                                <span className="sr-only">Open main menu</span>
-                                <Bars3Icon aria-hidden="true" className="size-6" />
-                            </button>
-                        </div>
-                        <div className="hidden lg:flex lg:items-center lg:flex-1 lg:justify-end gap-4">
-                            <ThemeToggleButton />
-                            <a href="#" className="text-sm/6 font-semibold text-gray-900 dark:text-white sm:text-white">
-                                PPDB <span aria-hidden="true">&rarr;</span>
-                            </a>
-                        </div>
-                    </div>
-                    {/* Menu Desktop Bar (row baru di bawah logo) */}
-                    <div className="hidden lg:flex w-full mt-4 justify-start">
-                        <NavigationMenu>
-                            <NavigationMenuList className="flex flex-row items-center gap-x-8">
-                                {navigation.map((item) => (
-                                    <NavigationMenuItem key={item.name}>
-                                        <NavigationMenuLink
-                                            href={item.href}
-                                            className="text-sm font-semibold text-gray-900 dark:text-white px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 sm:text-white transition-colors"
-                                        >
-                                            {item.name}
-                                        </NavigationMenuLink>
-                                    </NavigationMenuItem>
-                                ))}
-                                <NavigationMenuItem className="list-none">
-                                    <NavigationMenuTrigger className="text-sm font-semibold text-gray-900 dark:text-white px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 sm:text-white transition-colors bg-transparent">
-                                        Kurikulum
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent className="bg-white dark:bg-gray-900 ring-0">
-                                        <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px] p-4 m-0 list-none">
-                                            {components.map((component) => (
-                                                <ListItem
-                                                    key={component.title}
-                                                    title={component.title}
-                                                    href={component.href}
-                                                >
-                                                    {component.description}
-                                                </ListItem>
-                                            ))}
-                                        </ul>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                </nav>
-                <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-                    <div className="fixed inset-0 z-50" />
-                    <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-700/30">
-                        {/* ...mobile nav... */}
-                        <div className="flex items-center justify-between">
-                            <a href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
-                                <span className="sr-only">{config.appName}</span>
-                                <Image
-                                    alt={config.appName}
-                                    src={config.appLogo}
-                                    width={32}
-                                    height={32}
-                                    className="h-8 w-auto"
-                                />
-                                <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span>
-                            </a>
-                            <div className="flex items-center gap-2">
-                                <ThemeToggleButton />
-                                <button
-                                    type="button"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200"
-                                >
-                                    <span className="sr-only">Close menu</span>
-                                    <XMarkIcon aria-hidden="true" className="size-6" />
-                                </button>
-                            </div>
-                        </div>
-                        <div className="mt-6 flow-root">
-                            <div className="-my-6 divide-y divide-gray-200 dark:divide-gray-700">
-                                <div className="space-y-2 py-6">
-                                    {navigation.map((item) => (
-                                        <a
-                                            key={item.name}
-                                            href={item.href}
-                                            className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        >
-                                            {item.name}
-                                        </a>
-                                    ))}
-                                    {/* Dropdown menu for mobile */}
-                                    <div className="mt-4">
-                                        <div className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-2">Kurikulum</div>
-                                        <ul>
-                                            {components.map((component) => (
-                                                <li key={component.title}>
-                                                    <a
-                                                        href={component.href}
-                                                        className="block rounded-md px-3 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                                    >
-                                                        <div className="font-semibold">{component.title}</div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{component.description}</div>
-                                                    </a>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="py-6">
-                                    <a
-                                        href="#"
-                                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    >
-                                        PPDB
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </DialogPanel>
-                </Dialog>
-            </header>
+            <Header />
 
             {/* Hero */}
             <div className="relative isolate px-6 pt-14 lg:px-8 h-svh flex items-center">
@@ -409,7 +299,6 @@ export default function Example() {
                     poster="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                 >
                     <source src="/assets/images/hero.mp4" type="video/mp4" />
-                    {/* Fallback for browsers that don't support the video tag */}
                 </video>
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
@@ -529,8 +418,49 @@ export default function Example() {
                 <ImageSlider slides={slides} />
             </div>
 
+            {/* Section Kurikulum */}
+            <section id="kurikulum" className="max-w-5xl mx-auto mt-24 px-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
+                    Kurikulum
+                </h2>
+                <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                    SMP Unggulan Hamzanwadi memiliki tiga kategori utama pada Kurikulum: Ekstrakurikuler, Program Unggulan, dan KO-Kulikuler. Setiap kategori berisi kegiatan dan program untuk mendukung bakat, minat, dan kompetensi siswa secara optimal.
+                </p>
+                <div className="space-y-14">
+                    {kurikulumData.map((kategori) => (
+                        <div key={kategori.category}>
+                            <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
+                            <div className="grid gap-8 md:grid-cols-3">
+                                {kategori.data.map((item) => (
+                                    <div
+                                        key={item.name}
+                                        className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                                    >
+                                        <div className="h-40 w-full overflow-hidden">
+                                            <Image
+                                                src={item.image}
+                                                alt={item.name}
+                                                width={800}
+                                                height={600}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        </div>
+                                        <div className="p-5">
+                                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                                {item.name}
+                                            </h4>
+                                            <p className="text-gray-600 dark:text-gray-300 text-sm">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
             {/* Section Unggulan */}
-            <div className="relative max-w-3xl mx-auto mt-24 isolate">
+            <div className="relative max-w-3xl mx-auto mt-24 isolate" id="unggulan">
                 <div
                     aria-hidden="true"
                     className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -600,40 +530,6 @@ export default function Example() {
                 </div>
             </section>
 
-            {/* Section Ekstrakurikuler */}
-            <section className="max-w-5xl mx-auto mt-24 px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
-                    Ekstrakurikuler
-                </h2>
-                <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                    SMP Unggulan Hamzanwadi menyediakan berbagai pilihan ekstrakurikuler untuk mengembangkan bakat, minat, dan karakter siswa.
-                </p>
-                <div className="grid gap-8 md:grid-cols-3">
-                    {ekstrakurikulerList.map((ekskul) => (
-                        <div
-                            key={ekskul.name}
-                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
-                        >
-                            <div className="h-40 w-full overflow-hidden">
-                                <Image
-                                    src={ekskul.image}
-                                    alt={ekskul.name}
-                                    width={800}
-                                    height={600}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
-                            <div className="p-5">
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                                    {ekskul.name}
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm">{ekskul.desc}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
             {/* Section Berita, Artikel & Informasi */}
             <section className="max-w-5xl mx-auto mt-24 px-4">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
@@ -672,31 +568,6 @@ export default function Example() {
                     ))}
                 </div>
             </section>
-
-            {/* <section className="p-10">
-                <div
-                    className="bg-red-500 h-32 w-32 relative overflow-hidden group rounded-md cursor-pointer"
-                    tabIndex={0}
-                    onClick={e => {
-                        // Toggle the show state on click (for mobile)
-                        e.currentTarget.classList.toggle('show-overlay')
-                    }}
-                    onBlur={e => {
-                        // Remove overlay when focus is lost
-                        e.currentTarget.classList.remove('show-overlay')
-                    }}
-                >
-                    <div className="absolute left-0 right-0 bottom-[-100%] group-hover:bottom-0 group-hover:translate-y-0 transition-all duration-700 ease-in-out flex items-center justify-center h-full w-full pointer-events-none show-overlay:bottom-0 show-overlay:translate-y-0">
-                        <span className="text-white">Hello World</span>
-                    </div>
-                    <style jsx>{`
-                        .show-overlay .absolute {
-                            bottom: 0 !important;
-                            transform: translateY(0) !important;
-                        }
-                    `}</style>
-                </div>
-            </section> */}
 
             <footer className="mt-32 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
                 <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8">

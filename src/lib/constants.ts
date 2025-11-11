@@ -10,6 +10,7 @@ export const APIPATHS = {
     FETCHPOSTS: '/posts',
     FINDPOST: '/posts',
     STOREPOST: '/posts',
+    UPDATEPOST: '/posts',
     DELETE: '/posts',
 
     // farid
