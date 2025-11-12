@@ -16,15 +16,19 @@ export default async function EditPostPage({ params }: { params: { slug: string 
         <div className="grid grid-cols-12 gap-4 md:gap-6">
 
             <div className="col-span-12 space-y-6 xl:col-span-7">
-                <EditPostForm initialValues={{
-                    title: post?.title,
-                    thumbnail: post?.thumbnail,
-                    description: post?.description,
-                    content: post?.content.replaceAll("../../", "../../../"),
-                    published: post?.published,
-                    publishedAt: post?.published_at,
-                    category: post?.category as "BERITA" | "ARTIKEL" | "INFORMASI" | undefined,
-                }} isUpdate={true} editId={post?.slug} />
+                <EditPostForm
+                    initialValues={{
+                        title: post?.title,
+                        thumbnail: post?.thumbnail,
+                        description: post?.description,
+                        content: post?.content.replaceAll("../../", "../../../"),
+                        published: post?.published,
+                        publishedAt: post?.published_at,
+                        category: post?.category as "BERITA" | "ARTIKEL" | "INFORMASI" | undefined,
+                    }}
+                    isUpdate={true}
+                    editId={post?.slug}
+                />
             </div>
 
             <div className="col-span-12 space-y-6 xl:col-span-5">

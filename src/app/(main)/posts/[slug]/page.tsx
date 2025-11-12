@@ -4,6 +4,9 @@ import { Post, StandardApiResponse } from "@/types/post";
 import Image from "next/image";
 import "../../../tinymce.css"
 import { Header } from "../../header";
+import { APIPATHS } from "@/lib/constants";
+
+export const dynamic = "force-dynamic";
 
 type PostApiResponse = StandardApiResponse & {
   data: Post;
@@ -23,7 +26,7 @@ const PostPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const actualParams = await params;
 
   try {
-    const response = await axios.get<PostApiResponse>(`/posts/${actualParams.slug}`);
+    const response = await axios.get<PostApiResponse>(`${APIPATHS.FINDPOST}/${actualParams.slug}`);
     const post = response.data.data;
 
     return <PostDetail post={post} />

@@ -8,12 +8,12 @@ export const metadata: Metadata = {
     description: "Admin panel page to manage posts in the SMPU Hamzanwadi website.",
 };
 
-export default async function PostsAdminPage({ params }: { params: Promise<{ page?: string, limit?: string, q: string }> }) {
-    const findParams = await params;
+export default async function PostsAdminPage({ searchParams }: { searchParams: { page?: string, limit?: string, q?: string } }) {
+    const params = await searchParams
 
-    const page = Number(findParams.page) || 1;
-    const limit = Number(findParams.limit) || 10;
-    const q = typeof findParams?.q !== "undefined" ? String(findParams.q) : "";
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
+    const q = params?.q ?? "";
 
     const posts = await getPosts(page, limit, q);
 

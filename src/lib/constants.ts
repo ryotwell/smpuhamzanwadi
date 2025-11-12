@@ -6,16 +6,19 @@ export const PAGES = {
 } as const
 
 export const APIPATHS = {
-    SIGNIN: '/user/login',
-    FETCHPOSTS: '/posts',
-    FINDPOST: '/posts',
-    STOREPOST: '/posts',
-    UPDATEPOST: '/posts',
-    DELETE: '/posts',
+    // SIGNIN: '/user/login',
+    // FETCHPOSTS: '/posts',
+    // FINDPOST: '/posts',
+    // STOREPOST: '/posts',
+    // UPDATEPOST: '/posts',
+    // DELETE: '/posts',
 
     // farid
-    // SIGNIN: '/user/login',
-    // FETCHPOSTS: '/post/get-all',
-    // FINDPOST: '/posts',
-    // STOREPOST: '/post/add'
+    SIGNIN: '/user/login',
+    FETCHPOSTS: '/post/get-all',
+    FINDPOST: '/post/get',
+    STOREPOST: '/post/add',
+
+    UPDATEPOST: '/post/update',
+    DELETE: '/post/delete',
 } as const

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { Post } from "@/types/post";
 import { APIPATHS } from "@/lib/constants";
 
-export async function getPosts(page: number = 1, limit: number = 10, q: string) {
+export async function getPosts(page: number = 1, limit: number = 10, q: string = '') {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("session_token")?.value;
