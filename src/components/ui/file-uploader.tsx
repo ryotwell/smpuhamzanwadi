@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-export type AllowedFolders = 'pas-foto' | 'kartu-keluarga' | 'akta-kelahiran'
+export type AllowedFolders = 'pas-foto' | 'kartu-keluarga' | 'akta-kelahiran' | 'ijazah'
 
 type BasicUploaderProps = {
     value?: string;
@@ -17,10 +17,11 @@ type BasicUploaderProps = {
     disabled?: boolean;
     className?: string;
     isLoading?: boolean;
-    folder: AllowedFolders
+    folder: AllowedFolders;
+    hint?: string;
 };
 
-export default function FilePondUploader({
+export default function FileUploader({
     value = "",
     onChange,
     acceptedFileTypes = ["image/*"],
@@ -31,7 +32,8 @@ export default function FilePondUploader({
     disabled = false,
     className = "",
     isLoading = false,
-    folder
+    folder,
+    hint,
 }: BasicUploaderProps) {
     const [preview, setPreview] = useState<string>(value || "");
     const [uploading, setUploading] = useState(false);
@@ -111,6 +113,10 @@ export default function FilePondUploader({
                     {label}
                 </label>
             )}
+            {/* Display hint if provided */}
+            {hint && !preview && (
+                <div className="mb-2 text-xs text-gray-400 dark:text-gray-500">{hint}</div>
+            )}
             {preview && (
                 <div className="mb-2">
                     {/* Preview image/file if it's an image */}
@@ -140,15 +146,17 @@ export default function FilePondUploader({
                     </button>
                 </div>
             )}
-            <Input
-                type="file"
-                ref={inputRef}
-                name={name}
-                accept={acceptedFileTypes.join(",")}
-                onChange={handleFileChange}
-                disabled={disabled || uploading || isLoading}
-                multiple={multiple}
-            />
+            {!preview && (
+                <Input
+                    type="file"
+                    ref={inputRef}
+                    name={name}
+                    accept={acceptedFileTypes.join(",")}
+                    onChange={handleFileChange}
+                    disabled={disabled || uploading || isLoading}
+                    multiple={multiple}
+                />
+            )}
             {(uploading || isLoading) && (
                 <div className="text-xs text-gray-500 mt-1">Uploading...</div>
             )}

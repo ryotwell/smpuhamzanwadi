@@ -5,7 +5,7 @@ import { config } from '@/config'
 import crypto from 'crypto'
 
 // Allowed folders
-const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran'];
+const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran', 'ijazah'];
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        // Limit file size: max 2MB (2 * 1024 * 1024)
-        const maxSize = 2 * 1024 * 1024;
+        // Limit file size: max 1MB (1 * 1024 * 1024)
+        const maxSize = 1 * 1024 * 1024;
         if (file.size > maxSize) {
             return NextResponse.json({
                 success: false,
