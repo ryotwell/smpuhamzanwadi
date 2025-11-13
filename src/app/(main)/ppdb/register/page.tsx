@@ -30,12 +30,11 @@ const JENIS_KELAMIN_OPTIONS = [
 
 const AGAMA_OPTIONS = [
     { value: "ISLAM", label: "Islam" },
-    { value: "CHRISTIAN", label: "Kristen" },
+    { value: "CHRISTIAN_PROTESTANT", label: "Kristen Protestan" },
     { value: "CATHOLIC", label: "Katolik" },
     { value: "HINDU", label: "Hindu" },
     { value: "BUDDHA", label: "Buddha" },
     { value: "KONGHUCU", label: "Konghucu" },
-    { value: "OTHER", label: "Lainnya" },
 ];
 
 const KEADAAN_ORTU_OPTIONS = [
@@ -75,7 +74,38 @@ const KEWARGANEGARAAN_OPTIONS = [
     { value: "LAINNYA", label: "Lainnya" },
 ];
 
-// Form validation schema (Zod)
+const PENDIDIKAN_OPTIONS = [
+    { value: "TIDAK_SEKOLAH", label: "Tidak Sekolah" },
+    { value: "SD", label: "SD/Sederajat" },
+    { value: "SMP", label: "SMP/Sederajat" },
+    { value: "SMA", label: "SMA/Sederajat" },
+    { value: "D3", label: "D3" },
+    { value: "S1", label: "S1" },
+    { value: "S2", label: "S2" },
+    { value: "S3", label: "S3" },
+];
+
+const PEKERJAAN_OPTIONS = [
+    { value: "TIDAK_BEKERJA", label: "Tidak Bekerja" },
+    { value: "PETANI", label: "Petani" },
+    { value: "BURUH", label: "Buruh" },
+    { value: "PEDAGANG", label: "Pedagang" },
+    { value: "PNS", label: "PNS" },
+    { value: "TNI_POLRI", label: "TNI/POLRI" },
+    { value: "SWASTA", label: "Swasta" },
+    { value: "WIRAUSAHA", label: "Wirausaha" },
+    { value: "LAINNYA", label: "Lainnya" },
+];
+
+const PENGHASILAN_OPTIONS = [
+    { value: "<=1000000", label: "≤ Rp1.000.000" },
+    { value: "1000001-3000000", label: "Rp1.000.001 - Rp3.000.000" },
+    { value: "3000001-5000000", label: "Rp3.000.001 - Rp5.000.000" },
+    { value: "5000001-10000000", label: "Rp5.000.001 - Rp10.000.000" },
+    { value: ">10000000", label: "> Rp10.000.000" },
+    // { value: "TIDAK_ADA", label: "Tidak Ada" },
+];
+
 const biodataSchema = z.object({
     namaLengkap: z.string().min(2, "Nama harus minimal 2 karakter").max(64, "Nama maksimal 64 karakter"),
     nisn: z.string().min(10, "NISN harus 10 digit angka").max(10, "NISN harus 10 digit angka").regex(/^\d{10}$/, "NISN harus 10 digit angka"),
@@ -84,7 +114,7 @@ const biodataSchema = z.object({
     tempatLahir: z.string().min(2, "Tempat lahir minimal 2 karakter").max(64, "Tempat lahir maksimal 64 karakter"),
     tanggalLahir: z.string().min(8, "Tanggal lahir diperlukan"),
     gender: z.enum(["MALE", "FEMALE"], "Pilih jenis kelamin"),
-    agama: z.enum(["ISLAM", "CHRISTIAN", "CATHOLIC", "HINDU", "BUDDHA", "KONGHUCU", "OTHER"], "Pilih agama"),
+    agama: z.enum(["ISLAM", "CHRISTIAN", "CATHOLIC", "HINDU", "BUDDHA", "KONGHUCU"], "Pilih agama"),
     keadaanOrtu: z.enum(["LENGKAP", "YATIM", "PIATU", "YATIM_PIATU"], "Pilih keadaan orang tua"),
     statusKeluarga: z.enum(["ANAK_KANDUNG", "ANAK_TIRI", "ANAK_ANGKAT"], "Pilih status keluarga"),
     anakKe: z.number().int().positive("Anak ke harus bilangan positif"),
@@ -108,6 +138,19 @@ const biodataSchema = z.object({
     tinggiCm: z.number().int("Tinggi badan harus bilangan bulat").optional(),
     riwayatPenyakit: z.string().optional(),
     alamatLengkap: z.string().min(8, "Alamat lengkap minimal 8 karakter"),
+    // Wali
+    namaAyah: z.string().min(2, "Nama ayah wajib diisi"),
+    pendidikanAyah: z.enum(PENDIDIKAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pendidikan ayah wajib dipilih"),
+    pekerjaanAyah: z.enum(PEKERJAAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pekerjaan ayah wajib dipilih"),
+    penghasilanAyah: z.enum(PENGHASILAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Penghasilan ayah wajib dipilih"),
+    namaIbu: z.string().min(2, "Nama ibu wajib diisi"),
+    pendidikanIbu: z.enum(PENDIDIKAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pendidikan ibu wajib dipilih"),
+    pekerjaanIbu: z.enum(PEKERJAAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pekerjaan ibu wajib dipilih"),
+    penghasilanIbu: z.enum(PENGHASILAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Penghasilan ibu wajib dipilih"),
+    namaWali: z.string().min(2, "Nama wali wajib diisi"),
+    hpWali: z.string().min(8, "Nomor HP wali minimal 8 digit").max(18, "Nomor HP wali tidak boleh lebih dari 18 karakter").regex(/^08\d{7,16}$/, "Nomor HP wali harus dimulai dari 08 dan angka"),
+    emailWali: z.string().email("Email wali tidak valid"),
+    alamatWali: z.string().min(2, "Alamat wali wajib diisi"),
 });
 
 type BiodataFields = z.infer<typeof biodataSchema>;
@@ -145,14 +188,16 @@ const dokumenList = [
 
 type BerkasFields = Record<"pasfoto" | "kk" | "akta" | "ijazah", string | null>;
 
+// Tambahkan langkah baru untuk step orang tua/wali
 const steps = [
-    { title: "Lengkapi Data", description: "Isi data diri dan identitas lengkap" },
+    { title: "Lengkapi Data", description: "Data diri dan identitas lengkap" },
+    { title: "Data Orang Tua/Wali", description: "Data orang tua/wali" },
     { title: "Upload Berkas", description: "Unggah dokumen persyaratan" },
     { title: "Konfirmasi", description: "Periksa ulang isian dan konfirmasi pendaftaran" },
     { title: "Selesai", description: "Pendaftaran selesai, silakan tunggu verifikasi" },
 ];
 
-// Stepper component
+// Stepper component (no changes)
 function Stepper({ currentStep }: { currentStep: number }) {
     return (
         <div className="flex flex-col items-center py-10 px-4">
@@ -382,6 +427,30 @@ const SelectControls = {
             placeholder="Pilih Kewarganegaraan"
         />
     ),
+    Pendidikan: (props: SelectControlProps) => (
+        <LabeledSelect
+            {...props}
+            label="Pendidikan Terakhir"
+            options={PENDIDIKAN_OPTIONS}
+            placeholder="Pilih Pendidikan"
+        />
+    ),
+    Pekerjaan: (props: SelectControlProps) => (
+        <LabeledSelect
+            {...props}
+            label="Pekerjaan"
+            options={PEKERJAAN_OPTIONS}
+            placeholder="Pilih Pekerjaan"
+        />
+    ),
+    Penghasilan: (props: SelectControlProps) => (
+        <LabeledSelect
+            {...props}
+            label="Penghasilan"
+            options={PENGHASILAN_OPTIONS}
+            placeholder="Pilih Penghasilan"
+        />
+    ),
 };
 
 type BiodataFormProps = {
@@ -564,6 +633,191 @@ function BiodataForm({
     );
 }
 
+type FormOrtuProps = {
+    control: Control<BiodataFields>;
+    errors: FieldErrors<BiodataFields>;
+};
+
+function FormOrtuWali({ control, errors }: FormOrtuProps) {
+    return (
+        <form className="space-y-5">
+            <div>
+                <h2 className="font-bold text-xl mb-1">Data Orang Tua / Wali</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                    Lengkapi data ayah, ibu, serta data dan alamat wali (jika ada).
+                </p>
+            </div>
+
+            {/* Ayah */}
+            <div className="mt-2 mb-2 font-bold text-base">Data Ayah Kandung</div>
+            <div>
+                <label htmlFor="namaAyah" className="mb-1 font-medium text-sm">Nama Ayah</label>
+                <Controller
+                    control={control}
+                    name="namaAyah"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Nama Ayah"
+                            id="namaAyah"
+                        />
+                    )}
+                />
+                {errors.namaAyah && <p className="text-red-600 dark:text-red-400 text-xs">{errors.namaAyah.message as string}</p>}
+            </div>
+            <Controller
+                control={control}
+                name="pendidikanAyah"
+                render={({ field }) => (
+                    <SelectControls.Pendidikan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.pendidikanAyah?.message as string}
+                    />
+                )}
+            />
+            <Controller
+                control={control}
+                name="pekerjaanAyah"
+                render={({ field }) => (
+                    <SelectControls.Pekerjaan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.pekerjaanAyah?.message as string}
+                    />
+                )}
+            />
+            <Controller
+                control={control}
+                name="penghasilanAyah"
+                render={({ field }) => (
+                    <SelectControls.Penghasilan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.penghasilanAyah?.message as string}
+                    />
+                )}
+            />
+
+            {/* Ibu */}
+            <div className="mt-4 mb-2 font-bold text-base">Data Ibu Kandung</div>
+            <div>
+                <label htmlFor="namaIbu" className="mb-1 font-medium text-sm">Nama Ibu</label>
+                <Controller
+                    control={control}
+                    name="namaIbu"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Nama Ibu"
+                            id="namaIbu"
+                        />
+                    )}
+                />
+                {errors.namaIbu && <p className="text-red-600 dark:text-red-400 text-xs">{errors.namaIbu.message as string}</p>}
+            </div>
+            <Controller
+                control={control}
+                name="pendidikanIbu"
+                render={({ field }) => (
+                    <SelectControls.Pendidikan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.pendidikanIbu?.message as string}
+                    />
+                )}
+            />
+            <Controller
+                control={control}
+                name="pekerjaanIbu"
+                render={({ field }) => (
+                    <SelectControls.Pekerjaan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.pekerjaanIbu?.message as string}
+                    />
+                )}
+            />
+            <Controller
+                control={control}
+                name="penghasilanIbu"
+                render={({ field }) => (
+                    <SelectControls.Penghasilan
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.penghasilanIbu?.message as string}
+                    />
+                )}
+            />
+
+            {/* Wali & Alamat */}
+            <div className="mt-4 mb-2 font-bold text-base">Data Wali</div>
+            <div>
+                <label htmlFor="namaWali" className="mb-1 font-medium text-sm">Nama Wali</label>
+                <Controller
+                    control={control}
+                    name="namaWali"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Nama Wali"
+                            id="namaWali"
+                        />
+                    )}
+                />
+                {errors.namaWali && <p className="text-red-600 dark:text-red-400 text-xs">{errors.namaWali.message as string}</p>}
+            </div>
+            <div>
+                <label htmlFor="hpWali" className="mb-1 font-medium text-sm">Nomor HP Wali</label>
+                <Controller
+                    control={control}
+                    name="hpWali"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Nomor HP Wali (08xxxxxxxxxx)"
+                            id="hpWali"
+                            type="text"
+                        />
+                    )}
+                />
+                {errors.hpWali && <p className="text-red-600 dark:text-red-400 text-xs">{errors.hpWali.message as string}</p>}
+            </div>
+            <div>
+                <label htmlFor="emailWali" className="mb-1 font-medium text-sm">Email Wali</label>
+                <Controller
+                    control={control}
+                    name="emailWali"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Email Wali"
+                            id="emailWali"
+                            type="email"
+                        />
+                    )}
+                />
+                {errors.emailWali && <p className="text-red-600 dark:text-red-400 text-xs">{errors.emailWali.message as string}</p>}
+            </div>
+            <div>
+                <label htmlFor="alamatWali" className="mb-1 font-medium text-sm">Alamat Orang Tua/Wali</label>
+                <Controller
+                    control={control}
+                    name="alamatWali"
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            placeholder="Alamat lengkap orang tua/wali"
+                            id="alamatWali"
+                        />
+                    )}
+                />
+                {errors.alamatWali && <p className="text-red-600 dark:text-red-400 text-xs">{errors.alamatWali.message as string}</p>}
+            </div>
+        </form>
+    );
+}
+
 // ============================
 // Komponen Konfirmasi Data
 // ============================
@@ -574,6 +828,7 @@ type KonfirmasiDataProps = {
     dokumenMeta?: typeof dokumenList;
     onEditBiodata: () => void;
     onEditBerkas: () => void;
+    onEditOrtu?: () => void;
 };
 
 function KonfirmasiData({
@@ -582,6 +837,7 @@ function KonfirmasiData({
     dokumenMeta,
     onEditBiodata,
     onEditBerkas,
+    onEditOrtu,
 }: KonfirmasiDataProps) {
     // Untuk label opsi select/enum
     const getLabel = (key: string, val: unknown): React.ReactNode => {
@@ -600,6 +856,15 @@ function KonfirmasiData({
                 return BLOOD_TYPE_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "kewarganegaraan":
                 return KEWARGANEGARAAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
+            case "pendidikanAyah":
+            case "pendidikanIbu":
+                return PENDIDIKAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
+            case "pekerjaanAyah":
+            case "pekerjaanIbu":
+                return PEKERJAAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
+            case "penghasilanAyah":
+            case "penghasilanIbu":
+                return PENGHASILAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             default:
                 return String(val ?? "");
         }
@@ -721,6 +986,69 @@ function KonfirmasiData({
                 </table>
             </div>
 
+            {/* Data Orang Tua/Wali Preview */}
+            <div className="mb-8 overflow-x-auto rounded-lg bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700">
+                <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-100 dark:bg-slate-800 dark:border-slate-700">
+                    <div className="font-bold text-base">Data Orang Tua / Wali</div>
+                    <button onClick={onEditOrtu} className="text-blue-500 hover:underline text-sm dark:text-blue-400">Edit</button>
+                </div>
+                <table className="min-w-full text-sm">
+                    <tbody>
+                        {/* Ayah */}
+                        <tr>
+                            <td className="p-2 pl-4 font-medium w-48 text-gray-700 dark:text-gray-300">Nama Ayah</td>
+                            <td className="p-2">{values.namaAyah}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pendidikan Ayah</td>
+                            <td className="p-2">{getLabel("pendidikanAyah", values.pendidikanAyah)}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pekerjaan Ayah</td>
+                            <td className="p-2">{getLabel("pekerjaanAyah", values.pekerjaanAyah)}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Penghasilan Ayah</td>
+                            <td className="p-2">{getLabel("penghasilanAyah", values.penghasilanAyah)}</td>
+                        </tr>
+                        {/* Ibu */}
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Nama Ibu</td>
+                            <td className="p-2">{values.namaIbu}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pendidikan Ibu</td>
+                            <td className="p-2">{getLabel("pendidikanIbu", values.pendidikanIbu)}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pekerjaan Ibu</td>
+                            <td className="p-2">{getLabel("pekerjaanIbu", values.pekerjaanIbu)}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Penghasilan Ibu</td>
+                            <td className="p-2">{getLabel("penghasilanIbu", values.penghasilanIbu)}</td>
+                        </tr>
+                        {/* Wali & Alamat digabung */}
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Nama Wali</td>
+                            <td className="p-2">{values.namaWali}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Nomor HP Wali</td>
+                            <td className="p-2">{values.hpWali}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Email Wali</td>
+                            <td className="p-2">{values.emailWali}</td>
+                        </tr>
+                        <tr>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Alamat Orang Tua/Wali</td>
+                            <td className="p-2">{values.alamatWali}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             {/* Dokumen Preview */}
             <div className="mb-8 overflow-x-auto rounded-lg bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700">
                 <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-100 dark:bg-slate-800 dark:border-slate-700">
@@ -794,6 +1122,18 @@ export default function PPDBPage() {
             tinggiCm: 0,
             riwayatPenyakit: "",
             alamatLengkap: "Jl. Pahlawan No. 1, Masbagik Utara Baru,Masbagik, Lombok Timur, Nusa Tenggara Barat 83661",
+            namaAyah: "",
+            pendidikanAyah: "",
+            pekerjaanAyah: "",
+            penghasilanAyah: "",
+            namaIbu: "",
+            pendidikanIbu: "",
+            pekerjaanIbu: "",
+            penghasilanIbu: "",
+            namaWali: "",
+            hpWali: "",
+            emailWali: "",
+            alamatWali: "",
         },
     });
 
@@ -822,16 +1162,50 @@ export default function PPDBPage() {
     const handleNext = async (e?: React.MouseEvent) => {
         if (e) e.preventDefault();
         if (currentStep === 0) {
-            const valid = await trigger();
-            if (!valid) {
-                toast.error("Isian biodata masih ada yang belum valid.");
+            // Only trigger the fields belonging to step 0
+            // List of biodata fields for step 0 (data diri)
+            const biodataStepFields: (keyof BiodataFields)[] = [
+                "namaLengkap", "nisn", "nik", "asalSekolah", "tempatLahir", "tanggalLahir", "gender", "agama",
+                "keadaanOrtu", "statusKeluarga", "anakKe", "dariBersaudara", "tinggalBersama", "bloodType",
+                "beratKg", "tinggiCm", "riwayatPenyakit", "asalSekolah", "nik",
+                "kewarganegaraan", "alamatJalan", "rt", "rw", "desaKel", "kecamatan", "kabupaten", "provinsi",
+                "kodePos", "phone", "email", "alamatLengkap"
+            ];
+            // Validate only step 0 fields
+            const result = await trigger(biodataStepFields as any, { shouldFocus: true });
+            if (!result) {
+                // Cek field mana yang error, tampilkan error paling atas
+                const firstFieldError = biodataStepFields.find((f) => errors[f]);
+                if (firstFieldError && errors[firstFieldError]) {
+                    toast.error(errors[firstFieldError]?.message as string || "Isian biodata masih ada yang belum valid.");
+                } else {
+                    toast.error("Isian biodata masih ada yang belum valid.");
+                }
                 return;
             }
             setCurrentStep((s) => s + 1);
         } else if (currentStep === 1) {
-            if (!validateBerkas()) return;
+            // Trigger validasi hanya untuk field di step orang tua/wali:
+            const ortuFields: (keyof BiodataFields)[] = [
+                "namaAyah", "pendidikanAyah", "pekerjaanAyah", "penghasilanAyah",
+                "namaIbu", "pendidikanIbu", "pekerjaanIbu", "penghasilanIbu",
+                "namaWali", "hpWali", "emailWali", "alamatWali"
+            ];
+            const result = await trigger(ortuFields as any, { shouldFocus: true });
+            if (!result) {
+                const firstFieldError = ortuFields.find((f) => errors[f]);
+                if (firstFieldError && errors[firstFieldError]) {
+                    toast.error(errors[firstFieldError]?.message as string || "Isian data orang tua/wali masih ada yang belum valid.");
+                } else {
+                    toast.error("Isian data orang tua/wali masih ada yang belum valid.");
+                }
+                return;
+            }
             setCurrentStep((s) => s + 1);
         } else if (currentStep === 2) {
+            if (!validateBerkas()) return;
+            setCurrentStep((s) => s + 1);
+        } else if (currentStep === 3) {
             setLoadingDaftar(true);
             try {
                 // Prepare payload: combine biodata and berkas files (urls)
@@ -873,6 +1247,20 @@ export default function PPDBPage() {
                     berat_kg: biodata.beratKg,
                     tinggi_cm: biodata.tinggiCm,
                     riwayat_penyakit: biodata.riwayatPenyakit,
+
+                    // Data Ortu/Wali
+                    nama_ayah: biodata.namaAyah,
+                    pendidikan_ayah: biodata.pendidikanAyah,
+                    pekerjaan_ayah: biodata.pekerjaanAyah,
+                    penghasilan_ayah: biodata.penghasilanAyah,
+                    nama_ibu: biodata.namaIbu,
+                    pendidikan_ibu: biodata.pendidikanIbu,
+                    pekerjaan_ibu: biodata.pekerjaanIbu,
+                    penghasilan_ibu: biodata.penghasilanIbu,
+                    nama_wali: biodata.namaWali,
+                    hp_wali: biodata.hpWali,
+                    email_wali: biodata.emailWali,
+                    alamat_ortu_wali: biodata.alamatWali,
                 };
 
                 console.log(payload);
@@ -937,6 +1325,8 @@ export default function PPDBPage() {
             case 0:
                 return <BiodataForm control={control} errors={errors} />;
             case 1:
+                return <FormOrtuWali control={control} errors={errors} />;
+            case 2:
                 return (
                     <div>
                         <h2 className="font-bold text-xl mb-1">{steps[currentStep].title}</h2>
@@ -958,7 +1348,7 @@ export default function PPDBPage() {
                         </div>
                     </div>
                 );
-            case 2:
+            case 3:
                 return (
                     <div>
                         <KonfirmasiData
@@ -969,7 +1359,8 @@ export default function PPDBPage() {
                             dokumen={berkas}
                             dokumenMeta={dokumenList}
                             onEditBiodata={() => setCurrentStep(0)}
-                            onEditBerkas={() => setCurrentStep(1)}
+                            onEditBerkas={() => setCurrentStep(2)}
+                            onEditOrtu={() => setCurrentStep(1)}
                         />
                         <div className="flex flex-col gap-3 mt-6">
                             <Button
@@ -1022,7 +1413,7 @@ export default function PPDBPage() {
                     >
                         Sebelumnya
                     </Button>
-                    {currentStep !== 2 && (
+                    {currentStep !== 3 && (
                         <Button
                             onClick={handleNext}
                             disabled={currentStep === steps.length - 1}
