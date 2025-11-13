@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Admin panel page to edit an existing post in the SMPU Hamzanwadi website.",
 };
 
-export default async function EditPostPage({ params }: { params: { slug: string } }) {
+export default async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const post = await getPostBySlug(slug)
 

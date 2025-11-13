@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
@@ -87,50 +87,6 @@ const unggulanSlides = [
         desc: "Kegiatan tadarus, kultum, dan peringatan hari besar Islam.",
         cta: { label: "Lihat Kegiatan", href: "#" }
     }
-]
-
-function ListItem({ title, href, children }: { title: string, href: string, children: React.ReactNode }) {
-    return (
-        <li>
-            <a
-                href={href}
-                className="block rounded-md px-3 py-2 transition-colors hover:bg-primary/10 dark:hover:bg-white/10"
-            >
-                <div className="font-semibold dark:text-white text-gray-900">{title}</div>
-                <div className="text-sm dark:text-gray-300 text-gray-600">{children}</div>
-            </a>
-        </li>
-    )
-}
-
-// Menu utama sekolah
-const navigation = [
-    { name: 'Home', href: '#' },
-    { name: 'About Us', href: '#' },
-    { name: 'News and Event', href: '#' },
-    { name: 'Achievements', href: '#' },
-    // { name: 'Profil', href: '#' },
-    // { name: 'Guru & Staf', href: '#' },
-    // { name: 'Kontak', href: '#' },
-]
-
-// Dropdown menu sekolah
-const components = [
-    {
-        title: "Ekstrakurikuler",
-        href: "#ekstrakurikuler",
-        description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
-    },
-    {
-        title: "Program Unggulan",
-        href: "#unggulan",
-        description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
-    },
-    {
-        title: "KO-Kulikuler",
-        href: "#ko-kulikuler",
-        description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
-    },
 ]
 
 // Dummy data untuk berita, artikel & informasi

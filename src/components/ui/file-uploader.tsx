@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import Image from "next/image";
 
-export type AllowedFolders = 'pas-foto' | 'kartu-keluarga' | 'akta-kelahiran' | 'ijazah'
+export type AllowedFolders = "pas-foto" | "kartu-keluarga" | "akta-kelahiran" | "ijazah";
 
-type BasicUploaderProps = {
+type FileUploaderProps = {
     value?: string;
     onChange?: (filepath: string | null) => void;
     acceptedFileTypes?: string[];
@@ -21,7 +22,45 @@ type BasicUploaderProps = {
     hint?: string;
 };
 
-export default function FileUploader({
+const isImageFile = (filename: string) => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(filename);
+
+const getNormalizedImageSrc = (src: string) => {
+    try {
+        if (typeof window !== "undefined" && src.startsWith(window.location.origin)) {
+            return src.slice(window.location.origin.length);
+        }
+        if (/^https?:\/\/[^/]+\/upload\//.test(src)) {
+            return src.replace(/^https?:\/\/[^/]+/, "");
+        }
+        return src;
+    } catch {
+        return src;
+    }
+};
+
+const isRemote = (src: string) => {
+    if (typeof window !== "undefined") {
+        return src.startsWith("http") && !src.includes(window.location.host);
+    }
+    return false;
+};
+
+type UploadResponseData = {
+    path: string;
+    fullUrl: string;
+    name: string;
+    type: string;
+    size: number;
+};
+
+type UploadResponse = {
+    success: boolean;
+    status: number;
+    message?: string;
+    data?: UploadResponseData;
+};
+
+const FileUploader: React.FC<FileUploaderProps> = ({
     value = "",
     onChange,
     acceptedFileTypes = ["image/*"],
@@ -34,28 +73,33 @@ export default function FileUploader({
     isLoading = false,
     folder,
     hint,
-}: BasicUploaderProps) {
-    const [preview, setPreview] = useState<string>(value || "");
+}) => {
+    const [preview, setPreview] = useState<string>(value);
     const [uploading, setUploading] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string>("");
-    const inputRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setPreview(value || "");
     }, [value]);
 
-    // disables multiple due to logic in code, but keep for extensibility
-    const multiple = allowMultiple && (typeof maxFiles === "undefined" || maxFiles > 1);
+    const multiple =
+        allowMultiple && (typeof maxFiles === "undefined" || maxFiles > 1);
+
+    const resetState = () => {
+        setPreview("");
+        setErrorMsg("");
+        if (onChange) onChange(null);
+        if (inputRef.current) inputRef.current.value = "";
+    };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setErrorMsg(""); // clear previous error
+        setErrorMsg("");
         const file = e.target.files?.[0];
         if (!file) {
-            setPreview("");
-            if (onChange) onChange(null);
+            resetState();
             return;
         }
-
         setUploading(true);
         try {
             const formData = new FormData();
@@ -66,14 +110,14 @@ export default function FileUploader({
                 method: "POST",
                 body: formData,
             });
-            let json;
+
+            let json: UploadResponse;
             try {
                 json = await res.json();
             } catch {
                 setErrorMsg("Upload gagal. Server error.");
                 toast.error("Upload gagal. Server error.");
-                setPreview("");
-                if (onChange) onChange(null);
+                resetState();
                 return;
             }
 
@@ -82,50 +126,42 @@ export default function FileUploader({
                 if (onChange) onChange(json.data.path);
                 setErrorMsg("");
             } else {
-                setPreview("");
+                resetState();
                 setErrorMsg(json?.message || "Upload gagal.");
                 toast.error(json?.message || "Upload gagal.");
-                if (onChange) onChange(null);
             }
         } catch {
-            setPreview("");
+            resetState();
             setErrorMsg("Terjadi kesalahan saat mengupload file.");
             toast.error("Terjadi kesalahan saat mengupload file.");
-            if (onChange) onChange(null);
         } finally {
             setUploading(false);
         }
     };
 
-    const clearFile = () => {
-        setPreview("");
-        setErrorMsg("");
-        if (onChange) onChange(null);
-        if (inputRef.current) {
-            inputRef.current.value = "";
-        }
+    const handleClearFile = () => {
+        resetState();
     };
 
     return (
         <div className={className}>
-            {label && (
-                <label className="block text-sm font-medium mb-2">
-                    {label}
-                </label>
-            )}
-            {/* Display hint if provided */}
+            {label && <label className="block text-sm font-medium mb-2">{label}</label>}
             {hint && !preview && (
                 <div className="mb-2 text-xs text-gray-400 dark:text-gray-500">{hint}</div>
             )}
-            {preview && (
+            {preview ? (
                 <div className="mb-2">
-                    {/* Preview image/file if it's an image */}
-                    {preview.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) ? (
-                        <img
-                            src={preview}
-                            alt="preview"
-                            className="max-h-48 rounded border mb-2"
-                        />
+                    {isImageFile(preview) ? (
+                        <span className="block max-h-48 overflow-hidden rounded border mb-2 relative aspect-square w-32">
+                            <Image
+                                src={getNormalizedImageSrc(preview)}
+                                alt="preview"
+                                className="object-cover"
+                                fill
+                                sizes="128px"
+                                unoptimized={isRemote(preview)}
+                            />
+                        </span>
                     ) : (
                         <a
                             href={preview}
@@ -138,15 +174,14 @@ export default function FileUploader({
                     )}
                     <button
                         type="button"
-                        onClick={clearFile}
+                        onClick={handleClearFile}
                         className="mt-1 text-xs text-red-500 underline"
                         disabled={disabled || uploading || isLoading}
                     >
                         Hapus
                     </button>
                 </div>
-            )}
-            {!preview && (
+            ) : (
                 <Input
                     type="file"
                     ref={inputRef}
@@ -165,4 +200,7 @@ export default function FileUploader({
             )}
         </div>
     );
-}
+};
+
+export default FileUploader;
+

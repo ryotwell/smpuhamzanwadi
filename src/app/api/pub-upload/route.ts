@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({
                 success: false,
                 status: 400,
-                message: 'File size exceeds the 2MB limit',
+                message: 'File size exceeds the 1MB limit',
                 data: null
             }, { status: 400 });
         }

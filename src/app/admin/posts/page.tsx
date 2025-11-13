@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Admin panel page to manage posts in the SMPU Hamzanwadi website.",
 };
 
-export default async function PostsAdminPage({ searchParams }: { searchParams: { page?: string, limit?: string, q?: string } }) {
+export default async function PostsAdminPage({ searchParams }: { searchParams: Promise<{ page?: string, limit?: string, q?: string }> }) {
     const params = await searchParams
 
     const page = Number(params.page) || 1;

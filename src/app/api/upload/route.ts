@@ -35,15 +35,15 @@ async function checkAuthenticated() {
 export async function POST(request: NextRequest) {
     try {
         // ---- Check is authenticated ----
-        // const authResult = await checkAuthenticated();
-        // if (!authResult.isAuthenticated) {
-        //     return NextResponse.json({
-        //         success: false,
-        //         status: 401,
-        //         message: authResult.error,
-        //         data: null
-        //     }, { status: 401 });
-        // }
+        const authResult = await checkAuthenticated();
+        if (!authResult.isAuthenticated) {
+            return NextResponse.json({
+                success: false,
+                status: 401,
+                message: authResult.error,
+                data: null
+            }, { status: 401 });
+        }
 
         // ------------- Continue upload logic as normal -------------
         const data = await request.formData()

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -93,7 +93,7 @@ const biodataSchema = z.object({
     tinggalBersamaLainnya: z.string().optional(),
     kewarganegaraan: z.enum(["WNI", "WNA", "LAINNYA"], "Pilih kewarganegaraan"),
     kewarganegaraanLainnya: z.string().optional(),
-    alamatJalan: z.string().min(5, "Alamat jalan minimal 5 karakter"),
+    alamatJalan: z.string().optional(),
     rt: z.string().optional(),
     rw: z.string().optional(),
     desaKel: z.string().min(2, "Desa/Kelurahan minimal 2 karakter"),
@@ -114,7 +114,7 @@ type BiodataFields = z.infer<typeof biodataSchema>;
 
 const dokumenList = [
     {
-        label: "Pas Foto 3x4 (JPG/PNG)",
+        label: "Pas Foto 4x4 (JPG/PNG)",
         field: "pasfoto",
         hint: "Wajib background merah atau biru. Max 2MB.",
         acceptedFileTypes: ["image/jpeg", "image/png"],
@@ -327,9 +327,14 @@ function TanggalLahirPicker({
     );
 }
 
-// Generalized select controls for form:
+type SelectControlProps = {
+    value: string;
+    onChange: (val: string) => void;
+    error?: string;
+};
+
 const SelectControls = {
-    Agama: (props: any) => (
+    Agama: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Agama"
@@ -337,7 +342,7 @@ const SelectControls = {
             placeholder="Pilih Agama"
         />
     ),
-    KeadaanOrtu: (props: any) => (
+    KeadaanOrtu: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Keadaan Orang Tua"
@@ -345,7 +350,7 @@ const SelectControls = {
             placeholder="Pilih Keadaan"
         />
     ),
-    StatusKeluarga: (props: any) => (
+    StatusKeluarga: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Status Keluarga"
@@ -353,7 +358,7 @@ const SelectControls = {
             placeholder="Pilih Status"
         />
     ),
-    TinggalBersama: (props: any) => (
+    TinggalBersama: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Tinggal Bersama"
@@ -361,7 +366,7 @@ const SelectControls = {
             placeholder="Pilih Tinggal Bersama"
         />
     ),
-    BloodType: (props: any) => (
+    BloodType: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Golongan Darah"
@@ -369,7 +374,7 @@ const SelectControls = {
             placeholder="Pilih Golongan Darah"
         />
     ),
-    Kewarganegaraan: (props: any) => (
+    Kewarganegaraan: (props: SelectControlProps) => (
         <LabeledSelect
             {...props}
             label="Kewarganegaraan"
@@ -379,13 +384,15 @@ const SelectControls = {
     ),
 };
 
+type BiodataFormProps = {
+    control: Control<BiodataFields>;
+    errors: FieldErrors<BiodataFields>;
+};
+
 function BiodataForm({
     control,
     errors,
-}: {
-    control: any;
-    errors: any;
-}) {
+}: BiodataFormProps) {
     const textInput = (
         name: keyof BiodataFields,
         label: string,
@@ -408,7 +415,7 @@ function BiodataForm({
                     />
                 )}
             />
-            {errors[name] && <p className="text-red-600 dark:text-red-400 text-xs">{errors[name]?.message}</p>}
+            {errors[name] && <p className="text-red-600 dark:text-red-400 text-xs">{errors[name]?.message as string}</p>}
         </div>
     );
 
@@ -433,7 +440,7 @@ function BiodataForm({
                     />
                 )}
             />
-            {errors[name] && <p className="text-red-600 dark:text-red-400 text-xs">{errors[name]?.message}</p>}
+            {errors[name] && <p className="text-red-600 dark:text-red-400 text-xs">{errors[name]?.message as string}</p>}
         </div>
     );
 
@@ -453,7 +460,7 @@ function BiodataForm({
                     <TanggalLahirPicker
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.tanggalLahir?.message}
+                        error={errors.tanggalLahir?.message as string | undefined}
                     />
                 )}
             />
@@ -464,7 +471,7 @@ function BiodataForm({
                     <JenisKelaminRadio
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.gender?.message}
+                        error={errors.gender?.message as string | undefined}
                     />
                 )}
             />
@@ -475,7 +482,7 @@ function BiodataForm({
                     <SelectControls.Agama
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.agama?.message}
+                        error={errors.agama?.message as string | undefined}
                     />
                 )}
             />
@@ -486,7 +493,7 @@ function BiodataForm({
                     <SelectControls.KeadaanOrtu
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.keadaanOrtu?.message}
+                        error={errors.keadaanOrtu?.message as string | undefined}
                     />
                 )}
             />
@@ -497,7 +504,7 @@ function BiodataForm({
                     <SelectControls.StatusKeluarga
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.statusKeluarga?.message}
+                        error={errors.statusKeluarga?.message as string | undefined}
                     />
                 )}
             />
@@ -510,7 +517,7 @@ function BiodataForm({
                     <SelectControls.TinggalBersama
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.tinggalBersama?.message}
+                        error={errors.tinggalBersama?.message as string | undefined}
                     />
                 )}
             />
@@ -521,7 +528,7 @@ function BiodataForm({
                     <SelectControls.BloodType
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.bloodType?.message}
+                        error={errors.bloodType?.message as string | undefined}
                     />
                 )}
             />
@@ -538,7 +545,7 @@ function BiodataForm({
                     <SelectControls.Kewarganegaraan
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.kewarganegaraan?.message}
+                        error={errors.kewarganegaraan?.message as string | undefined}
                     />
                 )}
             />
@@ -561,46 +568,48 @@ function BiodataForm({
 // Komponen Konfirmasi Data
 // ============================
 
+type KonfirmasiDataProps = {
+    values: BiodataFields;
+    dokumen: BerkasFields;
+    dokumenMeta?: typeof dokumenList;
+    onEditBiodata: () => void;
+    onEditBerkas: () => void;
+};
+
 function KonfirmasiData({
     values,
     dokumen,
     dokumenMeta,
     onEditBiodata,
     onEditBerkas,
-}: {
-    values: BiodataFields,
-    dokumen: BerkasFields,
-    dokumenMeta?: typeof dokumenList,
-    onEditBiodata: () => void,
-    onEditBerkas: () => void,
-}) {
+}: KonfirmasiDataProps) {
     // Untuk label opsi select/enum
-    const getLabel = (key: string, val: any) => {
+    const getLabel = (key: string, val: unknown): React.ReactNode => {
         switch (key) {
             case "gender":
                 return val === "MALE" ? "Laki-laki" : "Perempuan";
             case "agama":
-                return AGAMA_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return AGAMA_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "keadaanOrtu":
-                return KEADAAN_ORTU_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return KEADAAN_ORTU_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "statusKeluarga":
-                return STATUS_KELUARGA_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return STATUS_KELUARGA_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "tinggalBersama":
-                return TINGGAL_BERSAMA_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return TINGGAL_BERSAMA_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "bloodType":
-                return BLOOD_TYPE_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return BLOOD_TYPE_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "kewarganegaraan":
-                return KEWARGANEGARAAN_OPTIONS.find((x) => x.value === val)?.label ?? val;
+                return KEWARGANEGARAAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             default:
-                return val;
+                return String(val ?? "");
         }
     };
 
     return (
         <div>
-            <h2 className="font-bold text-xl mb-1">Periksa & Konfirmasi Pendaftaran</h2>
+            <h2 className="font-bold text-xl mb-1">Periksa &amp; Konfirmasi Pendaftaran</h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-                Silakan <span className="font-semibold text-blue-600 dark:text-blue-400">periksa ulang</span> seluruh data anda sebelum menekan tombol <b>Konfirmasi & Daftar</b>. Jika ada <b>data yang salah</b>, silakan klik tombol "Edit".
+                Silakan <span className="font-semibold text-blue-600 dark:text-blue-400">periksa ulang</span> seluruh data anda sebelum menekan tombol <b>Konfirmasi &amp; Daftar</b>. Jika ada <b>data yang salah</b>, silakan klik tombol &quot;Edit&quot;.
             </p>
             {/* Biodata preview */}
             <div className="mb-8 overflow-x-auto rounded-lg bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700">
@@ -659,7 +668,7 @@ function KonfirmasiData({
                             <td className="p-2">{getLabel("bloodType", values.bloodType)}</td>
                         </tr>
                         <tr>
-                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Berat & Tinggi Badan</td>
+                            <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Berat &amp; Tinggi Badan</td>
                             <td className="p-2">{values.beratKg} kg, {values.tinggiCm} cm</td>
                         </tr>
                         {values.riwayatPenyakit && (
@@ -745,11 +754,11 @@ function KonfirmasiData({
 }
 
 export default function PPDBPage() {
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep, setCurrentStep] = React.useState(0);
     const {
         control,
         trigger,
-        formState: { errors, isValid, dirtyFields },
+        formState: { errors },
         getValues,
     } = useForm<BiodataFields>({
         resolver: zodResolver(biodataSchema),
@@ -770,25 +779,25 @@ export default function PPDBPage() {
             tinggalBersama: "ORANG_TUA",
             tinggalBersamaLainnya: "",
             kewarganegaraan: "WNI",
-            alamatJalan: "Jl. Pahlawan No. 1",
+            alamatJalan: "",
             rt: "",
             rw: "",
             desaKel: "Masbagik Utara Baru",
             kecamatan: "Masbagik",
             kabupaten: "Lombok Timur",
             provinsi: "Nusa Tenggara Barat",
-            kodePos: "83662",
+            kodePos: "83661",
             phone: "0812303923490",
             email: "ytryo789@gmail.com",
             bloodType: "UNKNOWN",
             beratKg: 0,
             tinggiCm: 0,
             riwayatPenyakit: "",
-            alamatLengkap: "Jl. Pahlawan No. 1, Masbagik, Lombok Timur, Nusa Tenggara Barat 83662",
+            alamatLengkap: "Jl. Pahlawan No. 1, Masbagik Utara Baru,Masbagik, Lombok Timur, Nusa Tenggara Barat 83661",
         },
     });
 
-    const [berkas, setBerkas] = useState<BerkasFields>({
+    const [berkas, setBerkas] = React.useState<BerkasFields>({
         pasfoto: null,
         kk: null,
         akta: null,
@@ -796,7 +805,7 @@ export default function PPDBPage() {
     });
 
     // Untuk tombol loading submit konfirmasi
-    const [loadingDaftar, setLoadingDaftar] = useState(false);
+    const [loadingDaftar, setLoadingDaftar] = React.useState(false);
 
     const validateBerkas = () => {
         let errorMsg = "";
@@ -846,9 +855,25 @@ export default function PPDBPage() {
                             : "Terjadi kesalahan saat menyimpan data. Silakan coba lagi."
                     );
                 }
-            } catch (err: any) {
+            } catch (err) {
+                console.error(err);
+
                 setLoadingDaftar(false);
-                if (err.response && err.response.data && err.response.data.message) {
+
+                // error type narrowing
+                if (
+                    typeof err === "object" &&
+                    err !== null &&
+                    "response" in err &&
+                    err.response &&
+                    typeof err.response === "object" &&
+                    err.response !== null &&
+                    "data" in err.response &&
+                    err.response.data &&
+                    typeof err.response.data === "object" &&
+                    err.response.data !== null &&
+                    "message" in err.response.data
+                ) {
                     toast.error(`Pendaftaran gagal: ${err.response.data.message}`);
                 } else {
                     toast.error("Pendaftaran gagal, terjadi masalah saat koneksi ke server.");
