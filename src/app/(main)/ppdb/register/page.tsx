@@ -2,7 +2,7 @@
 
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
+import { useForm, Controller, Control, FieldErrors, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,10 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
+import { APIPATHS } from "@/lib/constants";
+import { AxiosError, AxiosResponse } from "axios";
+import { StandardApiResponse } from "@/types/api";
+import { Student } from "@/types/model";
 
 const JENIS_KELAMIN_OPTIONS = [
     { value: "MALE", label: "Laki-laki" },
@@ -30,7 +34,7 @@ const JENIS_KELAMIN_OPTIONS = [
 
 const AGAMA_OPTIONS = [
     { value: "ISLAM", label: "Islam" },
-    { value: "CHRISTIAN_PROTESTANT", label: "Kristen Protestan" },
+    { value: "CHRISTIAN", label: "Kristen" },
     { value: "CATHOLIC", label: "Katolik" },
     { value: "HINDU", label: "Hindu" },
     { value: "BUDDHA", label: "Buddha" },
@@ -106,6 +110,7 @@ const PENGHASILAN_OPTIONS = [
     // { value: "TIDAK_ADA", label: "Tidak Ada" },
 ];
 
+// Tambahan untuk input pekerjaan ayah/ibu lainnya
 const biodataSchema = z.object({
     namaLengkap: z.string().min(2, "Nama harus minimal 2 karakter").max(64, "Nama maksimal 64 karakter"),
     nisn: z.string().min(10, "NISN harus 10 digit angka").max(10, "NISN harus 10 digit angka").regex(/^\d{10}$/, "NISN harus 10 digit angka"),
@@ -142,10 +147,12 @@ const biodataSchema = z.object({
     namaAyah: z.string().min(2, "Nama ayah wajib diisi"),
     pendidikanAyah: z.enum(PENDIDIKAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pendidikan ayah wajib dipilih"),
     pekerjaanAyah: z.enum(PEKERJAAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pekerjaan ayah wajib dipilih"),
+    pekerjaanAyahLainnya: z.string().optional(),
     penghasilanAyah: z.enum(PENGHASILAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Penghasilan ayah wajib dipilih"),
     namaIbu: z.string().min(2, "Nama ibu wajib diisi"),
     pendidikanIbu: z.enum(PENDIDIKAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pendidikan ibu wajib dipilih"),
     pekerjaanIbu: z.enum(PEKERJAAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pekerjaan ibu wajib dipilih"),
+    pekerjaanIbuLainnya: z.string().optional(),
     penghasilanIbu: z.enum(PENGHASILAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Penghasilan ibu wajib dipilih"),
     namaWali: z.string().min(2, "Nama wali wajib diisi"),
     hpWali: z.string().min(8, "Nomor HP wali minimal 8 digit").max(18, "Nomor HP wali tidak boleh lebih dari 18 karakter").regex(/^08\d{7,16}$/, "Nomor HP wali harus dimulai dari 08 dan angka"),
@@ -224,10 +231,10 @@ function Stepper({ currentStep }: { currentStep: number }) {
                         </div>
                         <div
                             className={`mt-3 text-sm font-semibold transition-colors duration-300 text-center ${currentStep === idx
-                                    ? "text-blue-700 dark:text-blue-400"
-                                    : currentStep > idx
-                                        ? "text-green-700 dark:text-green-400"
-                                        : "text-gray-400 dark:text-gray-500"
+                                ? "text-blue-700 dark:text-blue-400"
+                                : currentStep > idx
+                                    ? "text-green-700 dark:text-green-400"
+                                    : "text-gray-400 dark:text-gray-500"
                                 }`}
                         >
                             {step.title}
@@ -638,7 +645,11 @@ type FormOrtuProps = {
     errors: FieldErrors<BiodataFields>;
 };
 
+// FormOrtuWali: Menampilkan input pekerjaan jika pekerjaan LAINNYA dipilih
 function FormOrtuWali({ control, errors }: FormOrtuProps) {
+    const pekerjaanAyah = useWatch({ control, name: "pekerjaanAyah" });
+    const pekerjaanIbu = useWatch({ control, name: "pekerjaanIbu" });
+
     return (
         <form className="space-y-5">
             <div>
@@ -687,6 +698,26 @@ function FormOrtuWali({ control, errors }: FormOrtuProps) {
                     />
                 )}
             />
+            {/* Tambahan input pekerjaan ayah jika Lainnya */}
+            {pekerjaanAyah === "LAINNYA" && (
+                <div>
+                    <label htmlFor="pekerjaanAyahLainnya" className="mb-1 font-medium text-sm">Pekerjaan Ayah (Lainnya)</label>
+                    <Controller
+                        control={control}
+                        name="pekerjaanAyahLainnya"
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                placeholder="Tulis pekerjaan ayah"
+                                id="pekerjaanAyahLainnya"
+                            />
+                        )}
+                    />
+                    {errors.pekerjaanAyahLainnya && (
+                        <p className="text-red-600 dark:text-red-400 text-xs">{errors.pekerjaanAyahLainnya.message as string}</p>
+                    )}
+                </div>
+            )}
             <Controller
                 control={control}
                 name="penghasilanAyah"
@@ -738,6 +769,26 @@ function FormOrtuWali({ control, errors }: FormOrtuProps) {
                     />
                 )}
             />
+            {/* Tambahan input pekerjaan ibu jika Lainnya */}
+            {pekerjaanIbu === "LAINNYA" && (
+                <div>
+                    <label htmlFor="pekerjaanIbuLainnya" className="mb-1 font-medium text-sm">Pekerjaan Ibu (Lainnya)</label>
+                    <Controller
+                        control={control}
+                        name="pekerjaanIbuLainnya"
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                placeholder="Tulis pekerjaan ibu"
+                                id="pekerjaanIbuLainnya"
+                            />
+                        )}
+                    />
+                    {errors.pekerjaanIbuLainnya && (
+                        <p className="text-red-600 dark:text-red-400 text-xs">{errors.pekerjaanIbuLainnya.message as string}</p>
+                    )}
+                </div>
+            )}
             <Controller
                 control={control}
                 name="penghasilanIbu"
@@ -840,7 +891,7 @@ function KonfirmasiData({
     onEditOrtu,
 }: KonfirmasiDataProps) {
     // Untuk label opsi select/enum
-    const getLabel = (key: string, val: unknown): React.ReactNode => {
+    const getLabel = (key: string, val: unknown, valuesObj?: Partial<BiodataFields>): React.ReactNode => {
         switch (key) {
             case "gender":
                 return val === "MALE" ? "Laki-laki" : "Perempuan";
@@ -860,7 +911,14 @@ function KonfirmasiData({
             case "pendidikanIbu":
                 return PENDIDIKAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "pekerjaanAyah":
+                if (val === "LAINNYA" && valuesObj && valuesObj.pekerjaanAyahLainnya) {
+                    return `Lainnya: ${valuesObj.pekerjaanAyahLainnya}`;
+                }
+                return PEKERJAAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "pekerjaanIbu":
+                if (val === "LAINNYA" && valuesObj && valuesObj.pekerjaanIbuLainnya) {
+                    return `Lainnya: ${valuesObj.pekerjaanIbuLainnya}`;
+                }
                 return PEKERJAAN_OPTIONS.find((x) => x.value === val)?.label ?? String(val ?? "");
             case "penghasilanAyah":
             case "penghasilanIbu":
@@ -1005,7 +1063,7 @@ function KonfirmasiData({
                         </tr>
                         <tr>
                             <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pekerjaan Ayah</td>
-                            <td className="p-2">{getLabel("pekerjaanAyah", values.pekerjaanAyah)}</td>
+                            <td className="p-2">{getLabel("pekerjaanAyah", values.pekerjaanAyah, values)}</td>
                         </tr>
                         <tr>
                             <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Penghasilan Ayah</td>
@@ -1022,7 +1080,7 @@ function KonfirmasiData({
                         </tr>
                         <tr>
                             <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Pekerjaan Ibu</td>
-                            <td className="p-2">{getLabel("pekerjaanIbu", values.pekerjaanIbu)}</td>
+                            <td className="p-2">{getLabel("pekerjaanIbu", values.pekerjaanIbu, values)}</td>
                         </tr>
                         <tr>
                             <td className="p-2 pl-4 font-medium text-gray-700 dark:text-gray-300">Penghasilan Ibu</td>
@@ -1122,26 +1180,34 @@ export default function PPDBPage() {
             tinggiCm: 0,
             riwayatPenyakit: "",
             alamatLengkap: "Jl. Pahlawan No. 1, Masbagik Utara Baru,Masbagik, Lombok Timur, Nusa Tenggara Barat 83661",
-            namaAyah: "",
-            pendidikanAyah: "",
-            pekerjaanAyah: "",
-            penghasilanAyah: "",
-            namaIbu: "",
-            pendidikanIbu: "",
-            pekerjaanIbu: "",
-            penghasilanIbu: "",
-            namaWali: "",
-            hpWali: "",
-            emailWali: "",
-            alamatWali: "",
+
+            namaAyah: "M. Zarnuji",
+            pendidikanAyah: "SMA",
+            pekerjaanAyah: "PETANI",
+            pekerjaanAyahLainnya: "",
+            penghasilanAyah: "<=1000000",
+            namaIbu: "Rohilah",
+            pendidikanIbu: "SD",
+            pekerjaanIbu: "PETANI",
+            pekerjaanIbuLainnya: "",
+            penghasilanIbu: "<=1000000",
+            namaWali: "TGH. Ahda Hamzanwadi",
+            hpWali: "081233344455",
+            emailWali: "ahda@gmail.com",
+            alamatWali: "Masbagik Lombok Timur",
         },
     });
 
     const [berkas, setBerkas] = React.useState<BerkasFields>({
-        pasfoto: null,
-        kk: null,
-        akta: null,
-        ijazah: null,
+        // pasfoto: null,
+        // kk: null,
+        // akta: null,
+        // ijazah: null,
+
+        pasfoto: '/upload/pas-foto/1762982011206-6b89ab556a46e29a9858b8435da098e6.jpg',
+        kk: '/upload/kartu-keluarga/1763048491080-84fcb48afdb83fae2cc175e391e12280.pdf',
+        akta: '/upload/akta-kelahiran/1763048495235-e2076a82f00d53198504f94dd8661218.pdf',
+        ijazah: '/upload/ijazah/1763048498545-17759912f9d0c6a4df127a248ba906db.pdf',
     });
 
     // Untuk tombol loading submit konfirmasi
@@ -1187,8 +1253,8 @@ export default function PPDBPage() {
         } else if (currentStep === 1) {
             // Trigger validasi hanya untuk field di step orang tua/wali:
             const ortuFields: (keyof BiodataFields)[] = [
-                "namaAyah", "pendidikanAyah", "pekerjaanAyah", "penghasilanAyah",
-                "namaIbu", "pendidikanIbu", "pekerjaanIbu", "penghasilanIbu",
+                "namaAyah", "pendidikanAyah", "pekerjaanAyah", "pekerjaanAyahLainnya", "penghasilanAyah",
+                "namaIbu", "pendidikanIbu", "pekerjaanIbu", "pekerjaanIbuLainnya", "penghasilanIbu",
                 "namaWali", "hpWali", "emailWali", "alamatWali"
             ];
             const result = await trigger(ortuFields as any, { shouldFocus: true });
@@ -1207,70 +1273,69 @@ export default function PPDBPage() {
             setCurrentStep((s) => s + 1);
         } else if (currentStep === 3) {
             setLoadingDaftar(true);
-            try {
-                // Prepare payload: combine biodata and berkas files (urls)
-                const biodata = getValues();
-                const payload = {
-                    full_name: biodata.namaLengkap,
-                    nisn: biodata.nisn,
-                    nik: biodata.nik,
 
-                    asal_sekolah: biodata.asalSekolah,
-                    gender: biodata.gender,
-                    tempat_lahir: biodata.tempatLahir,
-                    tanggal_lahir: biodata.tanggalLahir,
-                    agama: biodata.agama,
-                    keadaan_ortu: biodata.keadaanOrtu,
-                    status_keluarga: biodata.statusKeluarga,
-                    anak_ke: biodata.anakKe,
-                    dari_bersaudara: biodata.dariBersaudara,
-                    tinggal_bersama: biodata.tinggalBersama,
-                    tinggal_bersama_lainnya: biodata.tinggalBersamaLainnya,
-                    kewarganegaraan: biodata.kewarganegaraan,
-                    alamat_jalan: biodata.alamatJalan,
-                    rt: biodata.rt,
-                    rw: biodata.rw,
-                    desa_kel: biodata.desaKel,
-                    kecamatan: biodata.kecamatan,
-                    kabupaten: biodata.kabupaten,
-                    provinsi: biodata.provinsi,
-                    kode_pos: biodata.kodePos,
-                    phone: biodata.phone,
-                    email: biodata.email,
 
-                    pas_foto: berkas.pasfoto,
-                    kartu_keluarga: berkas.kk,
-                    akta_kelahiran: berkas.akta,
-                    ijazah_skl: berkas.ijazah,
+            const biodata = getValues();
+            const payload = {
+                full_name: biodata.namaLengkap,
+                nisn: biodata.nisn,
+                nik: biodata.nik,
 
-                    blood_type: biodata.bloodType,
-                    berat_kg: biodata.beratKg,
-                    tinggi_cm: biodata.tinggiCm,
-                    riwayat_penyakit: biodata.riwayatPenyakit,
+                asal_sekolah: biodata.asalSekolah,
+                gender: biodata.gender,
+                tempat_lahir: biodata.tempatLahir,
+                tanggal_lahir: biodata.tanggalLahir,
+                agama: biodata.agama,
+                keadaan_ortu: biodata.keadaanOrtu,
+                status_keluarga: biodata.statusKeluarga,
+                anak_ke: biodata.anakKe,
+                dari_bersaudara: biodata.dariBersaudara,
+                tinggal_bersama: biodata.tinggalBersama,
+                tinggal_bersama_lainnya: biodata.tinggalBersamaLainnya,
+                kewarganegaraan: biodata.kewarganegaraan,
+                alamat_jalan: biodata.alamatJalan,
+                rt: biodata.rt,
+                rw: biodata.rw,
+                desa_kelurahan: biodata.desaKel,
+                kecamatan: biodata.kecamatan,
+                kabupaten: biodata.kabupaten,
+                provinsi: biodata.provinsi,
+                kode_pos: biodata.kodePos,
+                phone: biodata.phone,
+                email: biodata.email,
 
-                    // Data Ortu/Wali
-                    nama_ayah: biodata.namaAyah,
-                    pendidikan_ayah: biodata.pendidikanAyah,
-                    pekerjaan_ayah: biodata.pekerjaanAyah,
-                    penghasilan_ayah: biodata.penghasilanAyah,
-                    nama_ibu: biodata.namaIbu,
-                    pendidikan_ibu: biodata.pendidikanIbu,
-                    pekerjaan_ibu: biodata.pekerjaanIbu,
-                    penghasilan_ibu: biodata.penghasilanIbu,
-                    nama_wali: biodata.namaWali,
-                    hp_wali: biodata.hpWali,
-                    email_wali: biodata.emailWali,
+                blood_type: biodata.bloodType,
+                berat_kg: biodata.beratKg,
+                tinggi_cm: biodata.tinggiCm,
+                riwayat_penyakit: biodata.riwayatPenyakit,
+
+                // berkas calon peserta didik
+                photo: berkas.pasfoto,
+                kartu_keluarga: berkas.kk,
+                akta_kelahiran: berkas.akta,
+                ijazah_skl: berkas.ijazah,
+
+                parent: {
+                    // orang tua
+                    father_name: biodata.namaAyah,
+                    father_education: biodata.pendidikanAyah,
+                    father_job: biodata.pekerjaanAyah === "LAINNYA" && biodata.pekerjaanAyahLainnya ? biodata.pekerjaanAyahLainnya : biodata.pekerjaanAyah,
+                    father_income: biodata.penghasilanAyah,
+                    mother_name: biodata.namaIbu,
+                    mother_education: biodata.pendidikanIbu,
+                    mother_job: biodata.pekerjaanIbu === "LAINNYA" && biodata.pekerjaanIbuLainnya ? biodata.pekerjaanIbuLainnya : biodata.pekerjaanIbu,
+                    mother_income: biodata.penghasilanIbu,
+
+                    // wali
+                    wali_name: biodata.namaWali,
+                    parent_email: biodata.emailWali,
+                    no_hp_ortu_wali: biodata.hpWali,
                     alamat_ortu_wali: biodata.alamatWali,
-                };
+                }
+            };
 
-                console.log(payload);
-
-                const response = await axios.post("/ppdb/pendaftaran", payload);
-
-                setLoadingDaftar(false);
-
-                // Could validate response: response.data.success etc.
-                if (response.data && (response.data.success || response.data.status === "success")) {
+            axios.post(APIPATHS.STORESTUDENTPPDB, payload).then((response: AxiosResponse<StandardApiResponse<Student>>) => {
+                if (response.data && response.data.success) {
                     setCurrentStep((s) => s + 1);
                     toast.success("Pendaftaran berhasil dikonfirmasi!");
                 } else {
@@ -1280,30 +1345,17 @@ export default function PPDBPage() {
                             : "Terjadi kesalahan saat menyimpan data. Silakan coba lagi."
                     );
                 }
-            } catch (err) {
-                console.error(err);
-
+            }).catch((err: AxiosError<StandardApiResponse>) => {
                 setLoadingDaftar(false);
 
-                // error type narrowing
                 if (
-                    typeof err === "object" &&
-                    err !== null &&
-                    "response" in err &&
-                    err.response &&
-                    typeof err.response === "object" &&
-                    err.response !== null &&
-                    "data" in err.response &&
-                    err.response.data &&
-                    typeof err.response.data === "object" &&
-                    err.response.data !== null &&
-                    "message" in err.response.data
+                    err.response?.data?.message !== undefined
                 ) {
                     toast.error(`Pendaftaran gagal: ${err.response.data.message}`);
                 } else {
                     toast.error("Pendaftaran gagal, terjadi masalah saat koneksi ke server.");
                 }
-            }
+            }).finally(() => setLoadingDaftar(false));
         } else {
             setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
         }

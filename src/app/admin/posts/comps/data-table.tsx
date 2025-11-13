@@ -50,6 +50,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog"
+import { Meta } from "@/types/api"
 
 async function deletePost(slug: string) {
     if (!slug) return;
@@ -204,11 +205,6 @@ export const columns: ColumnDef<Post>[] = [
         },
     },
 ]
-
-export interface Meta {
-    limit: number;
-    page: number;
-}
 
 export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
     const router = useRouter();

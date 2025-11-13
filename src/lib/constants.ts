@@ -12,13 +12,15 @@ export const APIPATHS = {
     // STOREPOST: '/posts',
     // UPDATEPOST: '/posts',
     // DELETE: '/posts',
+    // STORESTUDENTPPDB: '/ppdb/pendaftaran'
 
     // farid
     SIGNIN: '/user/login',
     FETCHPOSTS: '/post/get-all',
     FINDPOST: '/post/get',
     STOREPOST: '/post/add',
-
     UPDATEPOST: '/post/update',
     DELETE: '/post/delete',
+
+    STORESTUDENTPPDB: '/ppdb/add'
 } as const

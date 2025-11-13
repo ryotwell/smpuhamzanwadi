@@ -1,7 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
-import { DataTable, Meta } from "./comps/data-table";
+import { DataTable } from "./comps/data-table";
 import { getPosts } from "./comps/actions";
+import { Meta } from "@/types/api";
 
 export const metadata: Metadata = {
     title: "Posts | Admin",
