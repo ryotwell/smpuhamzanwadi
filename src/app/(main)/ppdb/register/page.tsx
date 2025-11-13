@@ -837,10 +837,47 @@ export default function PPDBPage() {
                 // Prepare payload: combine biodata and berkas files (urls)
                 const biodata = getValues();
                 const payload = {
-                    biodata: biodata,
-                    dokumen: berkas,
+                    full_name: biodata.namaLengkap,
+                    nisn: biodata.nisn,
+                    nik: biodata.nik,
+
+                    asal_sekolah: biodata.asalSekolah,
+                    gender: biodata.gender,
+                    tempat_lahir: biodata.tempatLahir,
+                    tanggal_lahir: biodata.tanggalLahir,
+                    agama: biodata.agama,
+                    keadaan_ortu: biodata.keadaanOrtu,
+                    status_keluarga: biodata.statusKeluarga,
+                    anak_ke: biodata.anakKe,
+                    dari_bersaudara: biodata.dariBersaudara,
+                    tinggal_bersama: biodata.tinggalBersama,
+                    tinggal_bersama_lainnya: biodata.tinggalBersamaLainnya,
+                    kewarganegaraan: biodata.kewarganegaraan,
+                    alamat_jalan: biodata.alamatJalan,
+                    rt: biodata.rt,
+                    rw: biodata.rw,
+                    desa_kel: biodata.desaKel,
+                    kecamatan: biodata.kecamatan,
+                    kabupaten: biodata.kabupaten,
+                    provinsi: biodata.provinsi,
+                    kode_pos: biodata.kodePos,
+                    phone: biodata.phone,
+                    email: biodata.email,
+
+                    pas_foto: berkas.pasfoto,
+                    kartu_keluarga: berkas.kk,
+                    akta_kelahiran: berkas.akta,
+                    ijazah_skl: berkas.ijazah,
+
+                    blood_type: biodata.bloodType,
+                    berat_kg: biodata.beratKg,
+                    tinggi_cm: biodata.tinggiCm,
+                    riwayat_penyakit: biodata.riwayatPenyakit,
                 };
-                const response = await axios.post("/student/add", payload);
+
+                console.log(payload);
+
+                const response = await axios.post("/ppdb/pendaftaran", payload);
 
                 setLoadingDaftar(false);
 
