@@ -1,10 +1,15 @@
 import React from "react";
-import axios from "@/lib/axios";
-import { Post, StandardApiResponse } from "@/types/post";
 import Image from "next/image";
-import "../../../tinymce.css"
-import { Header } from "../../header";
+
 import { APIPATHS } from "@/lib/constants";
+import axios from "@/lib/axios";
+
+import { Header } from "../../header";
+
+import { Post } from "@/types/post";
+import { StandardApiResponse } from "@/types/api";
+
+import "../../../tinymce.css";
 
 export const dynamic = "force-dynamic";
 
