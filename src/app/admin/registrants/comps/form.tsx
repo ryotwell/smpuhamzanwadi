@@ -19,7 +19,7 @@ import { ParentForm } from "./parent-form";
 
 import * as studentLib from '@/lib/model/student'
 import { BiodataForm } from "./biodata-form";
-import useStudent from "@/hooks/useStudent";
+import useStudent, { StudentFormMode } from "@/hooks/useStudent";
 
 export const dokumenList = [
     {
@@ -267,10 +267,11 @@ export const SelectControls = {
 
 interface IStudentFormProps {
     student: Student
+    formMode: StudentFormMode
 };
 
-export const StudentForm: FC<IStudentFormProps> = ({ student }) => {
-    const { berkas, control, errors, onSubmit, setBerkas, submitLoading } = useStudent({ student, formMode: 'UPDATE' })
+export const StudentForm: FC<IStudentFormProps> = ({ student, formMode }) => {
+    const { berkas, control, errors, onSubmit, setBerkas, submitLoading } = useStudent({ student, formMode })
 
     return (
         <>
@@ -329,7 +330,7 @@ export const StudentForm: FC<IStudentFormProps> = ({ student }) => {
                         type="button"
                         className="mt-5"
                     >
-                        {student ? 'Update' : 'Create'}
+                        {formMode === 'CREATE' ? 'Create' : 'Update'}
                     </Button>
                 </div>
             </div>

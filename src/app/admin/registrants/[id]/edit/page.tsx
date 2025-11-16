@@ -22,7 +22,7 @@ export default async function EditRegistrantPage({ params }: { params: Promise<{
 
     return (
         <div className="grid grid-cols-12 gap-4 md:gap-6">
-            <StudentForm student={student} />
+            <StudentForm student={student} formMode="UPDATE" />
         </div>
     );
 }
