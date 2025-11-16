@@ -23,6 +23,17 @@ import { BerkasFields, dokumenList } from "@/app/admin/registrants/comps/form";
 import useStudent from "@/hooks/useStudent";
 import { ParentForm } from "@/app/admin/registrants/comps/parent-form";
 
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
+
 const steps = [
     { title: "Lengkapi Data", description: "Data diri dan identitas lengkap" },
     { title: "Data Orang Tua/Wali", description: "Data orang tua/wali" },
@@ -456,43 +467,53 @@ export default function PPDBPage() {
     }, [currentStep, control, errors, berkas, getValues, setBerkas, submitLoading, handleNext, formatTanggalLahir]);
 
     return (
-        <div className="max-w-2xl mx-auto py-10 px-4">
-            <div className="flex justify-center mb-6">
-                <Image
-                    src={config.appLogoPanjang}
-                    alt="Logo SMP Unggulan Hamzanwadi"
-                    loading="lazy"
-                    width={150}
-                    height={150}
-                />
+        <>
+            <div className="fixed top-5 right-5 z-50">
+                <ThemeToggleButton />
             </div>
-            <div className="text-center mb-6">
-                <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">Pendaftaran Peserta Didik Baru</h1>
-                <p className="text-gray-600 dark:text-gray-200 text-base sm:text-lg">SMP Unggulan Hamzanwadi</p>
-            </div>
-            <Stepper currentStep={currentStep} />
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow p-8 my-8 border border-gray-100 dark:border-slate-700 min-h-[120px] transition-all duration-300">
-                {stepContent}
-                <div className="flex justify-between mt-6">
-                    <Button
-                        onClick={handlePrev}
-                        disabled={currentStep === 0}
-                        type="button"
-                        variant="secondary"
-                    >
-                        Sebelumnya
-                    </Button>
-                    {currentStep !== 3 && (
-                        <Button
-                            onClick={handleNext}
-                            disabled={currentStep === steps.length - 1}
-                            type="button"
-                        >
-                            Selanjutnya
-                        </Button>
-                    )}
+
+            <div className="max-w-2xl mx-auto py-10 px-4">
+                <div className="flex justify-center mb-6">
+                    <Image
+                        src={config.appLogoPanjang}
+                        alt="Logo SMP Unggulan Hamzanwadi"
+                        loading="lazy"
+                        width={150}
+                        height={150}
+                    />
                 </div>
+                <div className="text-center mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">Pendaftaran Peserta Didik Baru</h1>
+                    <p className="text-gray-600 dark:text-gray-200 text-base sm:text-lg">SMP Unggulan Hamzanwadi</p>
+                </div>
+
+                <Stepper currentStep={currentStep} />
+                <Card>
+                    <CardContent>
+                        {stepContent}
+
+                        <div className="flex justify-between mt-6">
+                            <Button
+                                onClick={handlePrev}
+                                disabled={currentStep === 0}
+                                type="button"
+                                variant="secondary"
+                            >
+                                Sebelumnya
+                            </Button>
+                            {currentStep !== 3 && (
+                                <Button
+                                    onClick={handleNext}
+                                    disabled={currentStep === steps.length - 1}
+                                    type="button"
+                                >
+                                    Selanjutnya
+                                </Button>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-        </div>
+        </>
     );
 }

@@ -1,7 +1,7 @@
 import { PENDIDIKAN_OPTIONS, PENGHASILAN_OPTIONS } from '@/lib/model/student';
 import { z } from 'zod'
 
-export const biodataSchema = z.object({
+const studentSchemas = z.object({
     full_name: z.string().min(2, "Nama harus minimal 2 karakter").max(64, "Nama maksimal 64 karakter"),
     nisn: z.string().min(10, "NISN harus 10 digit angka").max(10, "NISN harus 10 digit angka").regex(/^\d{10}$/, "NISN harus 10 digit angka"),
     nik: z.string().min(16, "NIK harus 16 digit angka").max(16, "NIK harus 16 digit angka").regex(/^\d{16}$/, "NIK harus 16 digit angka"),
@@ -31,7 +31,9 @@ export const biodataSchema = z.object({
     berat_kg: z.number().int("Berat badan harus bilangan bulat").optional(),
     tinggi_cm: z.number().int("Tinggi badan harus bilangan bulat").optional(),
     riwayat_penyakit: z.string().optional(),
+})
 
+const parent = z.object({
     // Orang Tua dan Wali
     father_name: z.string().min(2, "Nama ayah wajib diisi"),
     father_education: z.enum(PENDIDIKAN_OPTIONS.map((item) => item.value) as [string, ...string[]], "Pendidikan ayah wajib dipilih"),
@@ -46,4 +48,9 @@ export const biodataSchema = z.object({
     no_hp_ortu_wali: z.string().min(8, "Nomor HP wali minimal 8 digit").max(18, "Nomor HP wali tidak boleh lebih dari 18 karakter").regex(/^08\d{7,16}$/, "Nomor HP wali harus dimulai dari 08 dan angka"),
     parent_email: z.string().email("Email wali tidak valid"),
     alamat_ortu_wali: z.string().min(2, "Alamat wali wajib diisi"),
-});
+})
+
+export const biodataSchema = z.object({
+    ...studentSchemas.shape,
+    ...parent.shape
+})
