@@ -59,7 +59,12 @@ const useStudent = ({ student, formMode = 'CREATE' }: IUseStudent) => {
     const onSubmit = async () => {
         const valid = await trigger();
         if (!valid) {
-            toast.error("Periksa kembali isian Anda. Pastikan semua kolom wajib diisi dengan benar.");
+            toast.error("Periksa kembali isian. Pastikan semua kolom wajib diisi dengan benar.");
+            return;
+        }
+
+        if(!berkas.photo || !berkas.akta_kelahiran || !berkas.kartu_keluarga || !berkas.ijazah_skl) {
+            toast.error("Pastikan semua dokumen (foto, akta kelahiran, kartu keluarga, dan ijazah/SKL) sudah diunggah.");
             return;
         }
 
@@ -85,18 +90,14 @@ const useStudent = ({ student, formMode = 'CREATE' }: IUseStudent) => {
 
         const payload = {
             ...biodata,
+            ...berkas,
             tinggal_bersama_lainnya: biodata?.tinggal_bersama === 'LAINNYA' ? biodata.tinggal_bersama_lainnya : '',
             parent: {
                 ...parentPayload
             }
         }
 
-        console.log(payload);
-
         setSubmitLoading(true)
-
-        console.log('submitted');
-        console.log(JSON.stringify(payload, null, 2), { formMode });
 
         try {
             let response: AxiosResponse<StandardApiResponse<Student>>;

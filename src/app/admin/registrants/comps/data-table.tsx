@@ -144,8 +144,6 @@ function StudentDeleteActions({ student }: { student: Student }) {
     );
 }
 
-// columns stays in Bahasa Indonesia as requested
-
 export const columns: ColumnDef<Student>[] = [
     {
         id: "select",
@@ -235,6 +233,7 @@ export const columns: ColumnDef<Student>[] = [
     {
         accessorKey: "phone",
         header: "No HP",
+        enableHiding: true,
         cell: ({ row }) => (
             <div>{row.getValue("phone")}</div>
         ),
@@ -275,8 +274,11 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
+    
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+        phone: false,
+        agama: false,
+    })
     const [rowSelection, setRowSelection] = React.useState({})
 
     React.useEffect(() => {
