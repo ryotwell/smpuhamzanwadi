@@ -2,7 +2,7 @@
 
 import axios from "@/lib/axios";
 import { cookies } from "next/headers";
-import { Post } from "@/types/post";
+import { Post } from "@/types/model"
 import { APIPATHS } from "@/lib/constants";
 
 export async function getPosts(page: number = 1, limit: number = 10, q: string = '') {

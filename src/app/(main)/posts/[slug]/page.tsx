@@ -6,7 +6,7 @@ import axios from "@/lib/axios";
 
 import { Header } from "../../header";
 
-import { Post } from "@/types/post";
+import { Post } from "@/types/model";
 import { StandardApiResponse } from "@/types/api";
 
 import "../../../tinymce.css";

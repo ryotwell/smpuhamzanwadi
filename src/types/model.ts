@@ -1,3 +1,17 @@
+export type Post = {
+    id: number;
+    title: string;
+    slug: string;
+    thumbnail: string | null;
+    description: string;
+    content: string;
+    published: boolean;
+    published_at: string | null;
+    created_at: string;
+    updated_at: string;
+    category: string;
+};
+
 export type Parent = {
     id: number;
     created_at: string;
