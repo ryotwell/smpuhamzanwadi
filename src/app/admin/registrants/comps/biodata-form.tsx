@@ -128,8 +128,10 @@ export const BiodataForm = ({
                     />
                 )}
             />
-            {numberInput("anak_ke", "Anak Ke", "Anak ke")}
-            {numberInput("dari_bersaudara", "Dari Bersaudara", "Dari bersaudara")}
+            <div className="flex justify-between space-x-5">
+                {numberInput("anak_ke", "Anak Ke", "Anak ke")}
+                {numberInput("dari_bersaudara", "Dari Bersaudara", "Dari bersaudara")}
+            </div>
             <Controller
                 control={control}
                 name="tinggal_bersama"
