@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Admin panel untuk mengedit data peserta SMPU Hamzanwadi.",
 };
 
-export default async function EditRegistrantPage({ params }: { params: { id: string } }) {
+export default async function EditRegistrantPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const student = await getStudent(id);
 
