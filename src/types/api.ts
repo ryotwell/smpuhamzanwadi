@@ -5,6 +5,7 @@ export type Meta = {
     page: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type StandardApiResponse<T = any> = {
     success: boolean;
     status: number;
@@ -14,4 +15,5 @@ export type StandardApiResponse<T = any> = {
     errors?: Record<string, string>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type StandardAxiosResponse<T = any> = AxiosResponse<StandardApiResponse<T>>;

@@ -1,9 +1,3 @@
-export type StandardApiResponse = {
-  success: boolean;
-  status: number;
-  message: string;
-};
-
 export type Post = {
   id: number;
   title: string;

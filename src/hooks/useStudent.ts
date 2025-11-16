@@ -1,3 +1,5 @@
+"use client"
+
 import { BiodataFields } from "@/app/admin/registrants/comps/biodata-form";
 import { BerkasFields } from "@/app/admin/registrants/comps/form";
 import axios from "@/lib/axios";
@@ -124,6 +126,7 @@ const useStudent = ({ student, formMode = 'CREATE' }: IUseStudent) => {
             } else {
                 toast.error(response?.data?.message || errorMessage);
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const serverMessage = error?.response?.data?.message;
 

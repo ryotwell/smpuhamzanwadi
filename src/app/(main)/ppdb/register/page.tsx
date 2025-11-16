@@ -358,6 +358,7 @@ export default function PPDBPage() {
 
             if (currentStep === 0 || currentStep === 1) {
                 const fieldsToValidate = stepValidations[currentStep];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const result = await trigger(fieldsToValidate as any, { shouldFocus: true });
                 if (!result) {
                     const firstFieldError = fieldsToValidate.find((f) => errors[f]);
@@ -452,7 +453,6 @@ export default function PPDBPage() {
                     </>
                 );
         }
-        // eslint-disable-next-line
     }, [currentStep, control, errors, berkas, getValues, setBerkas, submitLoading, handleNext, formatTanggalLahir]);
 
     return (
