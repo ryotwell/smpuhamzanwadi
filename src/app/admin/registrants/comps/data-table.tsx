@@ -33,12 +33,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Post } from "@/types/post"
+import { Student } from "@/types/model"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import axios from "@/lib/axios"
-import { toast } from "sonner";
-import Link from "next/link";
+import { toast } from "sonner"
+import Link from "next/link"
 
 // Import shadcn/ui dialog
 import {
@@ -51,20 +51,22 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog"
 import { Meta } from "@/types/api"
+import { getAgamaLabel, getJenisKelaminLabel } from "@/lib/model/student"
 import { APIPATHS } from "@/lib/constants"
 
-async function deletePost(slug: string) {
-    if (!slug) return;
+// Delete students
+async function deleteStudent(studentId: number) {
+    if (!studentId) return;
     try {
-        await axios.delete(`${APIPATHS.DELETEPOST}/${slug}`);
-        toast.success("Post deleted successfully.");
+        await axios.delete(`${APIPATHS.DELETESTUDENT}/${studentId}`);
+        toast.success("Student deleted successfully.");
     } catch {
-        toast.error("Failed to delete post.");
+        toast.error("Failed to delete student.");
     }
 }
 
-// Extract the delete actions cell to its own component to manage dialog state
-function PostDeleteActions({ post }: { post: Post }) {
+// Delete Action for student
+function StudentDeleteActions({ student }: { student: Student }) {
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const router = useRouter();
@@ -81,18 +83,18 @@ function PostDeleteActions({ post }: { post: Post }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                        onClick={() => navigator.clipboard.writeText(post.id.toString())}
+                        onClick={() => navigator.clipboard.writeText(student.id.toString())}
                     >
-                        Copy post ID
+                        Copy student ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                        <Link href={`/posts/${post.slug}`} scroll={true} target="_blank" rel="noopener noreferrer">
+                    {/* <DropdownMenuItem asChild>
+                        <Link href={`/admin/registrants/${student.id}`} scroll={true}>
                             Show
                         </Link>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/posts/${post.slug}/edit`} scroll={true}>
+                        <Link href={`/admin/registrants/${student.id}/edit`} scroll={true}>
                             Edit
                         </Link>
                     </DropdownMenuItem>
@@ -112,7 +114,7 @@ function PostDeleteActions({ post }: { post: Post }) {
                         Delete Confirmation
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to delete the post &quot;<b>{post.title}</b>&quot;? This action cannot be undone.
+                        Are you sure you want to delete student &quot;<b>{student.full_name}</b>&quot;? This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex justify-end gap-2">
@@ -127,7 +129,7 @@ function PostDeleteActions({ post }: { post: Post }) {
                         variant="destructive"
                         onClick={async () => {
                             setLoading(true);
-                            await deletePost(post.slug);
+                            await deleteStudent(student.id);
                             setLoading(false);
                             setOpen(false);
                             router.refresh?.();
@@ -142,7 +144,9 @@ function PostDeleteActions({ post }: { post: Post }) {
     );
 }
 
-export const columns: ColumnDef<Post>[] = [
+// columns stays in Bahasa Indonesia as requested
+
+export const columns: ColumnDef<Student>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -166,52 +170,105 @@ export const columns: ColumnDef<Post>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "title",
-        header: "Title",
+        accessorKey: "full_name",
+        header: "Nama Lengkap",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("title")}</div>
+            <div>{row.getValue("full_name")}</div>
         ),
     },
     {
-        accessorKey: "category",
-        header: "Category",
+        accessorKey: "nisn",
+        header: "NISN",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("category")}</div>
+            <div>{row.getValue("nisn")}</div>
         ),
     },
     {
-        accessorKey: "published",
-        header: "Published",
+        accessorKey: "nik",
+        header: "NIK",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("published") ? 'Yes' : 'No'}</div>
+            <div>{row.getValue("nik")}</div>
         ),
     },
     {
-        accessorKey: "published_at",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Published At
-                    <ArrowUpDown />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("published_at") ? new Date(row.getValue("published_at")).toLocaleDateString() : '-'}</div>,
+        accessorKey: "asal_sekolah",
+        header: "Asal Sekolah",
+        cell: ({ row }) => (
+            <div>{row.getValue("asal_sekolah")}</div>
+        ),
+    },
+    {
+        accessorKey: "gender",
+        header: "Jenis Kelamin",
+        cell: ({ row }) => (
+            <div className="capitalize">{getJenisKelaminLabel(row.getValue("gender")) ?? row.getValue("gender")}</div>
+        ),
+    },
+    {
+        accessorKey: "tanggal_lahir",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Tgl Lahir
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => (
+            <div>
+                {row.getValue("tanggal_lahir")
+                    ? new Date(row.getValue("tanggal_lahir") as string).toLocaleDateString()
+                    : "-"}
+            </div>
+        ),
+    },
+    {
+        accessorKey: "agama",
+        header: "Agama",
+        cell: ({ row }) => (
+            <div>
+                {getAgamaLabel(row.getValue("agama") as string) ?? row.getValue("agama")}
+            </div>
+        ),
+    },
+    {
+        accessorKey: "phone",
+        header: "No HP",
+        cell: ({ row }) => (
+            <div>{row.getValue("phone")}</div>
+        ),
+    },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Didaftarkan
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => (
+            <div>
+                {row.getValue("created_at")
+                    ? new Date(row.getValue("created_at") as string).toLocaleString()
+                    : "-"}
+            </div>
+        ),
     },
     {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const post = row.original
-            return <PostDeleteActions post={post} />;
+            const student = row.original
+            return <StudentDeleteActions student={student} />
         },
     },
 ]
 
-export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
+export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const q = searchParams.get('q') ?? '';
@@ -230,7 +287,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
             } else {
                 params.delete('q');
             }
-            router.push(`/admin/posts?${params.toString()}`);
+            router.push(`/admin/registrants?${params.toString()}`);
         }, 500);
 
         return () => clearTimeout(timeout);
@@ -256,7 +313,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Search title..."
+                    placeholder="Search name or NISN..."
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     className="max-w-sm"
@@ -266,9 +323,9 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
                         const params = new URLSearchParams(searchParams.toString());
                         params.set('limit', value);
                         params.set('page', '1');
-                        router.push(`/admin/posts?${params.toString()}`);
+                        router.push(`/admin/registrants?${params.toString()}`);
                     }}
-                    value={meta.limit.toString()}
+                    value={meta.limit?.toString() ?? "10"}
                 >
                     <SelectTrigger className="w-[100px] ml-auto">
                         <SelectValue placeholder="Limit" />
@@ -350,7 +407,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    No data found.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -369,7 +426,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page - 1).toString());
-                            router.push(`/admin/posts?${params.toString()}`);
+                            router.push(`/admin/registrants?${params.toString()}`);
                         }}
                         disabled={meta.page <= 1}
                     >
@@ -381,7 +438,7 @@ export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page + 1).toString());
-                            router.push(`/admin/posts?${params.toString()}`);
+                            router.push(`/admin/registrants?${params.toString()}`);
                         }}
                         disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
                     >

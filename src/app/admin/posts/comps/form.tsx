@@ -16,7 +16,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import type { FilePondFile } from "filepond";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import Editor from "../../create/comps/Editor";
+import Editor from "../comps/Editor";
 
 // --- Validation and form lib imports
 import { zodResolver } from "@hookform/resolvers/zod";

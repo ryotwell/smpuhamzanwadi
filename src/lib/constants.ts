@@ -6,21 +6,20 @@ export const PAGES = {
 } as const
 
 export const APIPATHS = {
-    // SIGNIN: '/user/login',
-    // FETCHPOSTS: '/posts',
-    // FINDPOST: '/posts',
-    // STOREPOST: '/posts',
-    // UPDATEPOST: '/posts',
-    // DELETE: '/posts',
-    // STORESTUDENTPPDB: '/ppdb/pendaftaran'
-
-    // farid
     SIGNIN: '/user/login',
+
     FETCHPOSTS: '/post/get-all',
     FINDPOST: '/post/get',
     STOREPOST: '/post/add',
     UPDATEPOST: '/post/update',
-    DELETE: '/post/delete',
+    DELETEPOST: '/post/delete',
 
-    STORESTUDENTPPDB: '/ppdb/add'
+    FETCHSTUDENTS: '/student/get-all',
+    FINDSTUDENT: '/student/get',
+    STORESTUDENT: '/student/add',
+    UPDATESTUDENT: '/student/update',
+    DELETESTUDENT: '/student/delete',
+
+    // public routes
+    STORESTUDENTPPDB: '/ppdb/add',
 } as const

@@ -1,38 +1,45 @@
 import React from "react";
-import CreatePostForm from "../comps/form";
 import type { Metadata } from "next";
+import { DataTable } from "./comps/data-table";
+import { getStudents } from "./actions";
+import { Meta } from "@/types/api";
 
 export const metadata: Metadata = {
-    title: "Create New Post | Admin",
-    description: "Admin panel page to create a new post in the SMPU Hamzanwadi website.",
+    title: "Registrants | Admin",
+    description: "Admin panel page to manage registrants data for SMPU Hamzanwadi.",
 };
 
-export default function CreatePost() {
+export default async function RegistrantsAdminPage({ searchParams }: { searchParams: Promise<{ page?: string, limit?: string, q?: string }> }) {
+    const params = await searchParams
+
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
+    const q = params?.q ?? "";
+
+    const students = await getStudents(page, limit, q);
+
     return (
         <div className="grid grid-cols-12 gap-4 md:gap-6">
 
-            <div className="col-span-12 space-y-6 xl:col-span-7">
-                <CreatePostForm isUpdate={false} />
-            </div>
-
-            <div className="col-span-12 space-y-6 xl:col-span-5">
+            <div className="col-span-12">
                 <div className="rounded-2xl border border-gray-200 bg-white px-4 py-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
                     <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
                         <div className="w-full">
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                                Example
+                                Registrant Data
                             </h3>
                             <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                                Lorem ipsum dolor sit.
+                                Manage new registrant data for SMPU Hamzanwadi PPDB.
                             </p>
                         </div>
                     </div>
 
                     <div className="w-full">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aperiam ab reprehenderit ex.
+                        <DataTable data={students?.data ?? []} meta={students?.meta as Meta} />
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

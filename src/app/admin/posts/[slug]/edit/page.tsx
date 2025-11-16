@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import EditPostForm from "./form";
+import EditPostForm from "../../comps/form";
 import { getPostBySlug } from "../../comps/actions";
 
 export const metadata: Metadata = {

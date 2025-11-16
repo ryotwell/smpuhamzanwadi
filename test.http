@@ -55,7 +55,78 @@ GET http://localhost:8080/posts/officia-nostrum-irur
 DELETE http://localhost:8080/posts/eveniet-cumque-volu
 
 ### fetch students
-GET http://localhost:8080/student/get-all
+GET http://localhost:8080/student/get-all?page=1&limit=1&q=hello
+
+### fetch student
+GET http://localhost:8080/student/get/3
+
+### PPDB
+POST http://localhost:8080/ppdb/add
+Content-Type: application/json
+Accept: application/json
+
+{
+  "full_name": "Xantha Cote",
+  "nisn": "7777777777",
+  "nik": "8888777777777777",
+  "asal_sekolah": "Distinctio Nemo cup",
+  "gender": "FEMALE",
+  "tempat_lahir": "Dolores dolor omnis ",
+  "tanggal_lahir": "2025-11-13",
+  "agama": "HINDU",
+  "keadaan_ortu": "LENGKAP",
+  "status_keluarga": "ANAK_ANGKAT",
+  "anak_ke": 78,
+  "dari_bersaudara": 47,
+  "tinggal_bersama": "LAINNYA",
+  "tinggal_bersama_lainnya": "",
+  "kewarganegaraan": "WNA",
+  "rt": "Aperiam dignissimos ",
+  "rw": "Animi et dolore exc",
+  "desa_kelurahan": "Et cumque anim excep",
+  "kecamatan": "Nam et ea doloribus ",
+  "kabupaten": "Aliqua Officiis rec",
+  "provinsi": "Id magnam blanditiis",
+  "kode_pos": "83661",
+  "alamat_jalan": "Doloremque excepturi",
+  "phone": "0812749478576",
+  "email": "forudir@mailinator.com",
+  "photo": "",
+  "kartu_keluarga": "",
+  "akta_kelahiran": "",
+  "ijazah_skl": "",
+  "blood_type": "UNKNOWN",
+  "berat_kg": 73,
+  "tinggi_cm": 61,
+  "riwayat_penyakit": "Ex architecto nesciu",
+  "parent_id": 0,
+  "parent": {
+    "father_name": "Anjolie Horne",
+    "father_education": "SD",
+    "father_job": "Qui ullamco aperiam ",
+    "father_income": ">10000000",
+    "mother_name": "Miriam Cole",
+    "mother_education": "S1",
+    "mother_job": "Corrupti necessitat",
+    "mother_income": ">10000000",
+    "wali_name": "Alexandra Santiago",
+    "parent_email": "tinar@mailinator.com",
+    "no_hp_ortu_wali": "0812749577374",
+    "alamat_ortu_wali": "Et duis ducimus sim"
+  },
+  "father_name": "Anjolie Horne",
+  "father_education": "SD",
+  "father_job": "Qui ullamco aperiam ",
+  "father_income": ">10000000",
+  "mother_name": "Miriam Cole",
+  "mother_education": "S1",
+  "mother_job": "Corrupti necessitat",
+  "mother_income": ">10000000",
+  "wali_name": "Alexandra Santiago",
+  "no_hp_ortu_wali": "0812749577374",
+  "parent_email": "tinar@mailinator.com",
+  "alamat_ortu_wali": "Et duis ducimus sim"
+}
 
 
 ### Upload Image
