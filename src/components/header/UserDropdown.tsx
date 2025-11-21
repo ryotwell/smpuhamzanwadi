@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 
 import React, { useState } from "react";
@@ -42,7 +43,7 @@ export default function UserDropdown() {
           <Image
             width={44}
             height={44}
-            src="/images/user/owner.jpg"
+            src={`https://ui-avatars.com/api/?color=ffffff&background=334155&name=` + user?.fullname}
             alt="User"
           />
         </span>

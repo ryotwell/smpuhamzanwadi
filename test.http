@@ -48,17 +48,20 @@ POST http://localhost:8080/posts
 ### Get Posts
 GET http://localhost:8080/post/get-all?page=1&limit=10&q="
 
-### Get Post by slug
+### find post by slug
 GET http://localhost:8080/posts/officia-nostrum-irur
 
 ### Delete Post
 DELETE http://localhost:8080/posts/eveniet-cumque-volu
 
 ### fetch students
-GET http://localhost:8080/student/get-all?page=1&limit=1&q=hello
+GET http://localhost:8080/student/get-all?page=1&limit=10&batch=1
 
-### fetch student
+### find student
 GET http://localhost:8080/student/get/3
+
+### fetch batchs
+GET http://localhost:8080/batch/get-all?q=sajsiaisi&page=1&limit=10
 
 ### PPDB
 POST http://localhost:8080/ppdb/add
@@ -66,9 +69,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "full_name": "Xantha Cote",
-  "nisn": "7777777777",
-  "nik": "8888777777777777",
+  "full_name": "Somay",
+  "nisn": "7777777771",
+  "nik": "8888777777777177",
   "asal_sekolah": "Distinctio Nemo cup",
   "gender": "FEMALE",
   "tempat_lahir": "Dolores dolor omnis ",

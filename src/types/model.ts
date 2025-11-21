@@ -130,16 +130,19 @@ export type Student = {
     parent: Parent;
 
     batch_id: number;
-    batch: Batch;
+    batch: Batch | null;
 };
 
 export type Batch = {
     id: number;
     name: string;
     year: number;
+    is_active: boolean;
+    start_date?: string | null;
+    end_date?: string | null;
     created_at: string;
     updated_at: string;
-    students?: Student[];
+    students: Student[] | null;
 };
 
 export const DEFAULT_STUDENT = {

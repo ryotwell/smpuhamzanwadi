@@ -63,14 +63,14 @@ interface ILabeledSelectProps {
     placeholder?: string;
 }
 
-function LabeledSelect({
+export const LabeledSelect = ({
     label,
     options,
     value,
     onChange,
     error,
     placeholder = "",
-}: ILabeledSelectProps) {
+}: ILabeledSelectProps) => {
     return (
         <div className="flex flex-col gap-1">
             <label className="mb-1 font-medium text-sm">{label}</label>
@@ -280,10 +280,10 @@ export const StudentForm: FC<IStudentFormProps> = ({ student, formMode }) => {
                     <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
                         <div className="w-full">
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                                Edit Biodata Calon Peserta Didik
+                                Formulir Biodata Siswa
                             </h3>
                             <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                                Sesuaikan atau perbarui data peserta sesuai kebutuhan.
+                                Silakan isi atau perbarui data diri siswa pada formulir berikut dengan benar dan lengkap.
                             </p>
                         </div>
                     </div>
@@ -313,10 +313,10 @@ export const StudentForm: FC<IStudentFormProps> = ({ student, formMode }) => {
                     <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
                         <div className="w-full">
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                                Data Orang Tua / Wali
+                                Formulir Data Orang Tua/Wali
                             </h3>
                             <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                                Lengkapi data ayah, ibu, serta data dan alamat wali (jika ada).
+                                Isilah data ayah, ibu, dan jika ada wali dari siswa secara jelas sesuai dokumen kependudukan.
                             </p>
                         </div>
                     </div>

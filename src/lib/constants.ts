@@ -20,6 +20,12 @@ export const APIPATHS = {
     UPDATESTUDENT: '/student/update',
     DELETESTUDENT: '/student/delete',
 
+    FETCHBATCHS: '/batch/get-all',
+    FINDBATCH: '/batch/get',
+    STOREBATCH: '/batch/add',
+    UPDATEBATCH: '/batch/update',
+    DELETEBATCH: '/batch/delete',
+
     // public routes
     STORESTUDENTPPDB: '/ppdb/add',
 } as const

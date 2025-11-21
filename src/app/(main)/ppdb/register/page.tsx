@@ -25,12 +25,7 @@ import { ParentForm } from "@/app/admin/registrants/comps/parent-form";
 
 import {
     Card,
-    CardAction,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 

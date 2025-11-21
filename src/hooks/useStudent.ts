@@ -5,13 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import axios from "@/lib/axios";
-import { AxiosResponse } from "axios";
 
 import { BiodataFields } from "@/app/admin/registrants/comps/biodata-form";
 import { BerkasFields } from "@/app/admin/registrants/comps/form";
 import { biodataSchema } from "@/schemas/student";
 import { APIPATHS } from "@/lib/constants";
-import { StandardApiResponse } from "@/types/api";
 import { Student } from "@/types/model";
 
 export type StudentFormMode = "CREATE" | "UPDATE" | "PPDB";
@@ -125,6 +123,7 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
             }
 
             toast.success(successMessage);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             const errorMsg =
                 err?.data?.errors?.nik ||

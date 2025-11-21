@@ -33,7 +33,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Batch, Student } from "@/types/model"
+import { Batch } from "@/types/model"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import axios from "@/lib/axios"
@@ -51,23 +51,22 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog"
 import { Meta } from "@/types/api"
-import { getAgamaLabel, getJenisKelaminLabel } from "@/lib/model/student"
 import { APIPATHS } from "@/lib/constants"
-import { getBatchs } from "../../batchs/actions"
+import { Switch } from "@/components/ui/switch"
 
-// Delete students
-async function deleteStudent(studentId: number) {
-    if (!studentId) return;
+// Delete batch
+async function deleteBatch(batchId: number) {
+    if (!batchId) return;
     try {
-        await axios.delete(`${APIPATHS.DELETESTUDENT}/${studentId}`);
-        toast.success("Student deleted successfully.");
+        await axios.delete(`/batch/delete/${batchId}`);
+        toast.success("Batch deleted successfully.");
     } catch {
-        toast.error("Failed to delete student.");
+        toast.error("Failed to delete batch.");
     }
 }
 
-// Delete Action for student
-function StudentDeleteActions({ student }: { student: Student }) {
+// Delete Action for batch
+function BatchDeleteActions({ batch }: { batch: Batch }) {
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const router = useRouter();
@@ -84,18 +83,13 @@ function StudentDeleteActions({ student }: { student: Student }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                        onClick={() => navigator.clipboard.writeText(student.id.toString())}
+                        onClick={() => navigator.clipboard.writeText(batch.id.toString())}
                     >
-                        Copy student ID
+                        Copy batch ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {/* <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}`} scroll={true}>
-                            Show
-                        </Link>
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}/edit`} scroll={true}>
+                        <Link href={`/admin/batchs/${batch.id}/edit`} scroll={true}>
                             Edit
                         </Link>
                     </DropdownMenuItem>
@@ -112,10 +106,10 @@ function StudentDeleteActions({ student }: { student: Student }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Delete Confirmation
+                        Delete Batch Confirmation
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to delete student &quot;<b>{student.full_name}</b>&quot;? This action cannot be undone.
+                        Are you sure you want to delete batch &quot;<b>{batch.name}</b>&quot;? This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex justify-end gap-2">
@@ -130,7 +124,7 @@ function StudentDeleteActions({ student }: { student: Student }) {
                         variant="destructive"
                         onClick={async () => {
                             setLoading(true);
-                            await deleteStudent(student.id);
+                            await deleteBatch(batch.id);
                             setLoading(false);
                             setOpen(false);
                             router.refresh?.();
@@ -145,7 +139,7 @@ function StudentDeleteActions({ student }: { student: Student }) {
     );
 }
 
-export const columns: ColumnDef<Student>[] = [
+export const columns: ColumnDef<Batch>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -169,74 +163,66 @@ export const columns: ColumnDef<Student>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "full_name",
-        header: "Nama Lengkap",
+        accessorKey: "name",
+        header: "Nama Angkatan",
         cell: ({ row }) => (
-            <div>{row.getValue("full_name")}</div>
+            <div>{row.getValue("name")}</div>
         ),
     },
     {
-        accessorKey: "nisn",
-        header: "NISN",
-        cell: ({ row }) => (
-            <div>{row.getValue("nisn")}</div>
-        ),
-    },
-    {
-        accessorKey: "nik",
-        header: "NIK",
-        cell: ({ row }) => (
-            <div>{row.getValue("nik")}</div>
-        ),
-    },
-    {
-        accessorKey: "asal_sekolah",
-        header: "Asal Sekolah",
-        cell: ({ row }) => (
-            <div>{row.getValue("asal_sekolah")}</div>
-        ),
-    },
-    {
-        accessorKey: "gender",
-        header: "Jenis Kelamin",
-        cell: ({ row }) => (
-            <div className="capitalize">{getJenisKelaminLabel(row.getValue("gender")) ?? row.getValue("gender")}</div>
-        ),
-    },
-    {
-        accessorKey: "tanggal_lahir",
+        accessorKey: "year",
         header: ({ column }) => (
             <Button
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Tgl Lahir
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                Tahun <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => (
+            <div>{row.getValue("year")}</div>
+        ),
+    },
+    {
+        accessorKey: "is_active",
+        header: "Aktif?",
+        cell: ({ row }) => {
+            const val = row.getValue("is_active")
+            const [isActive, setIsActive] = React.useState(val ? true : false)
+
+            const handleOnChange = () => {
+                setIsActive(!isActive)
+            }
+
+            return (
+                <Switch
+                    id="is_active"
+                    onClick={handleOnChange}
+                    checked={isActive}
+                />
+            )
+        },
+    },
+    {
+        accessorKey: "start_date",
+        header: "Tanggal Mulai",
+        cell: ({ row }) => (
             <div>
-                {row.getValue("tanggal_lahir")
-                    ? new Date(row.getValue("tanggal_lahir") as string).toLocaleDateString()
+                {row.getValue("start_date")
+                    ? new Date(row.getValue("start_date") as string).toLocaleDateString()
                     : "-"}
             </div>
         ),
     },
     {
-        accessorKey: "agama",
-        header: "Agama",
+        accessorKey: "end_date",
+        header: "Tanggal Selesai",
         cell: ({ row }) => (
             <div>
-                {getAgamaLabel(row.getValue("agama") as string) ?? row.getValue("agama")}
+                {row.getValue("end_date")
+                    ? new Date(row.getValue("end_date") as string).toLocaleDateString()
+                    : "-"}
             </div>
-        ),
-    },
-    {
-        accessorKey: "phone",
-        header: "No HP",
-        enableHiding: true,
-        cell: ({ row }) => (
-            <div>{row.getValue("phone")}</div>
         ),
     },
     {
@@ -246,8 +232,7 @@ export const columns: ColumnDef<Student>[] = [
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Didaftarkan
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                Dibuat <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => (
@@ -259,41 +244,56 @@ export const columns: ColumnDef<Student>[] = [
         ),
     },
     {
+        accessorKey: "updated_at",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Diupdate <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => (
+            <div>
+                {row.getValue("updated_at")
+                    ? new Date(row.getValue("updated_at") as string).toLocaleString()
+                    : "-"}
+            </div>
+        ),
+    },
+    {
+        accessorKey: "students",
+        header: "Jumlah Siswa",
+        cell: ({ row }) => {
+            const students = row.getValue("students") as any[] | null;
+            return <span>{students ? students.length : 0}</span>;
+        },
+    },
+    {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const student = row.original
-            return <StudentDeleteActions student={student} />
+            const batch = row.original
+            return <BatchDeleteActions batch={batch} />
         },
     },
 ]
 
-export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
+export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const q = searchParams.get('q') ?? '';
-    const batchIdFromParams = searchParams.get('batch') ?? '';
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [batchs, setBatchs] = React.useState<Batch[]>([])
-    const [selectedBatchId, setSelectedBatchId] = React.useState<string>(batchIdFromParams);
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        phone: false,
-        agama: false,
+        year: false,
+        created_at: false,
+        updated_at: false,
     })
     const [rowSelection, setRowSelection] = React.useState({})
 
-    const handleGetBatchs = async () => {
-        const data = await getBatchs(1, 99999)
-
-        if(data) {
-            setBatchs(data.data as Batch[])
-        }
-    }
-
-    // Update query param for search on change
     React.useEffect(() => {
         const timeout = setTimeout(() => {
             const params = new URLSearchParams(searchParams.toString());
@@ -302,37 +302,11 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
             } else {
                 params.delete('q');
             }
-            // Also re-apply batch filter (if needed)
-            if (selectedBatchId) {
-                params.set('batch', selectedBatchId);
-            } else {
-                params.delete('batch');
-            }
-            router.push(`/admin/registrants?${params.toString()}`);
+            router.push(`/admin/batchs?${params.toString()}`);
         }, 500);
 
         return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, router, searchParams]);
-
-    // Update param when select batch changes
-    React.useEffect(() => {
-        // Only trigger if value changes (not on initial mount to avoid double render)
-        if (selectedBatchId !== (searchParams.get('batch') ?? "")) {
-            const params = new URLSearchParams(searchParams.toString());
-            if (selectedBatchId) {
-                params.set('batch', selectedBatchId);
-            } else {
-                params.delete('batch');
-            }
-            router.push(`/admin/registrants?${params.toString()}`);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedBatchId]);
-
-    React.useEffect(() => {
-        handleGetBatchs()
-    }, [])
 
     const table = useReactTable({
         data,
@@ -352,38 +326,19 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
 
     return (
         <div className="w-full">
-            <div className="flex items-center py-4 gap-2">
+            <div className="flex items-center py-4">
                 <Input
-                    placeholder="Search name or NISN..."
+                    placeholder="Cari nama angkatan..."
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     className="max-w-sm"
                 />
-                {/* Select Batch */}
-                <Select
-                    value={selectedBatchId}
-                    onValueChange={(value) => {
-                        setSelectedBatchId(value);
-                        // batch is being handled by useEffect!
-                    }}
-                >
-                    <SelectTrigger className="w-[160px]">
-                        <SelectValue placeholder="Pilih Gelombang" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {batchs.map((batch) => (
-                            <SelectItem key={batch.id} value={batch.id.toString()}>
-                                {batch.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
                 <Select
                     onValueChange={(value) => {
                         const params = new URLSearchParams(searchParams.toString());
                         params.set('limit', value);
                         params.set('page', '1');
-                        router.push(`/admin/registrants?${params.toString()}`);
+                        router.push(`/admin/batchs?${params.toString()}`);
                     }}
                     value={meta.limit?.toString() ?? "10"}
                 >
@@ -486,7 +441,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page - 1).toString());
-                            router.push(`/admin/registrants?${params.toString()}`);
+                            router.push(`/admin/batchs?${params.toString()}`);
                         }}
                         disabled={meta.page <= 1}
                     >
@@ -498,7 +453,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page + 1).toString());
-                            router.push(`/admin/registrants?${params.toString()}`);
+                            router.push(`/admin/batchs?${params.toString()}`);
                         }}
                         disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
                     >

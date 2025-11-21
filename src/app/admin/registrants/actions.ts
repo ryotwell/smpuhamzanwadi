@@ -6,14 +6,20 @@ import { APIPATHS } from "@/lib/constants";
 import { buildHeaders } from "@/lib/server.utils";
 import { StandardAxiosResponse } from "@/types/api";
 
-export async function getStudents(page = 1, limit = 10, q = "") {
+export async function getStudents({ page = 1, limit = 10, q = "", batch }: { page: number, limit: number, q: string, batch?: number }) {
     try {
         const headers = await buildHeaders();
-        const query = new URLSearchParams({
+        const params: Record<string, string> = {
             page: String(page),
             limit: String(limit),
             q: q.trim(),
-        }).toString();
+        };
+
+        if (typeof batch === "number" && !Number.isNaN(batch)) {
+            params.batch = String(batch);
+        }
+
+        const query = new URLSearchParams(params).toString();
 
         const { data: { data, meta } }: StandardAxiosResponse<Student[]> = await axios.get(
             `${APIPATHS.FETCHSTUDENTS}?${query}`,

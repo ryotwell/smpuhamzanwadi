@@ -16,6 +16,7 @@ import {
   // PlugInIcon,
   // TableIcon,
   UserCircleIcon,
+  BoxCubeIcon,
 } from "../icons/index";
 import { FileTextIcon, UserPlusIcon } from "lucide-react";
 import { config } from "@/config";
@@ -56,6 +57,14 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Users", path: "/admin/users", pro: false },
       { name: "Add a new Registrant", path: "/admin/users/create", pro: false },
+    ],
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "Batchs",
+    subItems: [
+      { name: "Batchs", path: "/admin/batchs", pro: false },
+      { name: "Create a new Batch", path: "/admin/batchs/create", pro: false },
     ],
   },
   // {
