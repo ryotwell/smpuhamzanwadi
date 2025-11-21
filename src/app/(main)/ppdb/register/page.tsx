@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
-import { toast } from "sonner";
 import { config } from "@/config";
 import Image from "next/image";
 import FileUploader from "@/components/ui/file-uploader";
@@ -28,6 +27,7 @@ import {
     CardContent,
 } from "@/components/ui/card"
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
+import { showError } from "@/lib/utils";
 
 const steps = [
     { title: "Lengkapi Data", description: "Data diri dan identitas lengkap" },
@@ -298,7 +298,7 @@ export default function PPDBPage() {
         ];
         for (const [field, msg] of berkasRequired) {
             if (!berkas[field]) {
-                toast.error(msg);
+                showError(msg)
                 return false;
             }
         }
@@ -368,8 +368,8 @@ export default function PPDBPage() {
                 const result = await trigger(fieldsToValidate as any, { shouldFocus: true });
                 if (!result) {
                     const firstFieldError = fieldsToValidate.find((f) => errors[f]);
-                    toast.error((firstFieldError && errors[firstFieldError]?.message) ||
-                        (currentStep === 0 ? "Isian biodata masih ada yang belum valid." : "Isian data orang tua/wali masih ada yang belum valid."));
+                    showError((firstFieldError && errors[firstFieldError]?.message) ||
+                    (currentStep === 0 ? "Isian biodata masih ada yang belum valid." : "Isian data orang tua/wali masih ada yang belum valid."))
                     return;
                 }
                 setCurrentStep((s) => s + 1);

@@ -79,11 +79,6 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
             toast.success(successMessage);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            const errorMsg =
-                err?.data?.errors?.name ||
-                err?.response?.data?.message ||
-                "Terjadi kesalahan pada server. Silakan coba lagi.";
-
             showError(collectMessages(err).toString())
         } finally {
             setSubmitLoading(false);

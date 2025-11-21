@@ -11,6 +11,7 @@ import { BerkasFields } from "@/app/admin/registrants/comps/form";
 import { biodataSchema } from "@/schemas/student";
 import { APIPATHS } from "@/lib/constants";
 import { Student } from "@/types/model";
+import { collectMessages, showError } from "@/lib/utils";
 
 export type StudentFormMode = "CREATE" | "UPDATE" | "PPDB";
 
@@ -84,9 +85,6 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
         parent: buildParentPayload(biodata),
     });
 
-    const showError = (msg: string) =>
-        toast.error(msg);
-
     const onSubmit = async () => {
         const isValid = await trigger();
         if (!isValid) {
@@ -125,15 +123,7 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
             toast.success(successMessage);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            const errorMsg =
-                err?.data?.errors?.nik ||
-                err?.response?.data?.message ||
-                "Terjadi kesalahan pada server. Silakan coba lagi.";
-            showError(
-                err?.data?.errors?.nik || err?.response?.data?.message
-                    ? `Terjadi kesalahan pada server: ${errorMsg}`
-                    : errorMsg
-            );
+            showError(collectMessages(err).toString())
         } finally {
             setSubmitLoading(false);
         }
