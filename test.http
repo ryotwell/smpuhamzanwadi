@@ -19,6 +19,9 @@ Content-Type: application/json
     "password": "admin123"
 }
 
+### dashboard
+GET http://localhost:8080/user/dashboard
+
 ### Logout
 POST http://localhost:8080/user/logout
 

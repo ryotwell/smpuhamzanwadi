@@ -1,5 +1,6 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { config } from '@/config';
 
 type EditorProps = {
   value: string;
@@ -77,7 +78,7 @@ function handleTinyMceImageUpload(blobInfo: BlobInfo, progress: (percent: number
 export default function EditorComponent({ value, onChange, placeholder }: EditorProps) {
   return (
     <Editor
-      apiKey='unuiemd4czonhcsa3vt235khp53wbkiwbv2m92bo47outejr'
+      apiKey={config.tinyMCEApiKey}
       init={{
         plugins,
         menubar: false,

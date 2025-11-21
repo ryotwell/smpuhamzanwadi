@@ -6,4 +6,6 @@ export const config = {
 
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL as string,
     apiUrl: process.env.NEXT_PUBLIC_API_URL as string,
+
+    tinyMCEApiKey: process.env.NEXT_PUBLIC_TINYMCE_APIKEY as string,
 };
