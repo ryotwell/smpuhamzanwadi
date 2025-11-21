@@ -10,6 +10,7 @@ import axios from "@/lib/axios";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { APIPATHS } from "@/lib/constants";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +30,7 @@ export default function SignInForm() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post("/user/login", {
+      const res = await axios.post(APIPATHS.SIGNIN, {
         email,
         password,
       });

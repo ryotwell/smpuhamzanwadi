@@ -58,7 +58,7 @@ import { Switch } from "@/components/ui/switch"
 async function deleteBatch(batchId: number) {
     if (!batchId) return;
     try {
-        await axios.delete(`/batch/delete/${batchId}`);
+        await axios.delete(`${APIPATHS.DELETEBATCH}/${batchId}`);
         toast.success("Batch deleted successfully.");
     } catch {
         toast.error("Failed to delete batch.");

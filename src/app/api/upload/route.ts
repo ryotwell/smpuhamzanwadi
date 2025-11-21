@@ -5,6 +5,7 @@ import { config } from '@/config'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
 import axios from '@/lib/axios'
+import { APIPATHS } from '@/lib/constants'
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
@@ -21,7 +22,7 @@ async function checkAuthenticated() {
         return { isAuthenticated: false, error: 'Unauthorized: No session token found' };
     }
     try {
-        await axios.get('/user/profile', {
+        await axios.get(APIPATHS.PROFILE, {
             headers: {
                 Cookie: `session_token=${session_token.value}`,
             }

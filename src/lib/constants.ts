@@ -7,6 +7,7 @@ export const PAGES = {
 
 export const APIPATHS = {
     SIGNIN: '/user/login',
+    PROFILE: '/user/profile',
 
     FETCHPOSTS: '/post/get-all',
     FINDPOST: '/post/get',
@@ -26,6 +27,6 @@ export const APIPATHS = {
     UPDATEBATCH: '/batch/update',
     DELETEBATCH: '/batch/delete',
 
-    // public routes
+    // public api routes
     STORESTUDENTPPDB: '/ppdb/add',
 } as const
