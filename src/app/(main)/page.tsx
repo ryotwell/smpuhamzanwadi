@@ -1,12 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
 import { config } from '@/config'
 import { Header } from './header'
+import { Post } from '@/types/model'
+import axios from '@/lib/axios'
+import { APIPATHS } from '@/lib/constants'
+import Link from 'next/link'
+import { formatDateWithDayName } from '@/lib/utils'
 
 const slides = [
     {
@@ -237,7 +242,23 @@ const sambutanKepalaSekolah = {
     sambutan: `Sebagai lembaga pendidikan, SMP Unggulan Hamzanwadi tanggap dengan perkembangan teknologi tersebut. Dengan dukungan SDM yang di miliki sekolah ini`
 }
 
-export default function Example() {
+export default function Page() {
+    const [posts, setPosts] = useState<Post[]>([]);
+
+    const getPosts = async () => {
+        const { data: { data } } = await axios.get(APIPATHS.FETCHPOSTS + '?limit=3');
+        // If you want to format the date property in each post in advance, you could map them here:
+        // setPosts(data.map((post: Post) => ({
+        //     ...post,
+        //     created_at_formatted: formatDateIndo(post.created_at)
+        // })));
+        setPosts(data);
+    };
+
+    useEffect(() => {
+        getPosts();
+    }, []);
+
     return (
         <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300 min-h-screen flex flex-col">
 
@@ -495,7 +516,36 @@ export default function Example() {
                     Dapatkan update terbaru seputar kegiatan, prestasi, dan informasi penting di SMP Unggulan Hamzanwadi.
                 </p>
                 <div className="grid gap-8 md:grid-cols-3">
-                    {newsArticles.map((news) => (
+                    {posts.map((post) => (
+                        <Link
+                            key={post.slug}
+                            href={`/posts/${post.slug}`}
+                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                        >
+                            {post.thumbnail && (
+                                <div className="h-48 w-full overflow-hidden">
+                                    <Image
+                                        src={post.thumbnail}
+                                        alt={post.title}
+                                        width={800}
+                                        height={600}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                </div>
+                            )}
+                            <div className="p-5">
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{formatDateWithDayName(post.created_at)}</div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                    {post.title}
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{post.description}</p>
+                                <span className="inline-block text-primary font-semibold text-sm group-hover:underline">
+                                    Baca Selengkapnya &rarr;
+                                </span>
+                            </div>
+                        </Link>
+                    ))}
+                    {/* {newsArticles.map((news) => (
                         <a
                             key={news.id}
                             href={news.href}
@@ -521,7 +571,7 @@ export default function Example() {
                                 </span>
                             </div>
                         </a>
-                    ))}
+                    ))} */}
                 </div>
             </section>
 

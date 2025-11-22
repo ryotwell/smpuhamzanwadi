@@ -1,0 +1,6 @@
+{
+    countPosts: ..,
+    countRegistrants: ...,
+    CountRegistrantsCurrentBatch: ...,  // jumlah user by current batch / active batch
+    countBatch: ...,
+}

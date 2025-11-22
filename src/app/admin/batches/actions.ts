@@ -6,7 +6,7 @@ import { APIPATHS } from "@/lib/constants";
 import { buildHeaders } from "@/lib/server.utils";
 import { StandardAxiosResponse } from "@/types/api";
 
-export async function getBatchs(page = 1, limit = 10, q = "") {
+export async function getBatches(page = 1, limit = 10, q = "") {
     try {
         const headers = await buildHeaders();
         const query = new URLSearchParams({
@@ -16,13 +16,13 @@ export async function getBatchs(page = 1, limit = 10, q = "") {
         }).toString();
 
         const { data: { data, meta } }: StandardAxiosResponse<Batch[]> = await axios.get(
-            `${APIPATHS.FETCHBATCHS}?${query}`,
+            `${APIPATHS.FETCHBATCHES}?${query}`,
             { headers }
         );
 
         return { data, meta }
     } catch (error) {
-        console.error("Failed to fetch batchs:", error);
+        console.error("Failed to fetch Batches:", error);
         return null;
     }
 }

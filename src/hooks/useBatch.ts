@@ -8,7 +8,7 @@ import axios from "@/lib/axios";
 
 import { APIPATHS } from "@/lib/constants";
 import { Batch } from "@/types/model";
-import { BatchFields, batchSchema } from "@/app/admin/batchs/comps/form";
+import { BatchFields, batchSchema } from "@/app/admin/batches/comps/form";
 import { collectMessages, showError } from "@/lib/utils";
 
 export type BatchFormMode = "CREATE" | "UPDATE";

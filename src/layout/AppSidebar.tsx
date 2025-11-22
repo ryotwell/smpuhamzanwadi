@@ -61,10 +61,10 @@ const navItems: NavItem[] = [
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Batchs",
+    name: "Batches",
     subItems: [
-      { name: "Batchs", path: "/admin/batchs", pro: false },
-      { name: "Create a new Batch", path: "/admin/batchs/create", pro: false },
+      { name: "Batches", path: "/admin/batches", pro: false },
+      { name: "Create a new Batch", path: "/admin/batches/create", pro: false },
     ],
   },
   // {

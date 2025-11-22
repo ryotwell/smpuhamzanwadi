@@ -146,10 +146,10 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
             <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
                 <div className="w-full">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                        Formulir Data Angkatan
+                        {formMode === 'CREATE' ? 'Crete a new Batch' : 'Edit Batch ' + (batch?.name ?? '')}
                     </h3>
                     <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                        Silakan isi atau perbarui data angkatan (tahun ajaran) pada formulir berikut dengan benar dan lengkap.
+                        Please adjust the batch (academic year) data in the following form accurately and completely.
                     </p>
                 </div>
             </div>

@@ -53,7 +53,7 @@ import {
 import { Meta } from "@/types/api"
 import { getAgamaLabel, getJenisKelaminLabel } from "@/lib/model/student"
 import { APIPATHS } from "@/lib/constants"
-import { getBatchs } from "../../batchs/actions"
+import { getBatches } from "../../batches/actions"
 
 // Delete students
 async function deleteStudent(studentId: number) {
@@ -276,7 +276,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [batchs, setBatchs] = React.useState<Batch[]>([])
+    const [batches, setBatches] = React.useState<Batch[]>([])
     const [selectedBatchId, setSelectedBatchId] = React.useState<string>(batchIdFromParams);
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -285,11 +285,11 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
     })
     const [rowSelection, setRowSelection] = React.useState({})
 
-    const handleGetBatchs = async () => {
-        const data = await getBatchs(1, 99999)
+    const handleGetBatches = async () => {
+        const data = await getBatches(1, 99999)
 
         if(data) {
-            setBatchs(data.data as Batch[])
+            setBatches(data.data as Batch[])
         }
     }
 
@@ -331,7 +331,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
     }, [selectedBatchId]);
 
     React.useEffect(() => {
-        handleGetBatchs()
+        handleGetBatches()
     }, [])
 
     const table = useReactTable({
@@ -371,7 +371,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                         <SelectValue placeholder="Pilih Gelombang" />
                     </SelectTrigger>
                     <SelectContent>
-                        {batchs.map((batch) => (
+                        {batches.map((batch) => (
                             <SelectItem key={batch.id} value={batch.id.toString()}>
                                 {batch.name}
                             </SelectItem>

@@ -89,7 +89,7 @@ function BatchDeleteActions({ batch }: { batch: Batch }) {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/batchs/${batch.id}/edit`} scroll={true}>
+                        <Link href={`/admin/batches/${batch.id}/edit`} scroll={true}>
                             Edit
                         </Link>
                     </DropdownMenuItem>
@@ -302,7 +302,7 @@ export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
             } else {
                 params.delete('q');
             }
-            router.push(`/admin/batchs?${params.toString()}`);
+            router.push(`/admin/batches?${params.toString()}`);
         }, 500);
 
         return () => clearTimeout(timeout);
@@ -338,7 +338,7 @@ export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
                         const params = new URLSearchParams(searchParams.toString());
                         params.set('limit', value);
                         params.set('page', '1');
-                        router.push(`/admin/batchs?${params.toString()}`);
+                        router.push(`/admin/batches?${params.toString()}`);
                     }}
                     value={meta.limit?.toString() ?? "10"}
                 >
@@ -441,7 +441,7 @@ export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page - 1).toString());
-                            router.push(`/admin/batchs?${params.toString()}`);
+                            router.push(`/admin/batches?${params.toString()}`);
                         }}
                         disabled={meta.page <= 1}
                     >
@@ -453,7 +453,7 @@ export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page + 1).toString());
-                            router.push(`/admin/batchs?${params.toString()}`);
+                            router.push(`/admin/batches?${params.toString()}`);
                         }}
                         disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
                     >

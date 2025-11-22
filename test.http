@@ -63,7 +63,7 @@ GET http://localhost:8080/student/get-all?page=1&limit=10&batch=1
 ### find student
 GET http://localhost:8080/student/get/3
 
-### fetch batchs
+### fetch Batches
 GET http://localhost:8080/batch/get-all?q=sajsiaisi&page=1&limit=10
 
 ### PPDB

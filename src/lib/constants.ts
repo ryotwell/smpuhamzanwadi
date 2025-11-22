@@ -21,7 +21,7 @@ export const APIPATHS = {
     UPDATESTUDENT: '/student/update',
     DELETESTUDENT: '/student/delete',
 
-    FETCHBATCHS: '/batch/get-all',
+    FETCHBATCHES: '/batch/get-all',
     FINDBATCH: '/batch/get',
     STOREBATCH: '/batch/add',
     UPDATEBATCH: '/batch/update',
