@@ -3,19 +3,16 @@
 import axios from "@/lib/axios";
 import { APIPATHS } from "@/lib/constants";
 import { formatDateWithDayName } from "@/lib/utils";
+import { usePostStore } from "@/store/usePostStore";
 import { Post } from "@/types/model";
 import Image from "next/image";
 import Link from "next/link";
 import React, { FC } from "react";
+
 interface IPostListProps { };
 
 export const PostList: FC<IPostListProps> = (props) => {
-    const [posts, setPosts] = React.useState<Post[]>([]);
-
-    const getPosts = async () => {
-        const { data: { data } } = await axios.get(APIPATHS.FETCHPOSTS + '?limit=3');
-        setPosts(data);
-    };
+    const { posts, getPosts }  = usePostStore()
 
     React.useEffect(() => {
         getPosts();
@@ -23,9 +20,9 @@ export const PostList: FC<IPostListProps> = (props) => {
 
     return (
         <>
-            {posts.map((post, key) => {
+            {posts.map((post) => {
                 return (
-                    <Link href="/" className="flex" key={key}>
+                    <Link href={`/posts/${post.slug}`} className="flex" key={post.slug}>
                         {post.thumbnail && (
                             <div className="w-2/6 mr-5">
                                 <Image

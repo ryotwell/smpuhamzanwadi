@@ -1,17 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect }from 'react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
 import { config } from '@/config'
 import { Header } from './header'
-import { Post } from '@/types/model'
-import axios from '@/lib/axios'
-import { APIPATHS } from '@/lib/constants'
 import Link from 'next/link'
 import { formatDateWithDayName } from '@/lib/utils'
+import { usePostStore } from '@/store/usePostStore'
 
 const slides = [
     {
@@ -243,17 +241,7 @@ const sambutanKepalaSekolah = {
 }
 
 export default function Page() {
-    const [posts, setPosts] = useState<Post[]>([]);
-
-    const getPosts = async () => {
-        const { data: { data } } = await axios.get(APIPATHS.FETCHPOSTS + '?limit=3');
-        // If you want to format the date property in each post in advance, you could map them here:
-        // setPosts(data.map((post: Post) => ({
-        //     ...post,
-        //     created_at_formatted: formatDateIndo(post.created_at)
-        // })));
-        setPosts(data);
-    };
+    const { posts, getPosts }  = usePostStore()
 
     useEffect(() => {
         getPosts();

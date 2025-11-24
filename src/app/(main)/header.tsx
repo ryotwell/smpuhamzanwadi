@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { ThemeToggleButton } from '@/components/common/ThemeToggleButton'
 import { config } from '@/config'
+import { Button } from '@/components/ui/button'
 
 function ListItem({ title, href, children }: { title: string, href: string, children: React.ReactNode }) {
     return (
@@ -33,7 +34,7 @@ function ListItem({ title, href, children }: { title: string, href: string, chil
 
 // Menu utama sekolah
 const navigation = [
-    { name: 'Home', href: '#' },
+    { name: 'Home', href: '/' },
     { name: 'About Us', href: '#' },
     { name: 'News and Event', href: '#' },
     { name: 'Achievements', href: '#' },
@@ -60,6 +61,19 @@ const components = [
 
 export const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+    const [pathname, setPathname] = React.useState("")
+
+    const useReadableText = (path: string) => {
+        if(path === '/') return 'text-muted'
+
+        return 'text-muted-foreground'
+    }
+
+    React.useEffect(() => {
+        if (typeof window !== "undefined") {
+            setPathname(window.location.pathname)
+        }
+    }, [])
 
     return (
         <header className="absolute inset-x-0 top-0 z-50">
@@ -83,7 +97,7 @@ export const Header = () => {
                         <button
                             type="button"
                             onClick={() => setMobileMenuOpen(true)}
-                            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-500 dark:text-gray-400"
+                            className={`-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-muted dark:text-muted-foreground`}
                         >
                             <span className="sr-only">Open main menu</span>
                             <Bars3Icon aria-hidden="true" className="size-6" />
@@ -91,9 +105,11 @@ export const Header = () => {
                     </div>
                     <div className="hidden lg:flex lg:items-center lg:flex-1 lg:justify-end gap-4">
                         <ThemeToggleButton />
-                        <Link href="/ppdb/register" className="text-sm/6 font-semibold text-gray-900 dark:text-white sm:text-white">
-                            PPDB <span aria-hidden="true">&rarr;</span>
-                        </Link>
+                        <Button asChild>
+                            <Link href="/ppdb/register" className="text-sm/6 font-semibold text-white">
+                                PPDB
+                            </Link>
+                        </Button>
                     </div>
                 </div>
                 {/* Menu Desktop Bar (row baru di bawah logo) */}
@@ -104,7 +120,7 @@ export const Header = () => {
                                 <NavigationMenuItem key={item.name}>
                                     <NavigationMenuLink
                                         asChild
-                                        className="text-sm font-semibold text-gray-900 dark:text-white px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 sm:text-white transition-colors"
+                                        className={`text-sm font-semibold ${useReadableText(pathname)}`}
                                     >
                                         <Link href={item.href}>
                                             {item.name}
@@ -113,7 +129,7 @@ export const Header = () => {
                                 </NavigationMenuItem>
                             ))}
                             <NavigationMenuItem className="list-none">
-                                <NavigationMenuTrigger className="text-sm font-semibold text-gray-900 dark:text-white px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 sm:text-white transition-colors bg-transparent">
+                                <NavigationMenuTrigger className={`text-sm font-semibold ${useReadableText(pathname)} bg-transparent dark:bg-transparent`}>
                                     Kurikulum
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent className="bg-white dark:bg-gray-900 ring-0">
@@ -143,12 +159,12 @@ export const Header = () => {
                             <span className="sr-only">{config.appName}</span>
                             <Image
                                 alt={config.appName}
-                                src={config.appLogo}
-                                width={32}
-                                height={32}
-                                className="h-8 w-auto"
+                                src={config.appLogoPanjang}
+                                width={100}
+                                height={100}
+                                className="h-13 w-auto"
                             />
-                            <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span>
+                            {/* <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span> */}
                         </Link>
                         <div className="flex items-center gap-2">
                             <ThemeToggleButton />
