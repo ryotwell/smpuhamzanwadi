@@ -1,10 +1,13 @@
+/* TinyMCE content base styles */
 .tinymce-content {
-    /* Typography */
     font-family: inherit;
     font-size: 1rem;
-    color: #212529;
+    color: #212529; /* Tailwind: text-gray-900 */
     line-height: 1.7;
     word-break: break-word;
+}
+.dark .tinymce-content {
+    color: #e5e7eb; /* Tailwind: text-gray-200 */
 }
 
 /* Headings */
@@ -19,29 +22,20 @@
     margin-bottom: 1em;
     line-height: 1.2;
 }
+.tinymce-content h1 { font-size: 2.25rem; }
+.tinymce-content h2 { font-size: 1.75rem; }
+.tinymce-content h3 { font-size: 1.5rem; }
+.tinymce-content h4 { font-size: 1.25rem; }
+.tinymce-content h5 { font-size: 1.1rem; }
+.tinymce-content h6 { font-size: 1rem; }
 
-.tinymce-content h1 {
-    font-size: 2.25rem;
-}
-
-.tinymce-content h2 {
-    font-size: 1.75rem;
-}
-
-.tinymce-content h3 {
-    font-size: 1.5rem;
-}
-
-.tinymce-content h4 {
-    font-size: 1.25rem;
-}
-
-.tinymce-content h5 {
-    font-size: 1.1rem;
-}
-
-.tinymce-content h6 {
-    font-size: 1rem;
+.dark .tinymce-content h1,
+.dark .tinymce-content h2,
+.dark .tinymce-content h3,
+.dark .tinymce-content h4,
+.dark .tinymce-content h5,
+.dark .tinymce-content h6 {
+    color: #fff;
 }
 
 /* Paragraph */
@@ -51,13 +45,18 @@
 
 /* Links */
 .tinymce-content a {
-    color: #2563eb;
+    color: #2563eb;           /* Tailwind: blue-600 */
     text-decoration: underline;
     transition: color 0.15s;
 }
-
 .tinymce-content a:hover {
-    color: #1d4ed8;
+    color: #1d4ed8;           /* Tailwind: blue-700 */
+}
+.dark .tinymce-content a {
+    color: #60a5fa;           /* Tailwind: blue-400 */
+}
+.dark .tinymce-content a:hover {
+    color: #3b82f6;           /* Tailwind: blue-500 */
 }
 
 /* Lists */
@@ -66,36 +65,33 @@
     padding-left: 2em;
     margin-bottom: 1em;
 }
-
-.tinymce-content ul {
-    list-style-type: disc;
-}
-
-.tinymce-content ol {
-    list-style-type: decimal;
-}
-
-.tinymce-content li {
-    margin-bottom: 0.3em;
-}
+.tinymce-content ul { list-style-type: disc; }
+.tinymce-content ol { list-style-type: decimal; }
+.tinymce-content li { margin-bottom: 0.3em; }
 
 /* Images */
 .tinymce-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 0.375rem;
+    border-radius: 0.375rem;   /* Tailwind: rounded-md */
     display: block;
     margin: 1.2em auto;
+    background: transparent;
 }
 
 /* Blockquotes */
 .tinymce-content blockquote {
     border-left: 4px solid #ccc;
-    background: #f5f5f5;
+    background: #f5f5f5;       /* Tailwind: gray-100/gray-50 */
     color: #555;
     margin: 1.5em 0;
     padding: 1em 1.5em;
     font-style: italic;
+}
+.dark .tinymce-content blockquote {
+    border-left: 4px solid #6366f1;
+    background: #262636;       /* Near Tailwind: gray-800 */
+    color: #e5e7eb;            /* Tailwind: gray-200 */
 }
 
 /* Tables */
@@ -105,62 +101,90 @@
     margin-bottom: 1.5em;
     font-size: 1em;
 }
-
 .tinymce-content th,
 .tinymce-content td {
-    border: 1px solid #ddd;
+    border: 1px solid #ddd;            /* Tailwind: border-gray-300 */
     padding: 0.6em 0.8em;
 }
-
 .tinymce-content th {
-    background: #f3f4f6;
+    background: #f3f4f6;               /* Tailwind: gray-100/200 */
     font-weight: bold;
 }
+.dark .tinymce-content th,
+.dark .tinymce-content td {
+    border-color: #374151;              /* Tailwind: gray-700 */
+}
+.dark .tinymce-content th {
+    background: #1f2937;                /* Tailwind: gray-800 */
+    color: #e5e7eb;
+}
+.dark .tinymce-content td {
+    color: #d1d5db;
+}
 
-/* Code */
+/* Inline code */
 .tinymce-content code {
     font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-    background: #f1f5f9;
-    color: #db2777;
+    background: #f1f5f9;                /* Tailwind: slate-100 */
+    color: #db2777;                     /* Tailwind: pink-600 */
     font-size: 95%;
     padding: 0.2em 0.35em;
     border-radius: 4px;
 }
+.dark .tinymce-content code {
+    background: #334155;                /* Tailwind: slate-700 */
+    color: #f472b6;                     /* Tailwind: pink-400 */
+}
 
+/* Pre/code block */
 .tinymce-content pre {
-    background: #f3f4f6;
-    color: #374151;
+    background: #f3f4f6;                /* Tailwind: gray-100/200 */
+    color: #374151;                     /* Tailwind: gray-700 */
     padding: 1em 1.2em;
     border-radius: 6px;
     overflow: auto;
     font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
     margin-bottom: 1em;
 }
-
 .tinymce-content pre code {
     background: inherit;
     color: inherit;
     padding: 0;
 }
+.dark .tinymce-content pre {
+    background: #1f2937;                /* Tailwind: gray-800 */
+    color: #e5e7eb;
+}
 
 /* Horizontal rule */
 .tinymce-content hr {
     border: 0;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb;     /* Tailwind: border-gray-200 */
     margin: 2em 0;
+}
+.dark .tinymce-content hr {
+    border-top: 1px solid #374151;     /* Tailwind: border-gray-700 */
 }
 
 /* Emphasis */
 .tinymce-content em,
 .tinymce-content i {
-    color: #7c3aed;
+    color: #7c3aed;                    /* Tailwind: violet-600 */
+}
+.dark .tinymce-content em,
+.dark .tinymce-content i {
+    color: #c7d2fe;                    /* Tailwind: violet-200 */
 }
 
 /* Strong/Bold */
 .tinymce-content strong,
 .tinymce-content b {
     font-weight: 700;
-    color: #ea580c;
+    color: #ea580c;                    /* Tailwind: orange-600 */
+}
+.dark .tinymce-content strong,
+.dark .tinymce-content b {
+    color: #fdba74;                    /* Tailwind: orange-300 */
 }
 
 /* Table of contents, checklist, admonition, etc. (extra) */
@@ -168,35 +192,46 @@
     list-style: none;
     padding: 0;
 }
-
 .tinymce-content .tox-checklist li {
     margin-bottom: 0.6em;
+}
+.dark .tinymce-content .tox-checklist li {
+    color: #e5e7eb;                    /* Tailwind: gray-200 */
 }
 
 /* Responsive video iframes */
 .tinymce-content iframe {
     max-width: 100%;
     border: none;
+    background: transparent;
 }
 
 /* Mentions/badge */
 .tinymce-content .mce-mention {
-    background: #e0e7ff;
-    color: #3730a3;
+    background: #e0e7ff;               /* Tailwind: indigo-100 */
+    color: #3730a3;                    /* Tailwind: indigo-800 */
     padding: 0.15em 0.5em;
     border-radius: 0.3em;
     font-weight: 500;
+}
+.dark .tinymce-content .mce-mention {
+    background: #3730a3;               /* Tailwind: indigo-800 */
+    color: #e0e7ff;                    /* Tailwind: indigo-100 */
 }
 
 /* Table of contents, footnotes, etc. (if present) */
 .tinymce-content .mce-footnote,
 .tinymce-content .mce-footnotes {
     font-size: 0.97em;
-    color: #475569;
+    color: #475569;                /* Tailwind: slate-600 */
     padding-left: 0.3em;
+}
+.dark .tinymce-content .mce-footnote,
+.dark .tinymce-content .mce-footnotes {
+    color: #94a3b8;                /* Tailwind: slate-400 */
 }
 
 /* Remove bottom margin for last child: better spacing */
-.tinymce-content> :last-child {
+.tinymce-content > :last-child {
     margin-bottom: 0;
 }
