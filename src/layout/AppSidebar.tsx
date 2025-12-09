@@ -5,17 +5,16 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  UserCircleIcon,
-  BoxCubeIcon,
-} from "../icons/index";
-import {
   FileText,
   UserPlus,
+  LayoutGrid,
+  UserCircle,
+  Box,
+  Building2,
+  ChevronDownIcon,
 } from "lucide-react";
 import { config } from "@/config";
+import { HorizontaLDots } from "@/icons";
 // import SidebarWidget from "./SidebarWidget";
 
 // Bahasa Indonesia untuk navItems
@@ -28,7 +27,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <GridIcon />,
+    icon: <LayoutGrid className="w-5 h-5" />,
     name: "Dasbor",
     path: "/admin/",
   },
@@ -49,7 +48,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <UserCircleIcon />,
+    icon: <UserCircle className="w-5 h-5" />,
     name: "Pengguna",
     subItems: [
       { name: "Data Pengguna", path: "/admin/users", pro: false },
@@ -57,7 +56,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <BoxCubeIcon />,
+    icon: <Box className="w-5 h-5" />,
     name: "Tahun Ajaran",
     subItems: [
       { name: "Data Tahun Ajaran", path: "/admin/batches", pro: false },
@@ -65,11 +64,20 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <BoxCubeIcon />,
+    icon: <Box className="w-5 h-5" />,
     name: "Kurikulum",
     subItems: [
       { name: "Data Kurikulum", path: "/admin/curriculums", pro: false },
       { name: "Tambah Kurikulum", path: "/admin/curriculums/create", pro: false },
+    ],
+  },
+  // Tambahan Facility
+  {
+    icon: <Building2 className="w-5 h-5" />, // lucide-react building icon
+    name: "Fasilitas",
+    subItems: [
+      { name: "Data Fasilitas", path: "/admin/facilities", pro: false },
+      { name: "Tambah Fasilitas", path: "/admin/facilities/create", pro: false },
     ],
   },
   // {

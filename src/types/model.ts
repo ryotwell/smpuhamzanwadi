@@ -160,6 +160,15 @@ export type Curriculum = {
     updated_at: string;
 };
 
+export type Facility = {
+    id: number;
+    name: string;
+    image?: string | null;
+    description?: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export const DEFAULT_STUDENT = {
     // id: 0,
     // created_at: "",

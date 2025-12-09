@@ -33,6 +33,12 @@ export const APIPATHS = {
     UPDATECURRICULUM: '/curriculum/update',
     DELETECURRICULUM: '/curriculum/delete',
 
+    FETCHFACILITIES: '/facility/get-all',
+    FINDFACILITY: '/facility/get',
+    STOREFACILITY: '/facility/add',
+    UPDATEFACILITY: '/facility/update',
+    DELETEFACILITY: '/facility/delete',
+
     // public api routes
     STORESTUDENTPPDB: '/ppdb/add',
 } as const
