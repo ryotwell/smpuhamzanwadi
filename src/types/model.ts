@@ -145,6 +145,21 @@ export type Batch = {
     students: Student[] | null;
 };
 
+export type CurriculumCategory =
+    | "EXTRACURRICULAR"
+    | "PROGRAM UNGGULAN"
+    | "KO-CULLICULAR";
+
+export type Curriculum = {
+    id: number;
+    name: string;
+    image?: string | null;
+    category?: CurriculumCategory | null;
+    description?: string | null;
+    created_at: string;
+    updated_at: string;
+};
+
 export const DEFAULT_STUDENT = {
     // id: 0,
     // created_at: "",

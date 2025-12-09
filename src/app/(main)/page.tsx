@@ -120,9 +120,10 @@ const newsArticles = [
     },
 ]
 
-// Data Kurikulum
+// Data Kurikulum (ditambahkan properti "id" pada masing-masing kategori)
 const kurikulumData = [
     {
+        id: "ekstrakurikuler",
         category: "Ekstrakurikuler",
         data: [
             {
@@ -140,44 +141,10 @@ const kurikulumData = [
                 image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
                 desc: "Ekstrakurikuler musik untuk menyalurkan bakat seni dan kreativitas siswa."
             },
-            {
-                name: "Olahraga (Futsal, Basket, dll)",
-                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-                desc: "Berbagai pilihan olahraga untuk menjaga kebugaran dan semangat sportivitas."
-            },
-            {
-                name: "Karya Ilmiah Remaja (KIR)",
-                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-                desc: "Mengembangkan minat dan bakat siswa dalam bidang penelitian dan karya ilmiah."
-            },
-            {
-                name: "Seni Tari",
-                image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
-                desc: "Ekstrakurikuler tari tradisional dan modern untuk menumbuhkan kecintaan pada budaya."
-            }
         ]
     },
     {
-        category: "Program Unggulan",
-        data: [
-            {
-                name: "Bahasa Inggris",
-                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
-                desc: "Program intensif Bahasa Inggris melalui English Club, pelatihan, dan lomba."
-            },
-            {
-                name: "Pendidikan Karakter",
-                image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
-                desc: "Mengasah karakter siswa dengan pembiasaan positif, budi pekerti, kegiatan sosial."
-            },
-            {
-                name: "Tahfidz Al-Qur'an",
-                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
-                desc: "Membina siswa menghafal Al-Qur'an, serta pembelajaran tartil dan tilawah yang baik."
-            }
-        ]
-    },
-    {
+        id: "kokulikuler",
         category: "KO-Kulikuler",
         data: [
             {
@@ -232,13 +199,6 @@ const fasilitasList = [
         desc: "Tempat ibadah yang nyaman dan bersih untuk mendukung kegiatan keagamaan siswa."
     },
 ]
-
-// Data Sambutan Kepala Sekolah
-const sambutanKepalaSekolah = {
-    nama: "Drs. H. Ahmad Zainuddin, M.Pd.",
-    foto: "/assets/images/kepala-sekolah.png",
-    sambutan: `Sebagai lembaga pendidikan, SMP Unggulan Hamzanwadi tanggap dengan perkembangan teknologi tersebut. Dengan dukungan SDM yang di miliki sekolah ini`
-}
 
 export default function Page() {
     const { posts, getPosts }  = usePostStore()
@@ -328,8 +288,8 @@ export default function Page() {
                     <div className="flex-shrink-0 flex items-center justify-center">
                         <div className="w-32 h-32 rounded-full border-4 border-primary shadow overflow-hidden flex items-center justify-center bg-white dark:bg-gray-900">
                             <Image
-                                src={sambutanKepalaSekolah.foto}
-                                alt={sambutanKepalaSekolah.nama}
+                                src={config.kepalaSekolahPhoto}
+                                alt={config.kepalaSekolah}
                                 width={128}
                                 height={128}
                                 className="w-full h-full object-cover rounded-full"
@@ -339,9 +299,9 @@ export default function Page() {
                     </div>
                     <div>
                         <p className="text-gray-700 dark:text-gray-200 text-lg whitespace-pre-line mb-4">
-                            {sambutanKepalaSekolah.sambutan}
+                            {config.sambutan?.split(' ').slice(0, 20).join(' ') + (config.sambutan?.split(' ').length > 20 ? '...' : '')}
                         </p>
-                        <div className="font-semibold text-primary text-lg">{sambutanKepalaSekolah.nama}</div>
+                        <div className="font-semibold text-primary text-lg">{config.kepalaSekolah}</div>
                         <div className="text-gray-500 dark:text-gray-400 text-sm">Kepala Sekolah</div>
                         <div className="mt-4">
                             <a
@@ -371,7 +331,7 @@ export default function Page() {
             </section>
 
             {/* Section Sorotan Sekolah */}
-            <div className="max-w-3xl mx-auto mt-24">
+            {/* <div className="max-w-3xl mx-auto mt-24">
                 <div className="px-4">
                     <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
                         Sorotan Sekolah
@@ -381,6 +341,30 @@ export default function Page() {
                     </p>
                 </div>
                 <ImageSlider slides={slides} />
+            </div> */}
+            {/* Section Unggulan */}
+            <div className="relative max-w-3xl mx-auto mt-24 isolate" id="unggulan">
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+                >
+                    <div
+                        style={{
+                            clipPath:
+                                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+                        }}
+                        className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-primary opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
+                    />
+                </div>
+                <div className="px-4">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
+                        Program Unggulan
+                    </h2>
+                    <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                        Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur&apos;an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur&apos;an.
+                    </p>
+                </div>
+                <ImageSlider slides={unggulanSlides} />
             </div>
 
             {/* Section Kurikulum */}
@@ -393,7 +377,7 @@ export default function Page() {
                 </p>
                 <div className="space-y-14">
                     {kurikulumData.map((kategori) => (
-                        <div key={kategori.category}>
+                        <div key={kategori.id} id={kategori.id}>
                             <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
                             <div className="grid gap-8 md:grid-cols-3">
                                 {kategori.data.map((item) => (
@@ -423,31 +407,6 @@ export default function Page() {
                     ))}
                 </div>
             </section>
-
-            {/* Section Unggulan */}
-            <div className="relative max-w-3xl mx-auto mt-24 isolate" id="unggulan">
-                <div
-                    aria-hidden="true"
-                    className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-                >
-                    <div
-                        style={{
-                            clipPath:
-                                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-                        }}
-                        className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-primary opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
-                    />
-                </div>
-                <div className="px-4">
-                    <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
-                        Program Unggulan
-                    </h2>
-                    <p className="text-center text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-                        Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur&apos;an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur&apos;an.
-                    </p>
-                </div>
-                <ImageSlider slides={unggulanSlides} />
-            </div>
 
             {/* Section Fasilitas Sekolah */}
             <section className="max-w-5xl mx-auto mt-24 px-4">

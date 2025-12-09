@@ -44,17 +44,17 @@ const navigation = [
 const components = [
     {
         title: "Ekstrakurikuler",
-        href: "#",
+        href: "#ekstrakurikuler",
         description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
     },
     {
         title: "Program Unggulan",
-        href: "#",
+        href: "#unggulan",
         description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
     },
     {
         title: "KO-Kulikuler",
-        href: "#",
+        href: "#kokulikuler",
         description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
     },
 ]

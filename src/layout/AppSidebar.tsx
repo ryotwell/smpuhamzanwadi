@@ -5,23 +5,20 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  // BoxCubeIcon,
-  // CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  // ListIcon,
-  // PageIcon,
-  // PieChartIcon,
-  // PlugInIcon,
-  // TableIcon,
   UserCircleIcon,
   BoxCubeIcon,
 } from "../icons/index";
-import { FileTextIcon, UserPlusIcon } from "lucide-react";
+import {
+  FileText,
+  UserPlus,
+} from "lucide-react";
 import { config } from "@/config";
 // import SidebarWidget from "./SidebarWidget";
 
+// Bahasa Indonesia untuk navItems
 type NavItem = {
   name: string;
   icon: React.ReactNode;
@@ -32,39 +29,47 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
-    name: "Dashboard",
+    name: "Dasbor",
     path: "/admin/",
   },
   {
-    icon: <FileTextIcon />,
-    name: "Posts",
+    icon: <FileText className="w-5 h-5" />,
+    name: "Postingan",
     subItems: [
-      { name: "Posts", path: "/admin/posts", pro: false },
-      { name: "Create a new Post", path: "/admin/posts/create", pro: false },
+      { name: "Semua Postingan", path: "/admin/posts", pro: false },
+      { name: "Buat Postingan Baru", path: "/admin/posts/create", pro: false },
     ],
   },
   {
-    icon: <UserPlusIcon />,
-    name: "Registrants",
+    icon: <UserPlus className="w-5 h-5" />,
+    name: "Pendaftar",
     subItems: [
-      { name: "Registrants", path: "/admin/registrants", pro: false },
-      { name: "Add a new Registrant", path: "/admin/registrants/create", pro: false },
+      { name: "Data Pendaftar", path: "/admin/registrants", pro: false },
+      { name: "Tambah Pendaftar", path: "/admin/registrants/create", pro: false },
     ],
   },
   {
     icon: <UserCircleIcon />,
-    name: "Users",
+    name: "Pengguna",
     subItems: [
-      { name: "Users", path: "/admin/users", pro: false },
-      { name: "Add a new Registrant", path: "/admin/users/create", pro: false },
+      { name: "Data Pengguna", path: "/admin/users", pro: false },
+      { name: "Tambah Pengguna", path: "/admin/users/create", pro: false },
     ],
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Batches",
+    name: "Tahun Ajaran",
     subItems: [
-      { name: "Batches", path: "/admin/batches", pro: false },
-      { name: "Create a new Batch", path: "/admin/batches/create", pro: false },
+      { name: "Data Tahun Ajaran", path: "/admin/batches", pro: false },
+      { name: "Tambah Tahun Ajaran", path: "/admin/batches/create", pro: false },
+    ],
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "Kurikulum",
+    subItems: [
+      { name: "Data Kurikulum", path: "/admin/curriculums", pro: false },
+      { name: "Tambah Kurikulum", path: "/admin/curriculums/create", pro: false },
     ],
   },
   // {

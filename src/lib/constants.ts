@@ -27,6 +27,12 @@ export const APIPATHS = {
     UPDATEBATCH: '/batch/update',
     DELETEBATCH: '/batch/delete',
 
+    FETCHCURRICULUMS: '/curriculum/get-all',
+    FINDCURRICULUM: '/curriculum/get',
+    STORECURRICULUM: '/curriculum/add',
+    UPDATECURRICULUM: '/curriculum/update',
+    DELETECURRICULUM: '/curriculum/delete',
+
     // public api routes
     STORESTUDENTPPDB: '/ppdb/add',
 } as const

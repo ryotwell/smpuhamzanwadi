@@ -7,33 +7,34 @@ import { toast } from "sonner";
 import axios from "@/lib/axios";
 
 import { APIPATHS } from "@/lib/constants";
-import { Batch } from "@/types/model";
-import { BatchFields, batchSchema } from "@/app/admin/batches/comps/form";
+import { Curriculum } from "@/types/model";
+import { CurriculumFields, curriculumSchema } from "@/app/admin/curriculums/comps/form";
 import { collectMessages, showError } from "@/lib/utils";
 
-export type BatchFormMode = "CREATE" | "UPDATE";
+export type CurriculumFormMode = "CREATE" | "UPDATE";
 
-type IUseBatch = {
-    batch: Batch;
-    formMode: BatchFormMode;
+type IUseCurriculum = {
+    curriculum: Curriculum;
+    formMode: CurriculumFormMode;
 };
 
-const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
+const useCurriculum = ({ curriculum, formMode = "CREATE" }: IUseCurriculum) => {
     const {
         control,
         trigger,
         formState: { errors },
         getValues,
+        setValue,
+        watch,
         reset: resetForm,
-    } = useForm<BatchFields>({
-        resolver: zodResolver(batchSchema),
+    } = useForm<CurriculumFields>({
+        resolver: zodResolver(curriculumSchema),
         mode: "onTouched",
         defaultValues: {
-            name: batch?.name || "",
-            // is_active: batch?.is_active ? 'ACTIVE' : 'INACTIVE',
-            is_active: batch?.is_active ? true : false,
-            start_date: batch?.start_date || null,
-            end_date: batch?.end_date || null,
+            name: curriculum?.name || "",
+            image: curriculum?.image || null,
+            category: curriculum?.category || null,
+            description: curriculum?.description || null,
         },
     });
 
@@ -51,23 +52,23 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
         setSubmitLoading(true);
 
         try {
-            const batchFields = getValues();
+            const curriculumFields = getValues();
 
             const payload = {
-                ...batchFields,
-                year: new Date().getFullYear(),
-                // is_active: batchFields.is_active === 'ACTIVE' ? true : false,
-                is_active: batchFields.is_active ? true : false,
-            }
+                name: curriculumFields.name,
+                image: curriculumFields.image || null,
+                category: curriculumFields.category || null,
+                description: curriculumFields.description || null,
+            };
 
             let successMessage = "";
 
             if (formMode === "UPDATE") {
-                successMessage = "Data batch berhasil diperbarui.";
-                await axios.put(`${APIPATHS.UPDATEBATCH}/${batch.id}`, payload);
+                successMessage = "Data kurikulum berhasil diperbarui.";
+                await axios.put(`${APIPATHS.UPDATECURRICULUM}/${curriculum.id}`, payload);
             } else {
-                successMessage = "Data batch berhasil ditambahkan.";
-                await axios.post(APIPATHS.STOREBATCH, payload);
+                successMessage = "Data kurikulum berhasil ditambahkan.";
+                await axios.post(APIPATHS.STORECURRICULUM, payload);
             }
 
             if (formMode === "CREATE") {
@@ -85,11 +86,10 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
 
     const resetFormInputs = () => {
         resetForm({
-            name: batch?.name || "",
-            // is_active: batch?.is_active ? 'ACTIVE' : 'INACTIVE',
-            is_active: batch?.is_active ? true : false,
-            start_date: batch?.start_date || null,
-            end_date: batch?.end_date || null,
+            name: curriculum?.name || "",
+            image: curriculum?.image || null,
+            category: curriculum?.category || null,
+            description: curriculum?.description || null,
         });
     };
 
@@ -97,6 +97,8 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
         control,
         errors,
         getValues,
+        setValue,
+        watch,
         trigger,
         submitLoading,
         onSubmit,
@@ -104,4 +106,5 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
     };
 };
 
-export default useBatch;
+export default useCurriculum;
+

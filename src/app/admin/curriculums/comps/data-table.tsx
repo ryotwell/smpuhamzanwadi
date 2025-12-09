@@ -12,6 +12,7 @@ import {
     VisibilityState,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -33,11 +34,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Batch, Student } from "@/types/model"
+import { Curriculum } from "@/types/model"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import axios from "@/lib/axios"
-import { toast } from "sonner"
 import Link from "next/link"
 
 // Import shadcn/ui dialog
@@ -50,27 +49,14 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog"
-import { Meta } from "@/types/api"
-import { getAgamaLabel, getJenisKelaminLabel } from "@/lib/model/student"
-import { APIPATHS } from "@/lib/constants"
-import { getBatches } from "../../batches/actions"
+import { collectMessages, showError, showSuccess } from "@/lib/utils"
+import { useCurriculumStore } from "@/store/useCurriculumStore"
 
-// Delete students
-async function deleteStudent(studentId: number) {
-    if (!studentId) return;
-    try {
-        await axios.delete(`${APIPATHS.DELETESTUDENT}/${studentId}`);
-        toast.success("Student deleted successfully.");
-    } catch {
-        toast.error("Failed to delete student.");
-    }
-}
-
-// Delete Action for student
-function StudentDeleteActions({ student }: { student: Student }) {
+function CurriculumDeleteActions({ curriculum }: { curriculum: Curriculum }) {
     const [open, setOpen] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
     const router = useRouter();
+
+    const { deleteCurriculum, loading } = useCurriculumStore()
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -84,18 +70,13 @@ function StudentDeleteActions({ student }: { student: Student }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                        onClick={() => navigator.clipboard.writeText(student.id.toString())}
+                        onClick={() => navigator.clipboard.writeText(curriculum.id.toString())}
                     >
-                        Copy student ID
+                        Copy curriculum ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {/* <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}`} scroll={true}>
-                            Show
-                        </Link>
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}/edit`} scroll={true}>
+                        <Link href={`/admin/curriculums/${curriculum.id}/edit`} scroll={true}>
                             Edit
                         </Link>
                     </DropdownMenuItem>
@@ -112,10 +93,10 @@ function StudentDeleteActions({ student }: { student: Student }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Delete Confirmation
+                        Hapus Kurikulum
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to delete student &quot;<b>{student.full_name}</b>&quot;? This action cannot be undone.
+                        Apakah Anda yakin ingin menghapus kurikulum &quot;<b>{curriculum.name}</b>&quot;? Tindakan ini tidak dapat dibatalkan.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex justify-end gap-2">
@@ -124,20 +105,23 @@ function StudentDeleteActions({ student }: { student: Student }) {
                         onClick={() => setOpen(false)}
                         disabled={loading}
                     >
-                        Cancel
+                        Batal
                     </Button>
                     <Button
                         variant="destructive"
                         onClick={async () => {
-                            setLoading(true);
-                            await deleteStudent(student.id);
-                            setLoading(false);
-                            setOpen(false);
-                            router.refresh?.();
+                            const success = await deleteCurriculum(curriculum.id)
+                            if (success) {
+                                showSuccess('Kurikulum berhasil dihapus')
+                                setOpen(false);
+                                router.refresh?.();
+                            } else {
+                                showError('Gagal menghapus kurikulum')
+                            }
                         }}
-                        disabled={loading ? true : false}
+                        disabled={loading}
                     >
-                        Delete
+                        Hapus
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -145,7 +129,20 @@ function StudentDeleteActions({ student }: { student: Student }) {
     );
 }
 
-export const columns: ColumnDef<Student>[] = [
+const getCategoryLabel = (category: string | null | undefined) => {
+    switch (category) {
+        case "EXTRACURRICULAR":
+            return "Ekstrakurikuler";
+        case "PROGRAM UNGGULAN":
+            return "Program Unggulan";
+        case "KO-CULLICULAR":
+            return "Ko-Kurikuler";
+        default:
+            return "-";
+    }
+};
+
+export const columns: ColumnDef<Curriculum>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -169,75 +166,57 @@ export const columns: ColumnDef<Student>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "full_name",
-        header: "Nama Lengkap",
+        accessorKey: "name",
+        header: "Nama Kurikulum",
         cell: ({ row }) => (
-            <div>{row.getValue("full_name")}</div>
+            <div className="font-medium">{row.getValue("name")}</div>
         ),
     },
     {
-        accessorKey: "nisn",
-        header: "NISN",
+        accessorKey: "category",
+        header: "Kategori",
         cell: ({ row }) => (
-            <div>{row.getValue("nisn")}</div>
+            <div>{getCategoryLabel(row.getValue("category"))}</div>
         ),
     },
     {
-        accessorKey: "nik",
-        header: "NIK",
-        cell: ({ row }) => (
-            <div>{row.getValue("nik")}</div>
-        ),
+        accessorKey: "image",
+        header: "Gambar",
+        cell: ({ row }) => {
+            const image = row.getValue("image") as string | null | undefined;
+            if (!image) return <div className="text-gray-400">-</div>;
+            
+            const imageSrc = image.startsWith('http') 
+                ? image 
+                : image.startsWith('/') 
+                    ? image 
+                    : `/${image}`;
+            
+            return (
+                <div className="relative w-16 h-16 rounded overflow-hidden border">
+                    <Image
+                        src={imageSrc}
+                        alt={row.original.name}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                    />
+                </div>
+            );
+        },
     },
     {
-        accessorKey: "asal_sekolah",
-        header: "Asal Sekolah",
-        cell: ({ row }) => (
-            <div>{row.getValue("asal_sekolah")}</div>
-        ),
-    },
-    {
-        accessorKey: "gender",
-        header: "Jenis Kelamin",
-        cell: ({ row }) => (
-            <div className="capitalize">{getJenisKelaminLabel(row.getValue("gender")) ?? row.getValue("gender")}</div>
-        ),
-    },
-    {
-        accessorKey: "tanggal_lahir",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Tgl Lahir
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => (
-            <div>
-                {row.getValue("tanggal_lahir")
-                    ? new Date(row.getValue("tanggal_lahir") as string).toLocaleDateString()
-                    : "-"}
-            </div>
-        ),
-    },
-    {
-        accessorKey: "agama",
-        header: "Agama",
-        cell: ({ row }) => (
-            <div>
-                {getAgamaLabel(row.getValue("agama") as string) ?? row.getValue("agama")}
-            </div>
-        ),
-    },
-    {
-        accessorKey: "phone",
-        header: "No HP",
-        enableHiding: true,
-        cell: ({ row }) => (
-            <div>{row.getValue("phone")}</div>
-        ),
+        accessorKey: "description",
+        header: "Deskripsi",
+        cell: ({ row }) => {
+            const description = row.getValue("description") as string | null | undefined;
+            if (!description) return <div className="text-gray-400">-</div>;
+            return (
+                <div className="max-w-md truncate" title={description}>
+                    {description}
+                </div>
+            );
+        },
     },
     {
         accessorKey: "created_at",
@@ -246,8 +225,7 @@ export const columns: ColumnDef<Student>[] = [
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Didaftarkan
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                Dibuat <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => (
@@ -259,58 +237,60 @@ export const columns: ColumnDef<Student>[] = [
         ),
     },
     {
-        accessorKey: "Tahun Ajaran",
-        // header: ({ column }) => (
-        //     <Button
-        //         variant="ghost"
-        //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //     >
-        //         Didaftarkan
-        //         <ArrowUpDown className="ml-2 h-4 w-4" />
-        //     </Button>
-        // ),
-        cell: ({ row }) => {
-            const batch = row.original.batch;
-
-            return batch?.name
-        },
+        accessorKey: "updated_at",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Diupdate <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => (
+            <div>
+                {row.getValue("updated_at")
+                    ? new Date(row.getValue("updated_at") as string).toLocaleString()
+                    : "-"}
+            </div>
+        ),
     },
     {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const student = row.original
-            return <StudentDeleteActions student={student} />
+            const curriculum = row.original
+            return <CurriculumDeleteActions curriculum={curriculum} />
         },
     },
 ]
 
-export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
+export function DataTable() {
     const router = useRouter();
     const searchParams = useSearchParams();
+
     const q = searchParams.get('q') ?? '';
-    const batchIdFromParams = searchParams.get('batch') ?? '';
+    const page = searchParams.get('page') ?? '1';
+    const limit = searchParams.get('limit') ?? '10';
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [batches, setBatches] = React.useState<Batch[]>([])
-    const [selectedBatchId, setSelectedBatchId] = React.useState<string>(batchIdFromParams);
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        phone: false,
-        agama: false,
+        category: false,
+        image: false,
+        description: false,
+        created_at: false,
+        updated_at: false,
     })
     const [rowSelection, setRowSelection] = React.useState({})
 
-    const handleGetBatches = async () => {
-        const data = await getBatches(1, 99999)
+    const { curriculums, meta, getCurriculums } = useCurriculumStore()
 
-        if(data) {
-            setBatches(data.data as Batch[])
-        }
-    }
+    React.useEffect(() => {
+        getCurriculums({ page, limit, q })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, limit, q])
 
-    // Update query param for search on change
     React.useEffect(() => {
         const timeout = setTimeout(() => {
             const params = new URLSearchParams(searchParams.toString());
@@ -319,40 +299,14 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
             } else {
                 params.delete('q');
             }
-            // Also re-apply batch filter (if needed)
-            if (selectedBatchId) {
-                params.set('batch', selectedBatchId);
-            } else {
-                params.delete('batch');
-            }
-            router.push(`/admin/registrants?${params.toString()}`);
+            router.push(`/admin/curriculums?${params.toString()}`);
         }, 500);
 
         return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, router, searchParams]);
 
-    // Update param when select batch changes
-    React.useEffect(() => {
-        // Only trigger if value changes (not on initial mount to avoid double render)
-        if (selectedBatchId !== (searchParams.get('batch') ?? "")) {
-            const params = new URLSearchParams(searchParams.toString());
-            if (selectedBatchId) {
-                params.set('batch', selectedBatchId);
-            } else {
-                params.delete('batch');
-            }
-            router.push(`/admin/registrants?${params.toString()}`);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedBatchId]);
-
-    React.useEffect(() => {
-        handleGetBatches()
-    }, [])
-
     const table = useReactTable({
-        data,
+        data: curriculums,
         columns,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
@@ -369,38 +323,19 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
 
     return (
         <div className="w-full">
-            <div className="flex items-center py-4 gap-2">
+            <div className="flex items-center py-4">
                 <Input
-                    placeholder="Search name or NISN..."
+                    placeholder="Cari nama kurikulum..."
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     className="max-w-sm"
                 />
-                {/* Select Batch */}
-                <Select
-                    value={selectedBatchId}
-                    onValueChange={(value) => {
-                        setSelectedBatchId(value);
-                        // batch is being handled by useEffect!
-                    }}
-                >
-                    <SelectTrigger className="w-[160px]">
-                        <SelectValue placeholder="Pilih Gelombang" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {batches.map((batch) => (
-                            <SelectItem key={batch.id} value={batch.id.toString()}>
-                                {batch.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
                 <Select
                     onValueChange={(value) => {
                         const params = new URLSearchParams(searchParams.toString());
                         params.set('limit', value);
                         params.set('page', '1');
-                        router.push(`/admin/registrants?${params.toString()}`);
+                        router.push(`/admin/curriculums?${params.toString()}`);
                     }}
                     value={meta.limit?.toString() ?? "10"}
                 >
@@ -484,7 +419,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No data found.
+                                    Tidak ada data.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -493,8 +428,8 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="text-muted-foreground flex-1 text-sm">
-                    {table.getSelectedRowModel().rows.length} of{" "}
-                    {table.getRowModel().rows.length} row(s) selected.
+                    {table.getSelectedRowModel().rows.length} dari{" "}
+                    {table.getRowModel().rows.length} baris dipilih.
                 </div>
                 <div className="space-x-2">
                     <Button
@@ -503,11 +438,11 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page - 1).toString());
-                            router.push(`/admin/registrants?${params.toString()}`);
+                            router.push(`/admin/curriculums?${params.toString()}`);
                         }}
                         disabled={meta.page <= 1}
                     >
-                        Previous
+                        Sebelumnya
                     </Button>
                     <Button
                         variant="outline"
@@ -515,14 +450,15 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
                             params.set('page', (meta.page + 1).toString());
-                            router.push(`/admin/registrants?${params.toString()}`);
+                            router.push(`/admin/curriculums?${params.toString()}`);
                         }}
                         disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
                     >
-                        Next
+                        Selanjutnya
                     </Button>
                 </div>
             </div>
         </div>
     )
 }
+
