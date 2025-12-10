@@ -369,7 +369,7 @@ export default function PPDBPage() {
                 if (!result) {
                     const firstFieldError = fieldsToValidate.find((f) => errors[f]);
                     showError((firstFieldError && errors[firstFieldError]?.message) ||
-                    (currentStep === 0 ? "Isian biodata masih ada yang belum valid." : "Isian data orang tua/wali masih ada yang belum valid."))
+                        (currentStep === 0 ? "Isian biodata masih ada yang belum valid." : "Isian data orang tua/wali masih ada yang belum valid."))
                     return;
                 }
                 setCurrentStep((s) => s + 1);
@@ -471,7 +471,7 @@ export default function PPDBPage() {
                 <div className="flex justify-center mb-6">
                     <Image
                         src={config.appLogoPanjang}
-                        alt="Logo SMP Unggulan Hamzanwadi"
+                        alt={config.appName}
                         loading="lazy"
                         width={150}
                         height={150}
@@ -479,7 +479,7 @@ export default function PPDBPage() {
                 </div>
                 <div className="text-center mb-6">
                     <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">Pendaftaran Peserta Didik Baru</h1>
-                    <p className="text-gray-600 dark:text-gray-200 text-base sm:text-lg">SMP Unggulan Hamzanwadi</p>
+                    <p className="text-gray-600 dark:text-gray-200 text-base sm:text-lg">{config.appName}</p>
                 </div>
 
                 <Stepper currentStep={currentStep} />

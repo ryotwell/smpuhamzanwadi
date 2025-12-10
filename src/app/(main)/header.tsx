@@ -36,25 +36,26 @@ function ListItem({ title, href, children }: { title: string, href: string, chil
 const navigation = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about-us' },
-    { name: 'News and Event', href: '#' },
+    { name: 'News and Event', href: '/#posts' },
     { name: 'Achievements', href: '#' },
+    { name: 'Info PPDB', href: '/ppdb/info' },
 ]
 
 // Dropdown menu sekolah
 const components = [
     {
         title: "Ekstrakurikuler",
-        href: "#ekstrakurikuler",
+        href: "/#ekstrakurikuler",
         description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
     },
     {
         title: "Program Unggulan",
-        href: "#unggulan",
-        description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
+        href: "/#unggulan",
+        description: `Program-program utama sekolah yang menjadi keunggulan dan ciri khas ${config.appName}.`,
     },
     {
         title: "KO-Kulikuler",
-        href: "#kokulikuler",
+        href: "/#kokulikuler",
         description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
     },
 ]

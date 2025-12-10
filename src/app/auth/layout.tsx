@@ -30,7 +30,7 @@ export default function AuthLayout({
                   />
                 </Link>
                 <p className="text-center text-gray-400 dark:text-white/60">
-                  Selamat datang di Sistem Informasi SMP Unggulan Hamzanwadi
+                  Selamat datang di Sistem Informasi {config.appName}
                 </p>
               </div>
             </div>

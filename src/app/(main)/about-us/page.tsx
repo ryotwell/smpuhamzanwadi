@@ -40,7 +40,7 @@ export default function AboutUsPage() {
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Profil Sekolah</h2>
                         <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                             <p>
-                                SMP Unggulan Hamzanwadi adalah lembaga pendidikan menengah pertama yang berdedikasi untuk mencetak generasi muda yang beriman, berilmu, dan berakhlak mulia. Berdiri di bawah naungan Yayasan Pendidikan Hamzanwadi, sekolah kami memadukan kurikulum nasional dengan nilai-nilai keislaman yang kuat.
+                                {config.appName} adalah lembaga pendidikan menengah pertama yang berdedikasi untuk mencetak generasi muda yang beriman, berilmu, dan berakhlak mulia. Berdiri di bawah naungan Yayasan Pendidikan Hamzanwadi, sekolah kami memadukan kurikulum nasional dengan nilai-nilai keislaman yang kuat.
                             </p>
                             <p>
                                 Kami percaya bahwa setiap siswa memiliki potensi unik yang perlu digali dan dikembangkan. Oleh karena itu, kami menyediakan lingkungan belajar yang kondusif, fasilitas modern, dan tenaga pengajar yang profesional untuk mendukung tumbuh kembang siswa secara holistik.
@@ -108,10 +108,10 @@ export default function AboutUsPage() {
                                     Assalamu'alaikum Warahmatullahi Wabarakatuh.
                                 </p>
                                 <p>
-                                    Selamat datang di website resmi SMP Unggulan Hamzanwadi. Kami sangat bersyukur dapat menyapa Anda semua melalui media informasi ini. Website ini kami hadirkan sebagai jembatan komunikasi antara sekolah dengan masyarakat luas, khususnya orang tua siswa dan calon siswa.
+                                    Selamat datang di website resmi {config.appName}. Kami sangat bersyukur dapat menyapa Anda semua melalui media informasi ini. Website ini kami hadirkan sebagai jembatan komunikasi antara sekolah dengan masyarakat luas, khususnya orang tua siswa dan calon siswa.
                                 </p>
                                 <p>
-                                    SMP Unggulan Hamzanwadi terus berkomitmen untuk memberikan layanan pendidikan terbaik. Kami menyadari tantangan zaman yang semakin kompleks menuntut kami untuk terus berinovasi dan meningkatkan kualitas pendidikan. Melalui sinergi antara guru, siswa, dan orang tua, kami yakin dapat melahirkan generasi penerus bangsa yang unggul dan berkarakter.
+                                    {config.appName} terus berkomitmen untuk memberikan layanan pendidikan terbaik. Kami menyadari tantangan zaman yang semakin kompleks menuntut kami untuk terus berinovasi dan meningkatkan kualitas pendidikan. Melalui sinergi antara guru, siswa, dan orang tua, kami yakin dapat melahirkan generasi penerus bangsa yang unggul dan berkarakter.
                                 </p>
                             </div>
                         </div>
@@ -122,7 +122,7 @@ export default function AboutUsPage() {
                 <section className="text-center py-12">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Bergabunglah Bersama Kami</h2>
                     <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-                        Jadilah bagian dari keluarga besar SMP Unggulan Hamzanwadi dan raih masa depan gemilang.
+                        Jadilah bagian dari keluarga besar {config.appName} dan raih masa depan gemilang.
                     </p>
                     <div className="flex justify-center gap-4">
                         <Button size="lg" className="font-semibold px-8" asChild>
