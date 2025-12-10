@@ -17,7 +17,7 @@ interface CurriculumState {
     setCurriculums: (curriculums: Curriculum[], meta?: Meta) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
-    getCurriculums: (params?: { page?: string; limit?: string; q?: string }) => Promise<void>;
+    getCurriculums: (params?: { page?: string; limit?: string; q?: string; category?: string }) => Promise<void>;
     addCurriculum: (data: Partial<Curriculum>) => Promise<Curriculum | null>;
     updateCurriculum: (id: number, data: Partial<Curriculum>) => Promise<Curriculum | null>;
     deleteCurriculum: (id: number) => Promise<boolean>;
@@ -34,14 +34,20 @@ export const useCurriculumStore = create<CurriculumState>((set, get) => ({
 
     getCurriculums: async (params = {}) => {
         set({ loading: true, error: null });
-        const { page = 1, limit = 10, q = '' } = params;
+        const { page = 1, limit = 10, q = '', category = '' } = params;
 
         try {
-            const query = new URLSearchParams({
+            const queryParams: Record<string, string> = {
                 page: String(page),
                 limit: String(limit),
                 q: q.trim(),
-            }).toString();
+            };
+
+            if (category) {
+                queryParams.category = category;
+            }
+
+            const query = new URLSearchParams(queryParams).toString();
             const res = await axios.get(`${APIPATHS.FETCHCURRICULUMS}?${query}`);
 
             set({

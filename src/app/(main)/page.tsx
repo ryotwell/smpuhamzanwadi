@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect }from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,9 @@ import { Header } from './header'
 import Link from 'next/link'
 import { formatDateWithDayName } from '@/lib/utils'
 import { usePostStore } from '@/store/usePostStore'
+import { useCurriculumStore } from '@/store/useCurriculumStore'
+import { useFacilityStore } from '@/store/useFacilityStore'
+import { Curriculum } from '@/types/model'
 
 const slides = [
     {
@@ -29,66 +32,6 @@ const slides = [
         title: "Prestasi Siswa",
         desc: "Siswa kami berprestasi di tingkat lokal, nasional, dan internasional.",
         cta: { label: "Lihat Prestasi", href: "#" }
-    }
-]
-
-const unggulanSlides = [
-    // Bahasa Inggris
-    {
-        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80",
-        title: "Pembelajaran Bahasa Inggris",
-        desc: "Program intensif Bahasa Inggris untuk meningkatkan kemampuan komunikasi global siswa.",
-        cta: { label: "Selengkapnya", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80",
-        title: "English Club",
-        desc: "Kegiatan English Club untuk melatih speaking, listening, dan writing secara menyenangkan.",
-        cta: { label: "Gabung English Club", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
-        title: "Kompetisi Bahasa Inggris",
-        desc: "Siswa berpartisipasi dalam lomba debat, pidato, dan olimpiade Bahasa Inggris.",
-        cta: { label: "Lihat Prestasi", href: "#" }
-    },
-    // Pendidikan Karakter
-    {
-        image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80",
-        title: "Pembentukan Karakter",
-        desc: "Menanamkan nilai-nilai kejujuran, disiplin, dan tanggung jawab dalam keseharian siswa.",
-        cta: { label: "Pelajari Program", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80",
-        title: "Kegiatan Sosial",
-        desc: "Kegiatan bakti sosial dan gotong royong untuk membangun empati dan kepedulian.",
-        cta: { label: "Lihat Kegiatan", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?auto=format&fit=crop&w=1200&q=80",
-        title: "Pembiasaan Positif",
-        desc: "Pembiasaan salam, senyum, sapa, sopan, dan santun di lingkungan sekolah.",
-        cta: { label: "Baca Selengkapnya", href: "#" }
-    },
-    // Al-Qur'an
-    {
-        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80",
-        title: "Tahfidz Al-Qur&apos;an",
-        desc: "Program menghafal Al-Qur&apos;an dengan bimbingan guru berpengalaman.",
-        cta: { label: "Program Tahfidz", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
-        title: "Tartil & Tilawah",
-        desc: "Pembelajaran membaca Al-Qur&apos;an dengan tartil dan tajwid yang benar.",
-        cta: { label: "Pelajari Tartil", href: "#" }
-    },
-    {
-        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80",
-        title: "Kegiatan Keagamaan",
-        desc: "Kegiatan tadarus, kultum, dan peringatan hari besar Islam.",
-        cta: { label: "Lihat Kegiatan", href: "#" }
     }
 ]
 
@@ -120,92 +63,63 @@ const newsArticles = [
     },
 ]
 
-// Data Kurikulum (ditambahkan properti "id" pada masing-masing kategori)
-const kurikulumData = [
-    {
-        id: "ekstrakurikuler",
-        category: "Ekstrakurikuler",
-        data: [
-            {
-                name: "Pramuka",
-                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-                desc: "Kegiatan kepramukaan untuk membentuk karakter, kepemimpinan, dan kemandirian siswa."
-            },
-            {
-                name: "Paskibra",
-                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
-                desc: "Pasukan Pengibar Bendera, melatih kedisiplinan dan rasa cinta tanah air."
-            },
-            {
-                name: "Seni Musik",
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
-                desc: "Ekstrakurikuler musik untuk menyalurkan bakat seni dan kreativitas siswa."
-            },
-        ]
-    },
-    {
-        id: "kokulikuler",
-        category: "KO-Kulikuler",
-        data: [
-            {
-                name: "Praktikum IPTEK",
-                image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
-                desc: "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
-            },
-            {
-                name: "Kegiatan Bahasa dan Sastra",
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
-                desc: "Lomba pidato, puisi, debat, dan karya ilmiah bahasa Indonesia & Inggris."
-            },
-            {
-                name: "Workshop & Bimbingan",
-                image: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80",
-                desc: "Workshop, seminar, serta bimbingan konseling yang menunjang seluruh potensi siswa."
-            }
-        ]
-    }
-]
 
-// Data Fasilitas Sekolah
-const fasilitasList = [
-    {
-        name: "Ruang Kelas Nyaman",
-        image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80",
-        desc: "Setiap ruang kelas dilengkapi dengan fasilitas modern, pencahayaan baik, dan ventilasi udara yang optimal."
-    },
-    {
-        name: "Laboratorium IPA",
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
-        desc: "Laboratorium sains lengkap untuk mendukung pembelajaran praktikum Biologi, Fisika, dan Kimia."
-    },
-    {
-        name: "Perpustakaan",
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
-        desc: "Perpustakaan dengan koleksi buku pelajaran, referensi, dan literatur penunjang yang beragam."
-    },
-    {
-        name: "Lapangan Olahraga",
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
-        desc: "Lapangan multifungsi untuk kegiatan olahraga seperti futsal, basket, dan upacara."
-    },
-    {
-        name: "Ruang Komputer",
-        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
-        desc: "Ruang komputer dengan perangkat terbaru untuk mendukung pembelajaran teknologi informasi."
-    },
-    {
-        name: "Musholla",
-        image: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80",
-        desc: "Tempat ibadah yang nyaman dan bersih untuk mendukung kegiatan keagamaan siswa."
-    },
-]
+
+
+
 
 export default function Page() {
-    const { posts, getPosts }  = usePostStore()
+    const { posts, getPosts } = usePostStore()
+    const { curriculums, getCurriculums } = useCurriculumStore()
+    const { facilities, getFacilities } = useFacilityStore()
 
     useEffect(() => {
         getPosts();
+        getCurriculums({ limit: '100' }); // Fetch enough to cover all categories
+        getFacilities({ limit: '100' });
     }, []);
+
+    // Helper to group curriculums by category
+    const getCurriculumsByCategory = (category: string) => {
+        return curriculums.filter((item) => item.category === category)
+    }
+
+    const dynamicUnggulanSlides = getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
+        image: item.image || "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80",
+        title: item.name,
+        desc: item.description || "Program unggulan sekolah.",
+        cta: { label: "Selengkapnya", href: "#" }
+    }));
+
+    const dynamicKurikulumData = [
+        {
+            id: "ekstrakurikuler",
+            category: "Ekstrakurikuler",
+            data: getCurriculumsByCategory("EXTRACURRICULAR").map(item => ({
+                name: item.name,
+                image: item.image || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80", // Fallback image
+                desc: item.description || "Kegiatan kepramukaan untuk membentuk karakter, kepemimpinan, dan kemandirian siswa."
+            }))
+        },
+        {
+            id: "kokulikuler",
+            category: "KO-Kulikuler",
+            data: getCurriculumsByCategory("KO-CULLICULAR").map(item => ({
+                name: item.name,
+                image: item.image || "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
+                desc: item.description || "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
+            }))
+        },
+        {
+            id: "program-unggulan",
+            category: "Program Unggulan",
+            data: getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
+                name: item.name,
+                image: item.image || "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80", // Fallback
+                desc: item.description || "Program unggulan sekolah."
+            }))
+        }
+    ].filter(cat => cat.data.length > 0); // Only show categories with data
 
     return (
         <div className="bg-white dark:bg-gray-950 mb-28 transition-colors duration-300 min-h-screen flex flex-col">
@@ -213,6 +127,7 @@ export default function Page() {
             <Header />
 
             {/* Hero */}
+            {/* ... (keep existing Hero code) */}
             <div className="relative isolate px-6 pt-14 lg:px-8 h-svh flex items-center">
                 {/* Full background video */}
                 <video
@@ -364,7 +279,7 @@ export default function Page() {
                         Tiga program unggulan SMP Unggulan Hamzanwadi: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur&apos;an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur&apos;an.
                     </p>
                 </div>
-                <ImageSlider slides={unggulanSlides} />
+                <ImageSlider slides={dynamicUnggulanSlides} />
             </div>
 
             {/* Section Kurikulum */}
@@ -376,7 +291,7 @@ export default function Page() {
                     SMP Unggulan Hamzanwadi memiliki tiga kategori utama pada Kurikulum: Ekstrakurikuler, Program Unggulan, dan KO-Kulikuler. Setiap kategori berisi kegiatan dan program untuk mendukung bakat, minat, dan kompetensi siswa secara optimal.
                 </p>
                 <div className="space-y-14">
-                    {kurikulumData.map((kategori) => (
+                    {dynamicKurikulumData.map((kategori) => (
                         <div key={kategori.id} id={kategori.id}>
                             <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
                             <div className="grid gap-8 md:grid-cols-3">
@@ -420,7 +335,7 @@ export default function Page() {
                 </div>
                 {/* Responsive grid for Fasilitas Sekolah */}
                 <div
-                  className="
+                    className="
                     grid gap-8
                     grid-cols-1
                     sm:grid-cols-2
@@ -429,14 +344,14 @@ export default function Page() {
                     2xl:grid-cols-3
                   "
                 >
-                    {fasilitasList.map((fasilitas) => (
+                    {facilities.map((fasilitas) => (
                         <div
                             key={fasilitas.name}
                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-64 w-full overflow-hidden">
                                 <Image
-                                    src={fasilitas.image}
+                                    src={fasilitas.image || "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80"}
                                     alt={fasilitas.name}
                                     width={800}
                                     height={600}
@@ -447,7 +362,7 @@ export default function Page() {
                                 <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
                                     {fasilitas.name}
                                 </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-lg">{fasilitas.desc}</p>
+                                <p className="text-gray-600 dark:text-gray-300 text-lg">{fasilitas.description}</p>
                             </div>
                         </div>
                     ))}
