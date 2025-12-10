@@ -35,7 +35,7 @@ function ListItem({ title, href, children }: { title: string, href: string, chil
 // Menu utama sekolah
 const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'About Us', href: '#' },
+    { name: 'About Us', href: '/about-us' },
     { name: 'News and Event', href: '#' },
     { name: 'Achievements', href: '#' },
 ]
@@ -64,7 +64,7 @@ export const Header = () => {
     const [pathname, setPathname] = React.useState("")
 
     const useReadableText = (path: string) => {
-        if(path === '/') return 'text-muted'
+        if (path === '/') return 'text-muted'
 
         return 'text-muted-foreground'
     }
