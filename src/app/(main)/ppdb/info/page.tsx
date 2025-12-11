@@ -44,15 +44,15 @@ export default function PPDBInfoPage() {
                             Ikuti langkah-langkah mudah berikut untuk mendaftarkan putra-putri Anda di {config.appName}.
                         </p>
                     </div>
-                    <div className="grid gap-8 md:grid-cols-4 relative">
+                    <div className="grid gap-8 md:grid-cols-3 relative">
                         {/* Connecting Line (Desktop) */}
                         <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-700 -z-10 transform -translate-y-1/2" />
 
                         {[
                             { step: 1, title: 'Isi Formulir', desc: 'Lengkapi formulir pendaftaran secara online melalui website ini.', icon: FileText },
-                            { step: 2, title: 'Pembayaran', desc: 'Lakukan pembayaran biaya pendaftaran sesuai instruksi.', icon: CheckCircle2 },
-                            { step: 3, title: 'Verifikasi', desc: 'Panitia akan memverifikasi data dan berkas yang Anda kirimkan.', icon: Calendar }, // Using Calendar as placeholder
-                            { step: 4, title: 'Seleksi & Pengumuman', desc: 'Ikuti tes seleksi (jika ada) dan tunggu pengumuman hasil.', icon: HelpCircle },
+                            // { step: 2, title: 'Pembayaran', desc: 'Lakukan pembayaran biaya pendaftaran sesuai instruksi.', icon: CheckCircle2 },
+                            { step: 2, title: 'Verifikasi', desc: 'Panitia akan memverifikasi data dan berkas yang Anda kirimkan.', icon: Calendar }, // Using Calendar as placeholder
+                            { step: 3, title: 'Seleksi & Pengumuman', desc: 'Ikuti tes seleksi (jika ada) dan tunggu pengumuman hasil.', icon: HelpCircle },
                         ].map((item) => (
                             <div key={item.step} className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center relative">
                                 <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4 shadow-md z-10">

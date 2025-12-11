@@ -162,12 +162,12 @@ export default function Content() {
                         <div className="font-semibold text-primary text-lg">{config.kepalaSekolah}</div>
                         <div className="text-gray-500 dark:text-gray-400 text-sm">Kepala Sekolah</div>
                         <div className="mt-4">
-                            <Link
-                                href="/sambutan"
+                            <a
+                                href="#"
                                 className="inline-block text-primary font-semibold hover:underline text-base"
                             >
-                                Selengkapnya <ArrowRight className="h-5 w-5" />
-                            </Link>
+                                Selengkapnya &rarr;
+                            </a>
                         </div>
                     </div>
                 </div>
