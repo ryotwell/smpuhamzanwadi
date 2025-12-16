@@ -247,3 +247,18 @@ export const DEFAULT_STUDENT = {
     // parent_id: 0,
     parent: DEFAULT_PARENT,
 };
+
+export type Requirement = {
+    id: number;
+    description: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Faq = {
+    id: number;
+    question: string;
+    answer: string;
+    created_at: string;
+    updated_at: string;
+};
