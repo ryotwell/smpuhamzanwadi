@@ -157,17 +157,10 @@ export const columns: ColumnDef<Batch>[] = [
         ),
     },
     {
-        accessorKey: "year",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Tahun <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        accessorKey: "jalur",
+        header: "Jalur",
         cell: ({ row }) => (
-            <div>{row.getValue("year")}</div>
+            <div>{row.getValue("jalur")}</div>
         ),
     },
     {
@@ -295,7 +288,6 @@ export function DataTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        year: false,
         created_at: false,
         updated_at: false,
     })

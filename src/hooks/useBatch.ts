@@ -10,6 +10,7 @@ import { APIPATHS } from "@/lib/constants";
 import { Batch } from "@/types/model";
 import { BatchFields, batchSchema } from "@/app/admin/batches/comps/form";
 import { collectMessages, showError } from "@/lib/utils";
+import { useBatchStore } from "@/store/useBatchStore";
 
 export type BatchFormMode = "CREATE" | "UPDATE";
 
@@ -19,6 +20,9 @@ type IUseBatch = {
 };
 
 const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
+
+    const { getBatches } = useBatchStore()
+
     const {
         control,
         trigger,
@@ -30,6 +34,7 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
         mode: "onTouched",
         defaultValues: {
             name: batch?.name || "",
+            jalur: batch?.jalur || "",
             // is_active: batch?.is_active ? 'ACTIVE' : 'INACTIVE',
             is_active: batch?.is_active ? true : false,
             start_date: batch?.start_date || null,
@@ -55,7 +60,7 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
 
             const payload = {
                 ...batchFields,
-                year: new Date().getFullYear(),
+                // year: new Date().getFullYear(), // Removed year
                 // is_active: batchFields.is_active === 'ACTIVE' ? true : false,
                 is_active: batchFields.is_active ? true : false,
             }
@@ -70,12 +75,14 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
                 await axios.post(APIPATHS.STOREBATCH, payload);
             }
 
+            await getBatches();
+
             if (formMode === "CREATE") {
                 resetFormInputs();
             }
 
             toast.success(successMessage);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             showError(collectMessages(err).toString())
         } finally {
@@ -86,6 +93,7 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
     const resetFormInputs = () => {
         resetForm({
             name: batch?.name || "",
+            jalur: batch?.jalur || "",
             // is_active: batch?.is_active ? 'ACTIVE' : 'INACTIVE',
             is_active: batch?.is_active ? true : false,
             start_date: batch?.start_date || null,

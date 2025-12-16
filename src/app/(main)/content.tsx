@@ -57,15 +57,6 @@ export default function Content() {
                 desc: item.description || "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
             }))
         },
-        // {
-        //     id: "program-unggulan",
-        //     category: "Program Unggulan",
-        //     data: getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
-        //         name: item.name,
-        //         image: item.image || "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80", // Fallback
-        //         desc: item.description || "Program unggulan sekolah."
-        //     }))
-        // }
     ].filter(cat => cat.data.length > 0); // Only show categories with data
 
     return (
