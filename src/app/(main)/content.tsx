@@ -8,7 +8,7 @@ import { ImageSlider } from '@/components/ui/ImageSlider'
 import { config } from '@/config'
 import { Header } from './header'
 import Link from 'next/link'
-import { formatDateWithDayName } from '@/lib/utils'
+import { cn, formatDateWithDayName } from '@/lib/utils'
 import { usePostStore } from '@/store/usePostStore'
 import { useCurriculumStore } from '@/store/useCurriculumStore'
 import { useFacilityStore } from '@/store/useFacilityStore'
@@ -163,7 +163,7 @@ export default function Content() {
                         <div className="text-gray-500 dark:text-gray-400 text-sm">Kepala Sekolah</div>
                         <div className="mt-4">
                             <a
-                                href="#"
+                                href="/sambutan"
                                 className="inline-block text-primary font-semibold hover:underline text-base"
                             >
                                 Selengkapnya &rarr;
@@ -225,33 +225,35 @@ export default function Content() {
                         <div key={kategori.id} id={kategori.id}>
                             <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
                             <div className="grid gap-8 md:grid-cols-3">
-                                {kategori.data.map((item) => (
-                                    <div
-                                        key={item.name}
-                                        className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
-                                    >
-                                        <div className="h-40 w-full overflow-hidden">
-                                            <Image
-                                                src={item.image}
-                                                alt={item.name}
-                                                width={800}
-                                                height={600}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
+                                {
+                                    kategori.data.map((item) => (
+                                        <div
+                                            key={item.name}
+                                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                                        >
+                                            <div className="h-40 w-full overflow-hidden">
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    width={800}
+                                                    height={600}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                />
+                                            </div>
+                                            <div className="p-5">
+                                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                                    {item.name}
+                                                </h4>
+                                                <p className="text-gray-600 dark:text-gray-300 text-sm">{item.desc}</p>
+                                            </div>
                                         </div>
-                                        <div className="p-5">
-                                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                                                {item.name}
-                                            </h4>
-                                            <p className="text-gray-600 dark:text-gray-300 text-sm">{item.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                }
                             </div>
                         </div>
                     ))}
-                </div>
-            </section>
+                </div >
+            </section >
 
             {/* Section Fasilitas Sekolah */}
             <section id="fasilitas" className="max-w-5xl mx-auto mt-24 px-4">
@@ -265,14 +267,14 @@ export default function Content() {
                 </div>
                 {/* Responsive grid for Fasilitas Sekolah */}
                 <div
-                    className="
-                    grid gap-8
-                    grid-cols-1
-                    sm:grid-cols-2
-                    md:grid-cols-3
-                    xl:grid-cols-3
-                    2xl:grid-cols-3
-                  "
+                    className={cn([
+                        'grid gap-8',
+                        'grid-cols-1',
+                        'sm:grid-cols-2',
+                        'md:grid-cols-3',
+                        'xl:grid-cols-3',
+                        '2xl:grid-cols-3',
+                    ])}
                 >
                     {facilities.map((fasilitas) => (
                         <div
@@ -297,10 +299,10 @@ export default function Content() {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section >
 
             {/* Section Berita, Artikel & Informasi */}
-            <section id="posts" className="max-w-5xl mx-auto mt-24 px-4">
+            <section id="posts" className="max-w-5xl mx-auto mt-24 px-4" >
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
                     Berita, Artikel &amp; Informasi
                 </h2>
@@ -345,7 +347,7 @@ export default function Content() {
                         </Link>
                     </Button>
                 </div>
-            </section>
+            </section >
 
             <footer className="mt-32 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
                 <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8">

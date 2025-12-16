@@ -259,7 +259,7 @@ export const columns: ColumnDef<Student>[] = [
         ),
     },
     {
-        accessorKey: "Tahun Ajaran",
+        accessorKey: "Batch",
         // header: ({ column }) => (
         //     <Button
         //         variant="ghost"
@@ -305,7 +305,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
     const handleGetBatches = async () => {
         const data = await getBatches(1, 99999)
 
-        if(data) {
+        if (data) {
             setBatches(data.data as Batch[])
         }
     }
@@ -329,7 +329,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
         }, 500);
 
         return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, router, searchParams]);
 
     // Update param when select batch changes
@@ -344,7 +344,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
             }
             router.push(`/admin/registrants?${params.toString()}`);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBatchId]);
 
     React.useEffect(() => {

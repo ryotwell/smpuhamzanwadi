@@ -27,7 +27,7 @@ import { Switch } from "@/components/ui/switch";
 export type BatchFormMode = "CREATE" | "UPDATE";
 
 export const batchSchema = z.object({
-    name: z.string().min(1, "Tahun ajaran wajib diisi"),
+    name: z.string().min(1, "Batch wajib diisi"),
     // is_active: z.enum(["ACTIVE", "INACTIVE"]),
     is_active: z.boolean(),
     start_date: z.string().nullable(),
@@ -72,7 +72,7 @@ interface IBatchFormProps {
     formMode: BatchFormMode
 };
 
-type IIsActiveSwitchProps  = {
+type IIsActiveSwitchProps = {
     control: Control<BatchFields>;
     errors: FieldErrors<BatchFields>;
     hint?: string
@@ -155,7 +155,7 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
             </div>
 
             <form className="w-full space-y-5" onSubmit={onSubmit}>
-                {textInput("name", "Tahun Ajaran", "text", "Masukkan tahun ajaran", true)}
+                {textInput("name", "Batch", "text", "Masukkan Batch", true)}
                 <Controller
                     control={control}
                     name="start_date"
@@ -181,7 +181,7 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
                 <IsActiveSwitch
                     control={control}
                     errors={errors}
-                    hint="Jika batch ini adalah tahun ajaran yang sedang berjalan."
+                    hint="Jika batch ini adalah batch yang sedang berjalan."
                 />
 
                 <Button>
