@@ -39,17 +39,8 @@ export const FacilityForm: FC<IFacilityFormProps> = ({ facility, formMode }) => 
 
     const watchingImage = watch("image");
 
-    // Handle change with shadcn ui input file
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        setSelectedFile(file ?? null);
-
-        if (!file) {
-            setPreviewUrl(null);
-            setValue("image", null);
-            return;
-        }
-
+    const handleFile = React.useCallback(async (file: File) => {
+        setSelectedFile(file);
         setPreviewUrl(URL.createObjectURL(file));
 
         // Prevent concurrent uploads
@@ -81,7 +72,43 @@ export const FacilityForm: FC<IFacilityFormProps> = ({ facility, formMode }) => 
             uploadingRef.current = false;
             setUploading(false);
         }
+    }, [setValue]);
+
+    // Handle change with shadcn ui input file
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) {
+            setSelectedFile(null);
+            setPreviewUrl(null);
+            setValue("image", null);
+            return;
+        }
+        await handleFile(file);
     };
+
+    // Handle paste event
+    React.useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const file = items[i].getAsFile();
+                    if (file) {
+                        e.preventDefault();
+                        handleFile(file);
+                        return;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('paste', handlePaste);
+        return () => {
+            window.removeEventListener('paste', handlePaste);
+        };
+    }, [handleFile]);
 
     const textInput = (
         name: keyof FacilityFields,
@@ -158,7 +185,7 @@ export const FacilityForm: FC<IFacilityFormProps> = ({ facility, formMode }) => 
                     {(previewUrl || watchingImage || facility?.image) && (
                         <div className="mt-2">
                             <div className="text-xs text-gray-500 mb-2">
-                                Gambar saat ini: {watchingImage || facility?.image}
+                                Gambar saat ini: {watchingImage || facility?.image} (atau paste gambar baru)
                             </div>
                             <div className="relative w-32 h-32 rounded border overflow-hidden">
                                 {imageSrc && (

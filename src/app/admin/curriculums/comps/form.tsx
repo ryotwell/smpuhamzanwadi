@@ -127,15 +127,7 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
         return false;
     };
 
-    // Handle image file upload
-    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) {
-            setPreview(null);
-            setValue("image", null);
-            return;
-        }
-
+    const handleFile = React.useCallback(async (file: File) => {
         // Validate file type
         const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!allowedTypes.includes(file.type)) {
@@ -169,7 +161,43 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
         } finally {
             setUploading(false);
         }
+    }, [setValue]);
+
+    // Handle image file upload
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) {
+            setPreview(null);
+            setValue("image", null);
+            return;
+        }
+        await handleFile(file);
     };
+
+    // Handle paste event
+    useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const file = items[i].getAsFile();
+                    if (file) {
+                        e.preventDefault();
+                        handleFile(file);
+                        return;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('paste', handlePaste);
+        return () => {
+            window.removeEventListener('paste', handlePaste);
+        };
+    }, [handleFile]);
+
 
     // Handle image removal
     const handleRemoveImage = () => {
@@ -219,7 +247,7 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
 
             <form className="w-full space-y-5" onSubmit={onSubmit}>
                 {textInput("name", "Nama Kurikulum", "text", "Masukkan nama kurikulum", true)}
-                
+
                 <CategorySelect
                     control={control}
                     errors={errors}
@@ -287,7 +315,7 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
                     )}
                     {!preview && (
                         <p className="text-xs text-gray-500 mt-1">
-                            Format yang didukung: PNG, JPG, JPEG
+                            Format yang didukung: PNG, JPG, JPEG (atau paste)
                         </p>
                     )}
                 </div>
@@ -315,10 +343,10 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
                 </div>
 
                 <Button type="submit" disabled={uploading || submitLoading}>
-                    {uploading || submitLoading 
-                        ? "Mengupload..." 
-                        : formMode === 'CREATE' 
-                            ? 'Buat' 
+                    {uploading || submitLoading
+                        ? "Mengupload..."
+                        : formMode === 'CREATE'
+                            ? 'Buat'
                             : 'Perbarui'}
                 </Button>
             </form>

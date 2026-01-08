@@ -295,7 +295,7 @@ export default function Content() {
             </section >
 
             {/* Section Berita, Artikel & Informasi */}
-            <section id="posts" className="max-w-5xl mx-auto mt-24 px-4" >
+            <section id="posts" className="max-w-5xl mx-auto mt-24 px-4 mb-6">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4">
                     Berita, Artikel &amp; Informasi
                 </h2>
@@ -340,33 +340,7 @@ export default function Content() {
                         </Link>
                     </Button>
                 </div>
-            </section >
-
-            <footer className="mt-32 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-                <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div className="flex items-center gap-3">
-                        <Image
-                            src={config.appLogo}
-                            alt={config.appName}
-                            width={40}
-                            height={40}
-                            className="h-10 w-10 object-contain rounded bg-white p-1 shadow"
-                        />
-                        <span className="font-semibold text-lg text-gray-900 dark:text-white">{config.appName}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-6 text-gray-700 dark:text-gray-300 text-sm font-medium justify-center">
-                        <a href="#" className="hover:underline">Beranda</a>
-                        <a href="#" className="hover:underline">Profil</a>
-                        <a href="#" className="hover:underline">Guru &amp; Staf</a>
-                        <a href="#" className="hover:underline">Kontak</a>
-                        <a href="#" className="hover:underline">PPDB</a>
-                    </div>
-                    <div className="flex flex-col items-center gap-1">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">&copy; {new Date().getFullYear()} {config.appName}.</div>
-                        <div className="text-sm text-gray-400 dark:text-gray-600">Dibuat dengan <span role="img" aria-label="love">❤️</span> di Lombok Timur.</div>
-                    </div>
-                </div>
-            </footer>
+            </section>
         </>
     )
 }
