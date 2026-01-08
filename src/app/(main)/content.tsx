@@ -70,9 +70,11 @@ export default function Content() {
                     muted
                     playsInline
                     className="absolute inset-0 w-full h-full object-cover -z-10"
-                    poster="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                    // poster="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                    poster="/assets/images/hero-image-coba.jpg"
                 >
-                    <source src="/assets/images/hero.mp4" type="video/mp4" />
+                    {/* <source src="/assets/images/hero.mp4" type="video/mp4" /> */}
+                    <source src="hero-coba.MOV" type="video/mp4" />
                 </video>
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
@@ -96,11 +98,11 @@ export default function Content() {
                         <div className="mt-10 flex items-center justify-center gap-x-6">
                             <a
                                 href="#"
-                                className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                className="rounded-md bg-primary px-3.5 py-2.5 text-base font-semibold text-white shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             >
                                 Daftar Sekarang
                             </a>
-                            <a href="#" className="text-sm/6 font-semibold text-white dark:text-white hover:underline">
+                            <a href="#" className="text-base font-semibold text-white dark:text-white hover:underline">
                                 Lihat Profil Sekolah <span aria-hidden="true">→</span>
                             </a>
                         </div>
@@ -151,7 +153,7 @@ export default function Content() {
                             {config.sambutan?.split(' ').slice(0, 20).join(' ') + (config.sambutan?.split(' ').length > 20 ? '...' : '')}
                         </p>
                         <div className="font-semibold text-primary text-lg">{config.kepalaSekolah}</div>
-                        <div className="text-gray-500 dark:text-gray-400 text-sm">Kepala Sekolah</div>
+                        <div className="text-gray-500 dark:text-gray-400 text-base">Kepala Sekolah</div>
                         <div className="mt-4">
                             <a
                                 href="/sambutan"
@@ -163,7 +165,7 @@ export default function Content() {
                     </div>
                 </div>
                 {/* Statistik Data Sekolah */}
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                {/* <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
                     <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 flex flex-col items-center">
                         <div className="text-4xl font-bold text-primary mb-2">172</div>
                         <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">Guru &amp; Staf</div>
@@ -176,7 +178,7 @@ export default function Content() {
                         <div className="text-4xl font-bold text-primary mb-2">64</div>
                         <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">Rombel</div>
                     </div>
-                </div>
+                </div> */}
             </section>
 
             <div className="relative max-w-3xl mx-auto mt-24 isolate" id="unggulan">
@@ -235,7 +237,7 @@ export default function Content() {
                                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                                                     {item.name}
                                                 </h4>
-                                                <p className="text-gray-600 dark:text-gray-300 text-sm">{item.desc}</p>
+                                                <p className="text-gray-600 dark:text-gray-300 text-base">{item.desc}</p>
                                             </div>
                                         </div>
                                     ))
@@ -319,12 +321,12 @@ export default function Content() {
                                 </div>
                             )}
                             <div className="p-5">
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{formatDateWithDayName(post.created_at)}</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{formatDateWithDayName(post.created_at)}</div>
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                                     {post.title}
                                 </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{post.description}</p>
-                                <span className="inline-block text-primary font-semibold text-sm group-hover:underline">
+                                <p className="text-gray-600 dark:text-gray-300 text-base mb-4">{post.description}</p>
+                                <span className="inline-block text-primary font-semibold text-base group-hover:underline">
                                     Baca Selengkapnya &rarr;
                                 </span>
                             </div>
@@ -360,8 +362,8 @@ export default function Content() {
                         <a href="#" className="hover:underline">PPDB</a>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                        <div className="text-xs text-gray-500 dark:text-gray-400">&copy; {new Date().getFullYear()} {config.appName}.</div>
-                        <div className="text-xs text-gray-400 dark:text-gray-600">Dibuat dengan <span role="img" aria-label="love">❤️</span> di Lombok Timur.</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">&copy; {new Date().getFullYear()} {config.appName}.</div>
+                        <div className="text-sm text-gray-400 dark:text-gray-600">Dibuat dengan <span role="img" aria-label="love">❤️</span> di Lombok Timur.</div>
                     </div>
                 </div>
             </footer>
