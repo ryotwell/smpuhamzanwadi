@@ -79,11 +79,11 @@ export default function Content() {
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
                 <div className="mx-auto max-w-2xl">
-                    <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+                    <Link href="/ppdb/info" className="hidden sm:mb-8 sm:flex sm:justify-center">
                         <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-100 dark:text-gray-200 ring-1 ring-gray-200 dark:ring-gray-700 bg-black/30 dark:bg-black/40 hover:ring-gray-300 dark:hover:ring-gray-500">
-                            Penerimaan Peserta Didik Baru (PPDB) Tahun 2024.&nbsp;
+                            Penerimaan Peserta Didik Baru (PPDB) Tahun {new Date().getFullYear()}.&nbsp;
                         </div>
-                    </div>
+                    </Link>
                     <div className="text-center">
                         <Image
                             src={config.appLogoPanjang}
@@ -96,12 +96,12 @@ export default function Content() {
                             Temukan informasi seputar profil sekolah, kegiatan, prestasi, dan pendaftaran siswa baru di sini.
                         </p>
                         <div className="mt-10 flex items-center justify-center gap-x-6">
-                            <a
-                                href="#"
+                            <Link
+                                href="/ppdb/info"
                                 className="rounded-md bg-primary px-3.5 py-2.5 text-base font-semibold text-white shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             >
                                 Daftar Sekarang
-                            </a>
+                            </Link>
                             <a href="#" className="text-base font-semibold text-white dark:text-white hover:underline">
                                 Lihat Profil Sekolah <span aria-hidden="true">→</span>
                             </a>
