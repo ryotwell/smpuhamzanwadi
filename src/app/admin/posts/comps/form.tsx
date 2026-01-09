@@ -116,7 +116,7 @@ export default function CreatePostForm({
         } else {
             setPreview(null);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(initialValues)]);
 
     const watchingPublished = watch("published");
@@ -253,24 +253,8 @@ export default function CreatePostForm({
 
     return (
         <>
-            <div className="rounded-2xl border border-gray-200 bg-white px-4 py-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-                <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
-                    <div className="w-full">
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                            {isUpdate ? "Edit Post" : "Create a new Post"}
-                        </h3>
-                        <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                            {isUpdate
-                                ? "Edit the post below and submit your changes."
-                                : "Fill out the form below to publish a new post."}
-                        </p>
-                    </div>
-                    <div className="flex items-start w-full gap-3 sm:justify-end">
-                        {/* Optional: tab or actions slot */}
-                    </div>
-                </div>
-
-                <div className="w-full">
+            <>
+                <>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className="space-y-4 w-full"
@@ -490,8 +474,8 @@ export default function CreatePostForm({
                             </Button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </>
+            </>
         </>
     );
 }

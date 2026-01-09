@@ -37,7 +37,7 @@ const navigation = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about-us' },
     { name: 'News and Event', href: '/#posts' },
-    { name: 'Achievements', href: '#' },
+    // { name: 'Achievements', href: '#' },
     { name: 'Info PPDB', href: '/ppdb/info' },
 ]
 
