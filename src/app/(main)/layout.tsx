@@ -18,13 +18,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 Membentuk generasi unggul yang berkarakter islami, cerdas, dan kompetitif di era global.
                             </p>
                             <div className="flex gap-4">
-                                <a href="#" className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <a href={config.contactSocialMediaFacebook} className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
                                     <Facebook className="w-5 h-5" />
                                 </a>
-                                <a href="#" className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <a href={config.contactSocialMediaInstagram} className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
                                     <Instagram className="w-5 h-5" />
                                 </a>
-                                <a href="#" className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <a href={config.contactSocialMediaYoutube} className="p-2 bg-white dark:bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-colors text-gray-600 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
                                     <Youtube className="w-5 h-5" />
                                 </a>
                             </div>
@@ -37,17 +37,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 <div className="flex items-start gap-3 text-gray-600 dark:text-gray-400">
                                     <MapPin className="w-5 h-5 flex-shrink-0 mt-1 text-primary" />
                                     <span>
-                                        Jln. Dr. Ciptomangun Kusumo Sawing, Majidi,<br />
-                                        Selong, Lombok Timur, NTB
+                                        {config.contactAddress}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                                     <Phone className="w-5 h-5 flex-shrink-0 text-primary" />
-                                    <span>(0376) 2991000</span>
+                                    <span>{config.contactPhone}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                                     <Mail className="w-5 h-5 flex-shrink-0 text-primary" />
-                                    <span>info@smpuhamzanwadi.sch.id</span>
+                                    <span>{config.contactEmail}</span>
                                 </div>
                             </div>
                         </div>
