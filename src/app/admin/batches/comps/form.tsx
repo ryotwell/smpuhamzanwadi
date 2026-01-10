@@ -31,6 +31,7 @@ export const batchSchema = z.object({
     jalur: z.string().min(1, "Jalur wajib diisi"),
     // is_active: z.enum(["ACTIVE", "INACTIVE"]),
     is_active: z.boolean(),
+    whatsapp_group_link: z.string().min(1, "Link Group wajib diisi"),
     start_date: z.string().nullable(),
     end_date: z.string().nullable(),
 });
@@ -157,6 +158,7 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
 
             <form className="w-full space-y-5" onSubmit={onSubmit}>
                 {textInput("name", "Batch", "text", "Masukkan Batch", true)}
+                {textInput("whatsapp_group_link", "Whatsapp Group Link", "text", "Masukkan Link Whatsapp Group", true)}
 
                 <div>
                     <div className="mb-1 font-medium text-sm">Jalur</div>

@@ -113,6 +113,7 @@ export type Student = {
 export type Batch = {
     id: number;
     name: string;
+    whatsapp_group_link: string;
     jalur: "PRESTASI" | "REGULER" | string;
     is_active: boolean;
     start_date?: string | null;
