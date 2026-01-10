@@ -89,17 +89,6 @@ export default function PostsPage() {
                     </div>
                 )}
             </main>
-
-            <footer className="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-auto">
-                <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                        &copy; {new Date().getFullYear()} {config.appName}. All rights reserved.
-                    </div>
-                    <div className="text-sm text-gray-400 dark:text-gray-600">
-                        Sistem Informasi Sekolah
-                    </div>
-                </div>
-            </footer>
         </div>
     )
 }

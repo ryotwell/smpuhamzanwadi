@@ -47,14 +47,14 @@ const navItems: NavItem[] = [
       { name: "Tambah Pendaftar", path: "/admin/registrants/create", pro: false },
     ],
   },
-  {
-    icon: <UserCircle className="w-5 h-5" />,
-    name: "Pengguna",
-    subItems: [
-      { name: "Data Pengguna", path: "/admin/users", pro: false },
-      { name: "Tambah Pengguna", path: "/admin/users/create", pro: false },
-    ],
-  },
+  // {
+  //   icon: <UserCircle className="w-5 h-5" />,
+  //   name: "Pengguna",
+  //   subItems: [
+  //     { name: "Data Pengguna", path: "/admin/users", pro: false },
+  //     { name: "Tambah Pengguna", path: "/admin/users/create", pro: false },
+  //   ],
+  // },
   {
     icon: <Box className="w-5 h-5" />,
     name: "Batch",
