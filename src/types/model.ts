@@ -102,6 +102,7 @@ export type Student = {
     berat_kg: number;
     tinggi_cm: number;
     riwayat_penyakit: string;
+    is_accepted: boolean;
 
     parent_id: number;
     parent: Parent;
@@ -244,6 +245,7 @@ export const DEFAULT_STUDENT = {
     berat_kg: 0,
     tinggi_cm: 0,
     riwayat_penyakit: "",
+    is_accepted: false,
 
     // parent_id: 0,
     parent: DEFAULT_PARENT,

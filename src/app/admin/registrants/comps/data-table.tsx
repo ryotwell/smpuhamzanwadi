@@ -89,11 +89,6 @@ function StudentDeleteActions({ student }: { student: Student }) {
                         Copy student ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {/* <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}`} scroll={true}>
-                            Show
-                        </Link>
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem asChild>
                         <Link href={`/admin/registrants/${student.id}/edit`} scroll={true}>
                             Edit
@@ -258,17 +253,9 @@ export const columns: ColumnDef<Student>[] = [
             </div>
         ),
     },
+    // add is_accepted
     {
         accessorKey: "Batch",
-        // header: ({ column }) => (
-        //     <Button
-        //         variant="ghost"
-        //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //     >
-        //         Didaftarkan
-        //         <ArrowUpDown className="ml-2 h-4 w-4" />
-        //     </Button>
-        // ),
         cell: ({ row }) => {
             const batch = row.original.batch;
 

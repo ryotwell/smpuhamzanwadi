@@ -39,6 +39,7 @@ const useBatch = ({ batch, formMode = "CREATE" }: IUseBatch) => {
             is_active: batch?.is_active ? true : false,
             start_date: batch?.start_date || null,
             end_date: batch?.end_date || null,
+            whatsapp_group_link: batch?.whatsapp_group_link || "",
         },
     });
 

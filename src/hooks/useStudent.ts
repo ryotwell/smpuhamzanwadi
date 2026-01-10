@@ -35,6 +35,7 @@ const getDefaultBiodata = (student: Student): BiodataFields => ({
     parent_email: student?.parent.parent_email,
     alamat_ortu_wali: student?.parent.alamat_ortu_wali,
     batch_id: student?.batch_id,
+    is_accepted: student?.is_accepted,
 });
 
 const getDefaultBerkas = (student: Student): BerkasFields => ({
@@ -98,7 +99,6 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
             showError("Silakan pilih Gelombang Pendaftaran (Batch) terlebih dahulu.");
             return;
         }
-
 
         if (!allDokumenUploaded()) {
             showError("Pastikan semua dokumen (foto, akta kelahiran, kartu keluarga, dan ijazah/SKL) sudah diunggah.");
