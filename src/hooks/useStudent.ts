@@ -113,15 +113,17 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
 
             let successMessage = "";
 
+            let response;
+
             if (formMode === "UPDATE") {
                 successMessage = "Data peserta berhasil diperbarui.";
-                await axios.put(`${APIPATHS.UPDATESTUDENT}/${student.id}`, payload);
+                response = await axios.put(`${APIPATHS.UPDATESTUDENT}/${student.id}`, payload);
             } else if (formMode === "CREATE") {
                 successMessage = "Data peserta berhasil ditambahkan.";
-                await axios.post(APIPATHS.STORESTUDENT, payload);
+                response = await axios.post(APIPATHS.STORESTUDENT, payload);
             } else {
                 successMessage = "Pendaftaran berhasil! Data peserta berhasil didaftarkan.";
-                await axios.post(APIPATHS.STORESTUDENTPPDB, payload);
+                response = await axios.post(APIPATHS.STORESTUDENTPPDB, payload);
             }
 
             if (formMode === 'CREATE') {
@@ -129,6 +131,7 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
             }
 
             toast.success(successMessage);
+            return response.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             showError(collectMessages(err).toString())
