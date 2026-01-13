@@ -27,6 +27,30 @@ export const APIPATHS = {
     UPDATEBATCH: '/batch/update',
     DELETEBATCH: '/batch/delete',
 
+    FETCHCURRICULUMS: '/curriculum/get-all',
+    FINDCURRICULUM: '/curriculum/get',
+    STORECURRICULUM: '/curriculum/add',
+    UPDATECURRICULUM: '/curriculum/update',
+    DELETECURRICULUM: '/curriculum/delete',
+
+    FETCHFACILITIES: '/facility/get-all',
+    FINDFACILITY: '/facility/get',
+    STOREFACILITY: '/facility/add',
+    UPDATEFACILITY: '/facility/update',
+    DELETEFACILITY: '/facility/delete',
+
+    FETCHREQUIREMENTS: '/requirement/get-all',
+    FINDREQUIREMENT: '/requirement/get',
+    STOREREQUIREMENT: '/requirement/add',
+    UPDATEREQUIREMENT: '/requirement/update',
+    DELETEREQUIREMENT: '/requirement/delete',
+
+    FETCHFAQS: '/faq/get-all',
+    FINDFAQ: '/faq/get',
+    STOREFAQ: '/faq/add',
+    UPDATEFAQ: '/faq/update',
+    DELETEFAQ: '/faq/delete',
+
     // public api routes
     STORESTUDENTPPDB: '/ppdb/add',
 } as const

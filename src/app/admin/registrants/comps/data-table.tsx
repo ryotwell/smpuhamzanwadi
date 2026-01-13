@@ -89,11 +89,6 @@ function StudentDeleteActions({ student }: { student: Student }) {
                         Copy student ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {/* <DropdownMenuItem asChild>
-                        <Link href={`/admin/registrants/${student.id}`} scroll={true}>
-                            Show
-                        </Link>
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem asChild>
                         <Link href={`/admin/registrants/${student.id}/edit`} scroll={true}>
                             Edit
@@ -258,6 +253,15 @@ export const columns: ColumnDef<Student>[] = [
             </div>
         ),
     },
+    // add is_accepted
+    {
+        accessorKey: "Batch",
+        cell: ({ row }) => {
+            const batch = row.original.batch;
+
+            return batch?.name
+        },
+    },
     {
         id: "actions",
         enableHiding: false,
@@ -288,7 +292,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
     const handleGetBatches = async () => {
         const data = await getBatches(1, 99999)
 
-        if(data) {
+        if (data) {
             setBatches(data.data as Batch[])
         }
     }
@@ -312,7 +316,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
         }, 500);
 
         return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, router, searchParams]);
 
     // Update param when select batch changes
@@ -327,7 +331,7 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
             }
             router.push(`/admin/registrants?${params.toString()}`);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBatchId]);
 
     React.useEffect(() => {

@@ -35,26 +35,27 @@ function ListItem({ title, href, children }: { title: string, href: string, chil
 // Menu utama sekolah
 const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'About Us', href: '#' },
-    { name: 'News and Event', href: '#' },
-    { name: 'Achievements', href: '#' },
+    { name: 'About Us', href: '/about-us' },
+    { name: 'News and Event', href: '/#posts' },
+    // { name: 'Achievements', href: '#' },
+    { name: 'Info PPDB', href: '/ppdb/info' },
 ]
 
 // Dropdown menu sekolah
 const components = [
     {
         title: "Ekstrakurikuler",
-        href: "#",
+        href: "/#ekstrakurikuler",
         description: "Kegiatan tambahan di luar jam pelajaran untuk mengembangkan bakat, minat, dan karakter siswa.",
     },
     {
         title: "Program Unggulan",
-        href: "#",
-        description: "Program-program utama sekolah yang menjadi keunggulan dan ciri khas SMP Unggulan Hamzanwadi.",
+        href: "/#unggulan",
+        description: `Program-program utama sekolah yang menjadi keunggulan dan ciri khas ${config.appName}.`,
     },
     {
         title: "KO-Kulikuler",
-        href: "#",
+        href: "/#kokulikuler",
         description: "Kegiatan pendukung pembelajaran yang menunjang kompetensi siswa di berbagai bidang.",
     },
 ]
@@ -64,7 +65,7 @@ export const Header = () => {
     const [pathname, setPathname] = React.useState("")
 
     const useReadableText = (path: string) => {
-        if(path === '/') return 'text-muted'
+        if (path === '/') return 'text-muted'
 
         return 'text-muted-foreground'
     }

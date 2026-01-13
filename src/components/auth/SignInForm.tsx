@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input";
 import Label from "@/components/form/Label";
-import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -11,6 +10,7 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { APIPATHS } from "@/lib/constants";
+import { Button } from "../ui/button";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -111,7 +111,7 @@ export default function SignInForm() {
                   <div className="text-error-500 text-sm">{error}</div>
                 )}
                 <div>
-                  <Button className="w-full" size="sm" disabled={loading}>
+                  <Button className="w-full" size="sm" disabled={loading} type="submit">
                     {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>

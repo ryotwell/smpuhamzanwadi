@@ -11,11 +11,7 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import axios from "@/lib/axios";
-import { FilePond, registerPlugin } from "react-filepond";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import type { FilePondFile } from "filepond";
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import Image from "next/image";
 import Editor from "../comps/Editor";
 
 // --- Validation and form lib imports
@@ -25,8 +21,6 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { APIPATHS } from "@/lib/constants";
 
-// Register FilePond plugin
-registerPlugin(FilePondPluginImagePreview);
 
 const POST_CATEGORIES = [
     { label: "Berita", value: "BERITA" },
@@ -92,10 +86,9 @@ export default function CreatePostForm({
         ...initialValues,
     };
 
-    const [files, setFiles] = useState<File[]>([]);
+    const [preview, setPreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
-    const uploadingRef = useRef(false);
-    const lastUploadedFileName = useRef<string | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     // react-hook-form
     const {
@@ -117,80 +110,95 @@ export default function CreatePostForm({
     // Sync form when initialValues changes (for edit mode)
     useEffect(() => {
         reset(mergedValues);
-
-        // For thumbnail, if editing and initial thumbnail exists, don't show it as file, but keep field value
+        // Set preview for existing thumbnail
         if (initialValues?.thumbnail) {
-            setFiles([]); // No actual file, but show info via watchingThumbnail
+            setPreview(initialValues.thumbnail);
+        } else {
+            setPreview(null);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(initialValues)]);
 
     const watchingPublished = watch("published");
     const watchingThumbnail = watch("thumbnail");
 
-    // FilePond handler for single thumbnail upload
-    const handleThumbnailUpdate = async (fileItems: FilePondFile[]) => {
-        setFiles(fileItems.map(f => f.file).filter(Boolean) as File[]);
+    // Helper functions for image handling
+    const getNormalizedImageSrc = (src: string) => {
+        try {
+            if (typeof window !== "undefined" && src.startsWith(window.location.origin)) {
+                return src.slice(window.location.origin.length);
+            }
+            if (/^https?:\/\/[^/]+\/upload\//.test(src)) {
+                return src.replace(/^https?:\/\/[^/]+/, "");
+            }
+            return src;
+        } catch {
+            return src;
+        }
+    };
 
-        // Prevent duplicate/overlapping uploads
-        if (uploadingRef.current) {
+    const isRemote = (src: string) => {
+        if (typeof window !== "undefined") {
+            return src.startsWith("http") && !src.includes(window.location.host);
+        }
+        return false;
+    };
+
+    // Handle thumbnail file upload
+    const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) {
+            setPreview(null);
+            setValue("thumbnail", "");
             return;
         }
 
-        if (fileItems.length > 0) {
-            const file = fileItems[0]?.file;
-
-            if (!file) {
-                setValue("thumbnail", "");
-                lastUploadedFileName.current = null;
-                return;
-            }
-            if (
-                file.name === lastUploadedFileName.current &&
-                getValues("thumbnail")
-            ) {
-                // duplicate, skip
-                return;
-            }
-
-            uploadingRef.current = true;
-            setUploading(true);
-            try {
-                const formData = new FormData();
-                formData.append("file", file, file.name);
-                const res = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData,
-                });
-                const json = await res.json();
-                if (json.status === 200 && json.data && json.data.path) {
-                    setValue("thumbnail", json.data.path, { shouldValidate: true });
-                    lastUploadedFileName.current = file.name;
-                    toast.success("Thumbnail uploaded successfully");
-                } else {
-                    setValue("thumbnail", "");
-                    lastUploadedFileName.current = null;
-                    toast.error(json.message || "Failed to upload thumbnail");
-                }
-            } catch {
-                setValue("thumbnail", "");
-                lastUploadedFileName.current = null;
-                toast.error("Failed to upload thumbnail");
-            } finally {
-                uploadingRef.current = false;
-                setUploading(false);
-            }
-        } else {
-            // no file
-            setValue("thumbnail", "");
-            lastUploadedFileName.current = null;
+        // Validate file type
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Invalid file type. Only PNG, JPG, and JPEG are allowed");
+            if (inputRef.current) inputRef.current.value = "";
+            return;
         }
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file, file.name);
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const json = await res.json();
+            if (json.status === 200 && json.data && json.data.path) {
+                setValue("thumbnail", json.data.path, { shouldValidate: true });
+                setPreview(json.data.path);
+                toast.success("Thumbnail uploaded successfully");
+            } else {
+                setValue("thumbnail", "");
+                setPreview(null);
+                toast.error(json.message || "Failed to upload thumbnail");
+            }
+        } catch {
+            setValue("thumbnail", "");
+            setPreview(null);
+            toast.error("Failed to upload thumbnail");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    // Handle thumbnail removal
+    const handleRemoveThumbnail = () => {
+        setPreview(null);
+        setValue("thumbnail", "");
+        if (inputRef.current) inputRef.current.value = "";
     };
 
     // Form submit handler
     const handleInternalSubmit = async (data: CreatePostValues) => {
-        // ensure thumbnail upload completed (sync with FilePond)
-        if (files.length > 0 && !data.thumbnail) {
+        // ensure thumbnail upload completed
+        if (uploading) {
             toast.error("Mohon tunggu hingga thumbnail selesai di-upload.");
             return;
         }
@@ -223,8 +231,8 @@ export default function CreatePostForm({
                 await axios.post(APIPATHS.STOREPOST, payload);
                 toast.success("Post created successfully!");
                 reset(defaultValues);
-                setFiles([]);
-                lastUploadedFileName.current = null;
+                setPreview(null);
+                if (inputRef.current) inputRef.current.value = "";
             }
         } catch (err: unknown) {
             const message =
@@ -245,24 +253,8 @@ export default function CreatePostForm({
 
     return (
         <>
-            <div className="rounded-2xl border border-gray-200 bg-white px-4 py-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-                <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
-                    <div className="w-full">
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                            {isUpdate ? "Edit Post" : "Create a new Post"}
-                        </h3>
-                        <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                            {isUpdate
-                                ? "Edit the post below and submit your changes."
-                                : "Fill out the form below to publish a new post."}
-                        </p>
-                    </div>
-                    <div className="flex items-start w-full gap-3 sm:justify-end">
-                        {/* Optional: tab or actions slot */}
-                    </div>
-                </div>
-
-                <div className="w-full">
+            <>
+                <>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className="space-y-4 w-full"
@@ -310,30 +302,66 @@ export default function CreatePostForm({
                                 >
                                     Thumbnail
                                 </label>
-                                <FilePond
-                                    files={files}
-                                    onupdatefiles={handleThumbnailUpdate}
-                                    allowMultiple={false}
-                                    name="thumbnail"
-                                    labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
-                                    acceptedFileTypes={["image/*"]}
-                                    imagePreviewHeight={190}
-                                    required={false}
-                                    maxFiles={1}
+                                <Input
+                                    ref={inputRef}
+                                    type="file"
+                                    id="thumbnail"
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    onChange={handleThumbnailChange}
                                     disabled={uploading}
+                                    className={`cursor-pointer ${preview ? 'hidden' : ''}`}
                                 />
+                                {preview && (
+                                    <div className="mb-2">
+                                        <div className="relative w-full max-w-xs mb-2 rounded-lg border overflow-hidden">
+                                            <div className="relative aspect-video w-full">
+                                                <Image
+                                                    src={getNormalizedImageSrc(preview)}
+                                                    alt="Thumbnail preview"
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(max-width: 768px) 100vw, 400px"
+                                                    unoptimized={isRemote(preview)}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleRemoveThumbnail}
+                                                disabled={uploading}
+                                                className="text-xs"
+                                            >
+                                                Hapus Thumbnail
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => inputRef.current?.click()}
+                                                disabled={uploading}
+                                                className="text-xs"
+                                            >
+                                                Ganti Thumbnail
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
                                 {uploading && (
                                     <div className="text-xs text-gray-500 mt-2">Uploading thumbnail...</div>
                                 )}
-                                {watchingThumbnail && !uploading && (
-                                    <div className="text-xs text-green-600 mt-2">Thumbnail uploaded</div>
+                                {watchingThumbnail && !uploading && preview && (
+                                    <div className="text-xs text-green-600 mt-2">Thumbnail ready</div>
                                 )}
                                 {errors.thumbnail && typeof errors.thumbnail.message === "string" && (
                                     <div className="text-xs text-red-500 mt-2">{errors.thumbnail.message}</div>
                                 )}
-                                {/* If initial value but no new file, show thumbnail uploaded message */}
-                                {initialValues?.thumbnail && !watchingThumbnail && !uploading && files.length === 0 && (
-                                    <div className="text-xs text-green-600 mt-2">Thumbnail already uploaded</div>
+                                {!preview && (
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Format yang didukung: PNG, JPG, JPEG
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -446,8 +474,8 @@ export default function CreatePostForm({
                             </Button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </>
+            </>
         </>
     );
 }

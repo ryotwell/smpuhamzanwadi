@@ -37,7 +37,6 @@ import { Batch } from "@/types/model"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import axios from "@/lib/axios"
-import { toast } from "sonner"
 import Link from "next/link"
 
 // Import shadcn/ui dialog
@@ -50,26 +49,16 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog"
-import { Meta } from "@/types/api"
 import { APIPATHS } from "@/lib/constants"
 import { Switch } from "@/components/ui/switch"
+import { collectMessages, showError, showSuccess } from "@/lib/utils"
+import { useBatchStore } from "@/store/useBatchStore"
 
-// Delete batch
-async function deleteBatch(batchId: number) {
-    if (!batchId) return;
-    try {
-        await axios.delete(`${APIPATHS.DELETEBATCH}/${batchId}`);
-        toast.success("Batch deleted successfully.");
-    } catch {
-        toast.error("Failed to delete batch.");
-    }
-}
-
-// Delete Action for batch
 function BatchDeleteActions({ batch }: { batch: Batch }) {
     const [open, setOpen] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
     const router = useRouter();
+
+    const { deleteBatch, loading } = useBatchStore()
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -123,9 +112,7 @@ function BatchDeleteActions({ batch }: { batch: Batch }) {
                     <Button
                         variant="destructive"
                         onClick={async () => {
-                            setLoading(true);
-                            await deleteBatch(batch.id);
-                            setLoading(false);
+                            await deleteBatch(batch.id)
                             setOpen(false);
                             router.refresh?.();
                         }}
@@ -170,37 +157,46 @@ export const columns: ColumnDef<Batch>[] = [
         ),
     },
     {
-        accessorKey: "year",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Tahun <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        accessorKey: "jalur",
+        header: "Jalur",
         cell: ({ row }) => (
-            <div>{row.getValue("year")}</div>
+            <div>{row.getValue("jalur")}</div>
         ),
     },
     {
         accessorKey: "is_active",
         header: "Aktif?",
         cell: ({ row }) => {
-            const val = row.getValue("is_active")
-            const [isActive, setIsActive] = React.useState(val ? true : false)
+            const val = row.getValue("is_active");
+            const [isActive, setIsActive] = React.useState(val ? true : false);
+            const [loading, setLoading] = React.useState(false);
 
-            const handleOnChange = () => {
-                setIsActive(!isActive)
-            }
+            const batchId = row.original.id;
+
+            const handleOnChange = async () => {
+                setLoading(true);
+                try {
+                    const { data } = await axios.put(`${APIPATHS.UPDATEBATCH}/${batchId}`, {
+                        is_active: !isActive
+                    });
+
+                    setIsActive(data.data.is_active)
+                    showSuccess('Active status updated successfully')
+                } catch (error: any) {
+                    showError(collectMessages(error).toString())
+                } finally {
+                    setLoading(false);
+                }
+            };
 
             return (
                 <Switch
                     id="is_active"
                     onClick={handleOnChange}
                     checked={isActive}
+                    disabled={loading}
                 />
-            )
+            );
         },
     },
     {
@@ -279,20 +275,29 @@ export const columns: ColumnDef<Batch>[] = [
     },
 ]
 
-export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
+// export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
+export function DataTable() {
     const router = useRouter();
     const searchParams = useSearchParams();
+
     const q = searchParams.get('q') ?? '';
+    const page = searchParams.get('page') ?? '1';
+    const limit = searchParams.get('limit') ?? '10';
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-        year: false,
         created_at: false,
         updated_at: false,
     })
     const [rowSelection, setRowSelection] = React.useState({})
+
+    const { batches, meta, getBatches } = useBatchStore()
+
+    React.useEffect(() => {
+        getBatches({ page, limit, q })
+    }, [page, limit, q])
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
@@ -309,7 +314,7 @@ export function DataTable({ data, meta }: { data: Batch[], meta: Meta }) {
     }, [query, router, searchParams]);
 
     const table = useReactTable({
-        data,
+        data: batches,
         columns,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),

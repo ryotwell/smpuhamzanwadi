@@ -34,6 +34,8 @@ const getDefaultBiodata = (student: Student): BiodataFields => ({
     no_hp_ortu_wali: student?.parent.no_hp_ortu_wali,
     parent_email: student?.parent.parent_email,
     alamat_ortu_wali: student?.parent.alamat_ortu_wali,
+    batch_id: student?.batch_id,
+    is_accepted: student?.is_accepted,
 });
 
 const getDefaultBerkas = (student: Student): BerkasFields => ({
@@ -92,6 +94,12 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
             return;
         }
 
+        const biodata = getValues();
+        if ((formMode === "CREATE" || formMode === "UPDATE") && !biodata.batch_id) {
+            showError("Silakan pilih Gelombang Pendaftaran (Batch) terlebih dahulu.");
+            return;
+        }
+
         if (!allDokumenUploaded()) {
             showError("Pastikan semua dokumen (foto, akta kelahiran, kartu keluarga, dan ijazah/SKL) sudah diunggah.");
             return;
@@ -105,23 +113,26 @@ const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
 
             let successMessage = "";
 
+            let response;
+
             if (formMode === "UPDATE") {
                 successMessage = "Data peserta berhasil diperbarui.";
-                await axios.put(`${APIPATHS.UPDATESTUDENT}/${student.id}`, payload);
+                response = await axios.put(`${APIPATHS.UPDATESTUDENT}/${student.id}`, payload);
             } else if (formMode === "CREATE") {
                 successMessage = "Data peserta berhasil ditambahkan.";
-                await axios.post(APIPATHS.STORESTUDENT, payload);
+                response = await axios.post(APIPATHS.STORESTUDENT, payload);
             } else {
                 successMessage = "Pendaftaran berhasil! Data peserta berhasil didaftarkan.";
-                await axios.post(APIPATHS.STORESTUDENTPPDB, payload);
+                response = await axios.post(APIPATHS.STORESTUDENTPPDB, payload);
             }
 
-            if(formMode === 'CREATE') {
+            if (formMode === 'CREATE') {
                 resetFormInputs()
             }
 
             toast.success(successMessage);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return response.data;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             showError(collectMessages(err).toString())
         } finally {

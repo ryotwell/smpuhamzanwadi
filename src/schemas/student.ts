@@ -31,6 +31,8 @@ const studentSchemas = z.object({
     berat_kg: z.number().int("Berat badan harus bilangan bulat").optional(),
     tinggi_cm: z.number().int("Tinggi badan harus bilangan bulat").optional(),
     riwayat_penyakit: z.string().optional(),
+    is_accepted: z.boolean().optional(),
+    batch_id: z.number().optional(),
 })
 
 const parent = z.object({

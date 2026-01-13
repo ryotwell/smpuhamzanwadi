@@ -1,23 +1,13 @@
 import React from "react";
 import type { Metadata } from "next";
 import { DataTable } from "./comps/data-table";
-import { getBatches } from "./actions";
-import { Meta } from "@/types/api";
 
 export const metadata: Metadata = {
     title: "Batches | Admin",
     description: "Admin panel page to manage batches (academic years) on the SMPU Hamzanwadi website.",
 };
 
-export default async function BatchesAdminPage({ searchParams }: { searchParams: Promise<{ page?: string, limit?: string, q?: string }> }) {
-    const params = await searchParams;
-
-    const page = Number(params.page) || 1;
-    const limit = Number(params.limit) || 10;
-    const q = params?.q ?? "";
-
-    const batches = await getBatches(page, limit, q);
-
+export default async function BatchesAdminPage() {
     return (
         <div className="grid grid-cols-12 gap-4 md:gap-6">
 
@@ -35,7 +25,7 @@ export default async function BatchesAdminPage({ searchParams }: { searchParams:
                     </div>
 
                     <div className="w-full">
-                        <DataTable data={batches?.data ?? []} meta={batches?.meta as Meta} />
+                        <DataTable />
                     </div>
                 </div>
             </div>

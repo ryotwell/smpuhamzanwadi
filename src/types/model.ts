@@ -35,29 +35,6 @@ export type Parent = {
     student?: Student;
 };
 
-export const DEFAULT_PARENT = {
-    // id: 0,
-    // created_at: "",
-    // updated_at: "",
-
-    father_name: "",
-    father_education: "",
-    father_job: "",
-    father_income: "",
-
-    mother_name: "",
-    mother_education: "",
-    mother_job: "",
-    mother_income: "",
-
-    wali_name: "",
-    alamat_ortu_wali: "",
-    no_hp_ortu_wali: "",
-    parent_email: "",
-
-    // student: undefined as any,
-};
-
 export type Gender = "MALE" | "FEMALE";
 
 export type BloodType = "A" | "B" | "AB" | "O" | "UNKNOWN";
@@ -125,6 +102,7 @@ export type Student = {
     berat_kg: number;
     tinggi_cm: number;
     riwayat_penyakit: string;
+    is_accepted: boolean;
 
     parent_id: number;
     parent: Parent;
@@ -136,7 +114,8 @@ export type Student = {
 export type Batch = {
     id: number;
     name: string;
-    year: number;
+    whatsapp_group_link: string;
+    jalur: "PRESTASI" | "REGULER" | string;
     is_active: boolean;
     start_date?: string | null;
     end_date?: string | null;
@@ -145,18 +124,98 @@ export type Batch = {
     students: Student[] | null;
 };
 
-export const DEFAULT_STUDENT = {
-    // id: 0,
-    // created_at: "",
-    // updated_at: "",
+export type CurriculumCategory =
+    | "EXTRACURRICULAR"
+    | "PROGRAM UNGGULAN"
+    | "KO-CULLICULAR";
 
-    full_name: "",
-    nisn: "",
-    nik: "",
-    asal_sekolah: "",
+export type Curriculum = {
+    id: number;
+    name: string;
+    image?: string | null;
+    category?: CurriculumCategory | null;
+    description?: string | null;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Facility = {
+    id: number;
+    name: string;
+    image?: string | null;
+    description?: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+// export const DEFAULT_STUDENT = {
+//     full_name: "",
+//     nisn: "",
+//     nik: "",
+//     asal_sekolah: "",
+//     gender: "MALE",
+//     tempat_lahir: "",
+//     tanggal_lahir: "",
+//     agama: "ISLAM",
+//     keadaan_ortu: "LENGKAP",
+//     status_keluarga: "ANAK_KANDUNG",
+//     anak_ke: 1,
+//     dari_bersaudara: 1,
+//     tinggal_bersama: "ORANG_TUA",
+//     tinggal_bersama_lainnya: "",
+//     kewarganegaraan: "WNI",
+//     rt: "",
+//     rw: "",
+//     desa_kelurahan: "",
+//     kecamatan: "",
+//     kabupaten: "",
+//     provinsi: "",
+//     kode_pos: "",
+//     alamat_jalan: "",
+
+//     phone: "",
+//     email: "",
+//     photo: "",
+//     kartu_keluarga: "",
+//     akta_kelahiran: "",
+//     ijazah_skl: "",
+
+//     blood_type: "UNKNOWN",
+//     berat_kg: 0,
+//     tinggi_cm: 0,
+//     riwayat_penyakit: "",
+
+//     // parent_id: 0,
+//     parent: DEFAULT_PARENT,
+// };
+
+export const DEFAULT_PARENT = {
+    father_name: "Rohsan Samsul Hadi",
+    father_education: "SMA",
+    father_job: "Petani",
+    father_income: "",
+
+    mother_name: "Seniwati",
+    mother_education: "SMA",
+    mother_job: "Petani",
+    mother_income: "",
+
+    wali_name: "Rohsan Samsul Hadi",
+    alamat_ortu_wali: "Masbagik",
+    no_hp_ortu_wali: "081234567890",
+    parent_email: "rohsan@gmail.com",
+
+    // student: undefined as any,
+};
+
+export const DEFAULT_STUDENT = {
+    full_name: "Zulzario Zaeri",
+    nisn: "3333333333",
+    nik: "3333333333999999",
+    asal_sekolah: "SD Negeri 123",
     gender: "MALE",
-    tempat_lahir: "",
-    tanggal_lahir: "",
+    tempat_lahir: "Masbagik, 21 Januari 2000",
+    tanggal_lahir: "2000-01-21",
     agama: "ISLAM",
     keadaan_ortu: "LENGKAP",
     status_keluarga: "ANAK_KANDUNG",
@@ -165,27 +224,44 @@ export const DEFAULT_STUDENT = {
     tinggal_bersama: "ORANG_TUA",
     tinggal_bersama_lainnya: "",
     kewarganegaraan: "WNI",
-    rt: "",
-    rw: "",
-    desa_kelurahan: "",
-    kecamatan: "",
-    kabupaten: "",
-    provinsi: "",
-    kode_pos: "",
-    alamat_jalan: "",
+    rt: "12",
+    rw: "12",
+    desa_kelurahan: "Masbagik",
+    kecamatan: "Masbagik",
+    kabupaten: "Masbagik",
+    provinsi: "Masbagik",
+    kode_pos: "12345",
+    alamat_jalan: "Masbagik",
 
-    phone: "",
-    email: "",
-    photo: "",
-    kartu_keluarga: "",
-    akta_kelahiran: "",
-    ijazah_skl: "",
+    phone: "081234567890",
+    email: "zulzariozaeri@gmail.com",
+
+    photo: "/upload/pas-foto/1762981667280-a014122425e5e4d3449531d02a8160bb.jpg",
+    kartu_keluarga: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
+    akta_kelahiran: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
+    ijazah_skl: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
 
     blood_type: "UNKNOWN",
     berat_kg: 0,
     tinggi_cm: 0,
     riwayat_penyakit: "",
+    is_accepted: false,
 
     // parent_id: 0,
     parent: DEFAULT_PARENT,
+};
+
+export type Requirement = {
+    id: number;
+    description: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Faq = {
+    id: number;
+    question: string;
+    answer: string;
+    created_at: string;
+    updated_at: string;
 };

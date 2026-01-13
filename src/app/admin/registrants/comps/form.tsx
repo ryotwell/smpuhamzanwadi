@@ -270,8 +270,43 @@ interface IStudentFormProps {
     formMode: StudentFormMode
 };
 
+import axios from "@/lib/axios";
+import { APIPATHS } from "@/lib/constants";
+import { Batch } from "@/types/model";
+import { BiodataFields } from "./biodata-form";
+import { Controller } from "react-hook-form";
+
+const useBatchesList = () => {
+    const [batches, setBatches] = React.useState<{ value: string, label: string }[]>([]);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchBatches = async () => {
+            try {
+                const res = await axios.get(APIPATHS.FETCHBATCHES);
+                if (res.data?.success) {
+                    const data: Batch[] = res.data.data;
+                    const options = data.map(b => ({
+                        value: b.id.toString(),
+                        label: `${b.name} (${b.jalur}) - ${b.is_active ? 'Aktif' : 'Tidak Aktif'}`
+                    }));
+                    setBatches(options);
+                }
+            } catch (error) {
+                console.error("Failed to fetch batches", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBatches();
+    }, []);
+
+    return { batches, loading };
+}
+
 export const StudentForm: FC<IStudentFormProps> = ({ student, formMode }) => {
     const { berkas, control, errors, onSubmit, setBerkas, submitLoading } = useStudent({ student, formMode })
+    const { batches } = useBatchesList();
 
     return (
         <>
@@ -288,7 +323,23 @@ export const StudentForm: FC<IStudentFormProps> = ({ student, formMode }) => {
                         </div>
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full space-y-5">
+                        {/* Batch Selection */}
+                        <Controller
+                            control={control}
+                            name="batch_id"
+                            render={({ field }) => (
+                                <LabeledSelect
+                                    label="Gelombang Pendaftaran (Batch)"
+                                    placeholder="Pilih Batch"
+                                    value={field.value?.toString() ?? ""}
+                                    onChange={(val) => field.onChange(Number(val))}
+                                    options={batches}
+                                    error={errors.batch_id?.message as string | undefined}
+                                />
+                            )}
+                        />
+
                         <BiodataForm control={control} errors={errors} />
                         <div className="space-y-5 mt-5">
                             {dokumenList.map((dokumen) => (

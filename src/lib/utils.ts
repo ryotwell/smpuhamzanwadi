@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const showError = (msg: string) => toast.error(msg);
+export const showSuccess = (msg: string) => toast.success(msg);
 
 export function collectMessages(x: any): string[] {
   if (x?.response?.data?.errors && typeof x.response.data.errors === 'object') {

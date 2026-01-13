@@ -27,9 +27,11 @@ import { Switch } from "@/components/ui/switch";
 export type BatchFormMode = "CREATE" | "UPDATE";
 
 export const batchSchema = z.object({
-    name: z.string().min(1, "Tahun ajaran wajib diisi"),
+    name: z.string().min(1, "Batch wajib diisi"),
+    jalur: z.string().min(1, "Jalur wajib diisi"),
     // is_active: z.enum(["ACTIVE", "INACTIVE"]),
     is_active: z.boolean(),
+    whatsapp_group_link: z.string().min(1, "Link Group wajib diisi"),
     start_date: z.string().nullable(),
     end_date: z.string().nullable(),
 });
@@ -72,7 +74,7 @@ interface IBatchFormProps {
     formMode: BatchFormMode
 };
 
-type IIsActiveSwitchProps  = {
+type IIsActiveSwitchProps = {
     control: Control<BatchFields>;
     errors: FieldErrors<BatchFields>;
     hint?: string
@@ -155,7 +157,29 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
             </div>
 
             <form className="w-full space-y-5" onSubmit={onSubmit}>
-                {textInput("name", "Tahun Ajaran", "text", "Masukkan tahun ajaran", true)}
+                {textInput("name", "Batch", "text", "Masukkan Batch", true)}
+                {textInput("whatsapp_group_link", "Whatsapp Group Link", "text", "Masukkan Link Whatsapp Group", true)}
+
+                <div>
+                    <div className="mb-1 font-medium text-sm">Jalur</div>
+                    <Controller
+                        control={control}
+                        name="jalur"
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Pilih Jalur" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="PRESTASI">Pretasi</SelectItem>
+                                    <SelectItem value="REGULER">Reguler</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        )}
+                    />
+                    {errors.jalur && <p className="text-red-600 dark:text-red-400 text-xs">{errors.jalur?.message as string}</p>}
+                </div>
+
                 <Controller
                     control={control}
                     name="start_date"
@@ -181,7 +205,7 @@ export const BatchForm: FC<IBatchFormProps> = ({ batch, formMode }) => {
                 <IsActiveSwitch
                     control={control}
                     errors={errors}
-                    hint="Jika batch ini adalah tahun ajaran yang sedang berjalan."
+                    hint="Jika batch ini adalah batch yang sedang berjalan."
                 />
 
                 <Button>
