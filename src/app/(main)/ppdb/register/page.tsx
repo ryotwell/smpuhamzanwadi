@@ -292,6 +292,11 @@ export default function PPDBPage() {
     } = useStudent({ student: DEFAULT_STUDENT as Student, formMode: "PPDB" });
     const { activeBatch, loading } = useBatchStore();
 
+    const isExpired = useMemo(() => {
+        if (!activeBatch?.end_date) return false;
+        return new Date() > new Date(activeBatch.end_date);
+    }, [activeBatch]);
+
     const formatDate = (dateString: string | null | undefined) => {
         if (!dateString) return "-";
         return new Date(dateString).toLocaleDateString("id-ID", {
@@ -583,6 +588,33 @@ export default function PPDBPage() {
                             <p className="text-gray-500 dark:text-gray-400 mb-6">
                                 Mohon maaf, saat ini belum ada gelombang pendaftaran yang aktif.
                                 Silakan pantau informasi selanjutnya.
+                            </p>
+                            <Button onClick={() => window.location.href = "/"}>
+                                Kembali ke Beranda
+                            </Button>
+                        </CardContent>
+                    </Card>
+                ) : isExpired ? (
+                    <Card className="max-w-lg mx-auto mt-8">
+                        <CardContent className="flex flex-col items-center text-center py-12">
+                            <div className="w-20 h-20 bg-red-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                                <svg
+                                    className="w-10 h-10 text-red-500 dark:text-red-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-bold mb-2">Masa Pendaftaran Telah Berakhir</h2>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6">
+                                Mohon maaf, masa pendaftaran untuk gelombang <strong>{activeBatch?.name}</strong> untuk jalur <strong>{activeBatch?.jalur}</strong> telah berakhir pada tanggal <strong>{formatDate(activeBatch?.end_date)}</strong>.
                             </p>
                             <Button onClick={() => window.location.href = "/"}>
                                 Kembali ke Beranda
