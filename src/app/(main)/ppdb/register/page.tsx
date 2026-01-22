@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { config } from "@/config";
 import Image from "next/image";
 import FileUploader from "@/components/ui/file-uploader";
@@ -290,7 +290,16 @@ export default function PPDBPage() {
         submitLoading,
         trigger,
     } = useStudent({ student: DEFAULT_STUDENT as Student, formMode: "PPDB" });
-    const { activeBatch } = useBatchStore();
+    const { activeBatch, loading } = useBatchStore();
+
+    const formatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return "-";
+        return new Date(dateString).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+    };
 
     const validateBerkas = useCallback(() => {
         const berkasRequired: [keyof BerkasFields, string][] = [
@@ -547,32 +556,85 @@ export default function PPDBPage() {
                     <p className="text-gray-600 dark:text-gray-200 text-base sm:text-lg">{config.appName}</p>
                 </div>
 
-                <Stepper currentStep={currentStep} />
-                <Card>
-                    <CardContent>
-                        {stepContent}
 
-                        <div className="flex justify-between mt-6">
-                            <Button
-                                onClick={handlePrev}
-                                disabled={currentStep === 0}
-                                type="button"
-                                variant="secondary"
-                            >
-                                Sebelumnya
-                            </Button>
-                            {currentStep !== 3 && currentStep !== 4 && (
-                                <Button
-                                    onClick={handleNext}
-                                    disabled={currentStep === steps.length - 1}
-                                    type="button"
+                {loading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : !activeBatch ? (
+                    <Card className="max-w-lg mx-auto mt-8">
+                        <CardContent className="flex flex-col items-center text-center py-12">
+                            <div className="w-20 h-20 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                                <svg
+                                    className="w-10 h-10 text-gray-400 dark:text-gray-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                 >
-                                    Selanjutnya
-                                </Button>
-                            )}
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                    />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-bold mb-2">Pendaftaran Belum Dibuka</h2>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6">
+                                Mohon maaf, saat ini belum ada gelombang pendaftaran yang aktif.
+                                Silakan pantau informasi selanjutnya.
+                            </p>
+                            <Button onClick={() => window.location.href = "/"}>
+                                Kembali ke Beranda
+                            </Button>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <>
+                        <div className="flex flex-col items-center mb-8">
+                            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg px-6 py-4 text-center max-w-lg w-full">
+                                <h2 className="text-lg font-bold text-blue-800 dark:text-blue-300 flex items-center justify-center gap-2">
+                                    {activeBatch.name}
+                                    {activeBatch.jalur && (
+                                        <span className="text-xs bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full">
+                                            {activeBatch.jalur}
+                                        </span>
+                                    )}
+                                </h2>
+                                <p className="text-blue-600 dark:text-blue-400 text-sm mt-1">
+                                    Periode: {formatDate(activeBatch.start_date)} - {formatDate(activeBatch.end_date)}
+                                </p>
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
+
+                        <Stepper currentStep={currentStep} />
+                        <Card>
+                            <CardContent>
+                                {stepContent}
+
+                                <div className="flex justify-between mt-6">
+                                    <Button
+                                        onClick={handlePrev}
+                                        disabled={currentStep === 0}
+                                        type="button"
+                                        variant="secondary"
+                                    >
+                                        Sebelumnya
+                                    </Button>
+                                    {currentStep !== 3 && currentStep !== 4 && (
+                                        <Button
+                                            onClick={handleNext}
+                                            disabled={currentStep === steps.length - 1}
+                                            type="button"
+                                        >
+                                            Selanjutnya
+                                        </Button>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </>
+                )}
             </div>
         </>
     );

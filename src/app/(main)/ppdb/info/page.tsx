@@ -9,15 +9,26 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle2, Calendar, FileText, HelpCircle, MapPin, Phone, Mail, Facebook, Instagram, Youtube } from 'lucide-react'
 import { useRequirementStore } from '@/store/useRequirementStore'
 import { useFaqStore } from '@/store/useFaqStore'
+import { useBatchStore } from '@/store/useBatchStore'
 
 export default function PPDBInfoPage() {
     const { requirements, getRequirements } = useRequirementStore()
     const { faqs, getFaqs } = useFaqStore()
+    const { activeBatch } = useBatchStore();
 
     useEffect(() => {
         getRequirements()
         getFaqs()
     }, [getRequirements, getFaqs])
+
+    const formatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return "-";
+        return new Date(dateString).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+    };
 
     return (
         <div className="bg-white dark:bg-gray-950 min-h-screen flex flex-col transition-colors duration-300">
@@ -34,9 +45,15 @@ export default function PPDBInfoPage() {
                         Simak informasi lengkap mengenai alur pendaftaran, persyaratan, dan jadwal penting di bawah ini.
                     </p>
                     <div className="mt-10 flex items-center justify-center gap-x-6">
-                        <Button asChild size="lg">
-                            <Link href="/ppdb/register">Daftar Sekarang</Link>
-                        </Button>
+                        {activeBatch ? (
+                            <Button asChild size="lg">
+                                <Link href="/ppdb/register">Daftar Sekarang</Link>
+                            </Button>
+                        ) : (
+                            <Button size="lg" disabled>
+                                Pendaftaran Belum Dibuka
+                            </Button>
+                        )}
                         <a href="#alur" className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100">
                             Pelajari Alurnya <span aria-hidden="true">→</span>
                         </a>
@@ -97,7 +114,12 @@ export default function PPDBInfoPage() {
                             </p>
                             <div className="flex items-center gap-2 text-sm text-primary font-medium">
                                 <Calendar className="w-4 h-4" />
-                                <span>Periode Pendaftaran: 1 Januari - 30 April 2025</span>
+                                <span>
+                                    Periode Pendaftaran:{" "}
+                                    {activeBatch
+                                        ? `${formatDate(activeBatch.start_date)} - ${formatDate(activeBatch.end_date)}`
+                                        : "Belum Dibuka"}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -131,9 +153,15 @@ export default function PPDBInfoPage() {
                         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
                             Jangan lewatkan kesempatan untuk bergabung dengan {config.appName}. Kuota terbatas!
                         </p>
-                        <Button size="lg" className="font-semibold px-8" asChild>
-                            <Link href="/ppdb/register">Daftar Sekarang</Link>
-                        </Button>
+                        {activeBatch ? (
+                            <Button size="lg" className="font-semibold px-8" asChild>
+                                <Link href="/ppdb/register">Daftar Sekarang</Link>
+                            </Button>
+                        ) : (
+                            <Button size="lg" className="font-semibold px-8" disabled>
+                                Pendaftaran Ditutup
+                            </Button>
+                        )}
                     </div>
                 </section>
 
