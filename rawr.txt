@@ -1,0 +1,105 @@
+# BAB IV
+# IMPLEMENTASI DAN PEMBAHASAN
+
+## 4.1. Implementasi
+Implementasi merupakan tahap penerapan sistem yang telah dirancang. Pada tahap ini, akan dijelaskan manual program atau panduan penggunaan sistem yang telah dibangun, baik dari sisi pengguna umum (calon siswa/wali) maupun administrator.
+
+### 4.1.1. Manual Program
+Manual program ini bertujuan untuk memudahkan pengguna dalam mengoperasikan aplikasi Penerimaan Peserta Didik Baru (PPDB) dan Sistem Informasi Sekolah SMP Hamzanwadi.
+
+#### A. Halaman Pendaftaran PPDB (Public)
+Halaman ini dapat diakses oleh calon siswa atau orang tua/wali untuk melakukan pendaftaran secara online.
+
+1.  **Langkah 1: Lengkapi Data Diri (Biodata)**
+    *   Pengguna mengakses halaman pendaftaran.
+    *   Sistem menampilkan formulir **Biodata** yang harus dilengkapi, meliputi: Nama Lengkap, NISN, NIK, Asal Sekolah, Tempat & Tanggal Lahir, Jenis Kelamin, Agama, dan data fisik (Berat/Tinggi Badan) serta kesehatan.
+    *   Pengguna wajib mengisi semua kolom yang bertanda bintang atau validasi akan muncul.
+    *   Klik tombol **"Selanjutnya"** untuk melanjutkan.
+
+2.  **Langkah 2: Data Orang Tua/Wali**
+    *   Pengguna mengisi data Ayah, Ibu, atau Wali.
+    *   Data meliputi: Nama, Pendidikan, Pekerjaan, Penghasilan, Nomor HP (WhatsApp), dan Alamat.
+    *   Data ini penting untuk keperluan komunikasi sekolah dengan wali murid.
+
+3.  **Langkah 3: Upload Berkas**
+    *   Pengguna diminta mengunggah dokumen persyaratan digital.
+    *   Dokumen wajib meliputi: Pas Foto, Scan Kartu Keluarga, Scan Akta Kelahiran, dan Ijazah/SKL.
+    *   Sistem menyediakan fitur *Drag & Drop* atau klik untuk memilih file.
+    *   Sistem memvalidasi keberadaan file sebelum mengizinkan lanjut ke tahap berikutnya.
+
+4.  **Langkah 4: Konfirmasi Data**
+    *   Sistem menampilkan rangkuman (resume) dari seluruh data yang telah diinput (Biodata, Orang Tua, dan Dokumen).
+    *   Pengguna dapat memeriksa kembali kebenaran data.
+    *   Terdapat tombol **"Edit"** pada setiap bagian jika ingin memperbaiki data.
+    *   Jika sudah benar, pengguna menekan tombol **"Konfirmasi & Daftar"**.
+
+5.  **Langkah 5: Pendaftaran Berhasil**
+    *   Setelah data terkirim, sistem menampilkan halaman sukses.
+    *   Sistem memberikan **Link Grup WhatsApp** khusus angkatan tersebut agar pendaftar dapat bergabung untuk informasi lebih lanjut.
+    *   Tombol "Kembali ke Beranda" atau "Daftar Lagi" tersedia.
+
+#### B. Halaman Login Admin
+Halaman ini ditujukan untuk administrator sekolah guna mengelola data.
+
+1.  **Akses Login**: Buka halaman `/login` atau akses menu login.
+2.  **Input Kredensial**: Masukkan Email (contoh: `admin@mail.com`) dan Password.
+3.  **Fitur Show Password**: Klik ikon mata untuk melihat password yang diketik.
+4.  **Masuk**: Klik tombol **"Sign in"**. Jika berhasil, akan diarahkan ke Dashboard Admin. Jika gagal, pesan error akan muncul.
+
+#### C. Dashboard Admin
+Setelah login, admin dapat mengakses berbagai menu manajemen data melalui sidebar.
+
+1.  **Manajemen Gelombang (Batches)**
+    *   Menu ini menampilkan daftar gelombang pendaftaran.
+    *   **Tabel Data**: Menampilkan Nama Angkatan, Jalur, Status Aktif, Tanggal Mulai/Selesai, dan Jumlah Siswa terdaftar.
+    *   **Toggle Status**: Admin dapat mengaktifkan/menonaktifkan gelombang langsung dengan menekan tombol *Switch* pada kolom "Aktif?".
+    *   **Pencarian**: Dapat mencari gelombang berdasarkan nama.
+    *   **Aksi**: Edit detail gelombang atau Hapus gelombang (dengan konfirmasi).
+
+2.  **Manajemen Pendaftar (Registrants)**
+    *   Menampilkan seluruh data siswa yang telah mendaftar.
+    *   **Filter**: Admin dapat memfilter data berdasarkan Gelombang (Batch) tertentu.
+    *   **Pencarian**: Mencari siswa berdasarkan Nama atau NISN.
+    *   **Detail Data**: Tabel menampilkan Nama, NISN, NIK, Asal Sekolah, Gender, dll.
+    *   **Aksi**: Hapus data siswa jika diperlukan.
+
+3.  **Manajemen Kurikulum & Fasilitas**
+    *   Admin dapat menambah, mengedit, atau menghapus data Kurikulum (Ekstrakurikuler, Program Unggulan) dan Fasilitas Sekolah.
+    *   Setiap item dilengkapi dengan gambar dan deskripsi.
+
+4.  **Manajemen Berita (Posts)**
+    *   Digunakan untuk mengelola artikel atau berita sekolah.
+    *   Tabel menampilkan Judul, Kategori, Status Publikasi, dan Tanggal Publikasi.
+    *   Admin dapat melihat pratinjau (*Show*) postingan di halaman publik.
+
+5.  **Manajemen Data Lainnya (FAQs & Requirements)**
+    *   **FAQs**: Pengelolaan daftar *Frequently Asked Questions* yang tampil di halaman depan.
+    *   **Requirements**: Pengelolaan daftar persyaratan pendaftaran yang muncul di informasi PPDB.
+    *   Kedua menu ini memiliki fitur standar: Tambah, Edit, Hapus, dan Pencarian.
+
+## 4.2. Pembahasan
+Bagian ini membahas evaluasi terhadap hasil implementasi sistem.
+
+### 4.2.1. Pembahasan Interface (Antarmuka)
+Antarmuka sistem dirancang dengan konsep modern, bersih, dan responsif (*mobile-friendly*). Implementasi menggunakan teknologi *React* dengan *Tailwind CSS* serta komponen *Shadcn UI* memberikan pengalaman pengguna yang konsisten.
+
+1.  **Navigasi (Stepper) pada Pendaftaran**: Penggunaan *stepper* visual pada halaman pendaftaran membantu pengguna mengetahui progres pengisian data mereka, mengurangi kebingungan saat mengisi formulir yang panjang.
+2.  **Responsivitas**: Halaman pendaftaran dan admin dapat menyesuaikan tampilan dengan baik pada perangkat *mobile*, memastikan aksesibilitas bagi pengguna yang menggunakan smartphone.
+3.  **Tema (Dark Mode)**: Tersedia fitur *Theme Toggle* yang memungkinkan pengguna beralih antara mode gelap dan terang sesuai kenyamanan visual.
+4.  **Feedback Visual**: Sistem memberikan respon visual instan, seperti indikator *loading* saat menyimpan data, pesan sukses (Toast/Alert) saat aksi berhasil, dan pesan error yang jelas pada validasi formulir.
+
+### 4.2.2. Pengujian Produk (Black Box Testing)
+Pengujian dilakukan dengan metode *Black Box Testing*, yang berfokus pada fungsionalitas input dan output sistem tanpa melihat kode internal. Berikut adalah hasil pengujian beberapa fitur utama:
+
+| No | Skenario Pengujian | Langkah Pengujian | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-------------------|-----------------------|-----------------|------------|
+| 1 | Login Admin (Valid) | Memasukkan email dan password yang benar, lalu klik Sign In. | Masuk ke Dashboard Admin. | Berhasil masuk ke dashboard. | Valid |
+| 2 | Login Admin (Invalid) | Memasukkan email atau password yang salah. | Muncul pesan error "Login failed". | Pesan error muncul, tetap di halaman login. | Valid |
+| 3 | Pendaftaran Siswa (Lengkaps) | Mengisi seluruh form biodata, orang tua, upload berkas, dan konfirmasi. | Data tersimpan, muncul halaman sukses & Link WA. | Halaman sukses muncul, data masuk ke admin. | Valid |
+| 4 | Validasi Form Kosong | Mengosongkan field wajib (misal: NISN) dan klik Selanjutnya. | Muncul pesan peringatan/error pada field tersebut. | Pesan error muncul, tidak bisa lanjut langkah. | Valid |
+| 5 | Upload Berkas | Mengunggah file gambar pada bagian persyaratan. | File terunggah dan preview/nama file muncul. | File berhasil diunggah. | Valid |
+| 6 | Filter Data Pendaftar | Pada menu Admin Registrants, pilih filter Gelombang tertentu. | Tabel hanya menampilkan siswa dari gelombang tersebut. | Data terfilter sesuai pilihan. | Valid |
+| 7 | Toggle Status Gelombang | Klik *Switch* aktif/nonaktif pada tabel Batches. | Status berubah dan muncul notifikasi sukses. | Status berubah real-time. | Valid |
+| 8 | Pencarian Data | Ketik kata kunci pada kotak pencarian tabel. | Tabel menampilkan baris yang cocok dengan kata kunci. | Data yang relevan muncul. | Valid |
+
+Berdasarkan pengujian di atas, sistem telah berjalan sesuai dengan spesifikasi fungsional yang diharapkan dan mampu menangani skenario positif maupun negatif (validasi error) dengan baik.

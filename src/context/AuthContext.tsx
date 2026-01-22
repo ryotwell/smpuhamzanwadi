@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import api from "@/lib/axios";
+import { APIPATHS } from "@/lib/constants";
 
 interface User {
   user_id: string;
@@ -24,8 +25,8 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
-  login: () => {},
-  logout: () => {},
+  login: () => { },
+  logout: () => { },
   loading: true,
 });
 
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       api
-        .get("/user/profile")
+        .get(APIPATHS.PROFILE)
         .then((res) => {
           setUser(res.data.data);
           setIsAuthenticated(true);

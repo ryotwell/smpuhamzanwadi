@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/card"
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import { showError } from "@/lib/utils";
+import { useBatchStore } from "@/store/useBatchStore";
 
 const steps = [
     { title: "Lengkapi Data", description: "Data diri dan identitas lengkap" },
@@ -289,6 +290,7 @@ export default function PPDBPage() {
         submitLoading,
         trigger,
     } = useStudent({ student: DEFAULT_STUDENT as Student, formMode: "PPDB" });
+    const { activeBatch } = useBatchStore();
 
     const validateBerkas = useCallback(() => {
         const berkasRequired: [keyof BerkasFields, string][] = [
@@ -296,6 +298,7 @@ export default function PPDBPage() {
             ["kartu_keluarga", "Scan Kartu Keluarga wajib diunggah."],
             ["akta_kelahiran", "Scan Akta Kelahiran wajib diunggah."],
             ["ijazah_skl", "Scan Ijazah/Surat Keterangan Lulus wajib diunggah."],
+            // ["prestasi", "Scan Sertifikat Prestasi"],
         ];
         for (const [field, msg] of berkasRequired) {
             if (!berkas[field]) {
@@ -420,19 +423,21 @@ export default function PPDBPage() {
                         <h2 className="font-bold text-xl mb-1">{steps[currentStep].title}</h2>
                         <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{steps[currentStep].description}</p>
                         <div className="space-y-6">
-                            {dokumenList.map((dokumen) => (
-                                <div key={dokumen.field} className="flex flex-col gap-1">
-                                    <FileUploader
-                                        value={berkas[dokumen.field as keyof BerkasFields] ?? ""}
-                                        onChange={(url) => setBerkas((prev) => ({ ...prev, [dokumen.field]: url }))}
-                                        label={dokumen.label}
-                                        allowMultiple={false}
-                                        acceptedFileTypes={dokumen.acceptedFileTypes}
-                                        folder={dokumen.folder}
-                                        hint={dokumen.hint}
-                                    />
-                                </div>
-                            ))}
+                            {dokumenList.map((dokumen) => {
+                                return (
+                                    <div key={dokumen.field} className="flex flex-col gap-1">
+                                        <FileUploader
+                                            value={berkas[dokumen.field as keyof BerkasFields] ?? ""}
+                                            onChange={(url) => setBerkas((prev) => ({ ...prev, [dokumen.field]: url }))}
+                                            label={dokumen.label}
+                                            allowMultiple={false}
+                                            acceptedFileTypes={dokumen.acceptedFileTypes}
+                                            folder={dokumen.folder}
+                                            hint={dokumen.hint}
+                                        />
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
                 );
@@ -510,12 +515,6 @@ export default function PPDBPage() {
                         )}
 
                         <div className="flex gap-4">
-                            <Button
-                                variant="outline"
-                                onClick={() => window.location.reload()}
-                            >
-                                Daftar Lagi
-                            </Button>
                             <Button
                                 onClick={() => window.location.href = "/"}
                             >

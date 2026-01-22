@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "@/lib/axios";
+import { APIPATHS } from "@/lib/constants";
 
 export type ActiveBatch = {
     id: number;
@@ -42,7 +43,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
     fetchDashboard: async () => {
         set({ loading: true, error: null });
         try {
-            const { data }: { data: DashboardAPIResponse } = await axios.get("/dashboard/");
+            const { data }: { data: DashboardAPIResponse } = await axios.get(APIPATHS.DASHBOARD);
             set({ data: data.data, loading: false, error: null });
         } catch (err: any) {
             set({

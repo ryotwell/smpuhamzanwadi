@@ -32,6 +32,8 @@ export const BiodataForm = ({
                         id={name}
                         type={type}
                         {...field}
+                        // Explicitly cast value to ensure it's compatible with Input
+                        value={field.value as string | number | undefined}
                         placeholder={placeholder}
                         required={required}
                     />
@@ -57,6 +59,7 @@ export const BiodataForm = ({
                         type="number"
                         {...field}
                         onChange={e => field.onChange(Number(e.target.value))}
+                        value={field.value as string | number | undefined}
                         placeholder={placeholder}
                     />
                 )}

@@ -97,6 +97,7 @@ export type Student = {
     kartu_keluarga: string;
     akta_kelahiran: string;
     ijazah_skl: string;
+    prestasi: string | null;
 
     blood_type: BloodType;
     berat_kg: number;
@@ -193,12 +194,12 @@ export const DEFAULT_PARENT = {
     father_name: "Rohsan Samsul Hadi",
     father_education: "SMA",
     father_job: "Petani",
-    father_income: "",
+    father_income: "<=1000000",
 
     mother_name: "Seniwati",
     mother_education: "SMA",
     mother_job: "Petani",
-    mother_income: "",
+    mother_income: "<=1000000",
 
     wali_name: "Rohsan Samsul Hadi",
     alamat_ortu_wali: "Masbagik",
@@ -240,6 +241,7 @@ export const DEFAULT_STUDENT = {
     kartu_keluarga: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
     akta_kelahiran: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
     ijazah_skl: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
+    prestasi: "/upload/ijazah/1762993757073-1a441fd13fedefe3625b9fb361508e14.pdf",
 
     blood_type: "UNKNOWN",
     berat_kg: 0,

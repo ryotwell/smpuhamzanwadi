@@ -14,6 +14,8 @@ interface BatchState {
     batches: Batch[];
     meta: Meta;
     loading: boolean;
+    activeBatch: Batch | null;
+    getActiveBatch: () => Promise<void>;
     setBatches: (batches: Batch[], meta?: Meta) => void;
     setLoading: (loading: boolean) => void;
     getBatches: (params?: { page?: string; limit?: string; q?: string }) => Promise<void>;
@@ -25,9 +27,20 @@ export const useBatchStore = create<BatchState>((set, get) => ({
     batches: [],
     meta: metaDefault,
     loading: false,
+    activeBatch: null,
     setBatches: (batches, meta = metaDefault) => set({ batches, meta }),
     setLoading: (loading) => set({ loading }),
-
+    getActiveBatch: async () => {
+        set({ loading: true });
+        try {
+            const res = await axios.get(APIPATHS.ACTIVEBATCH);
+            set({ activeBatch: res.data?.data || null, loading: false });
+        } catch (err: any) {
+            const message = err?.response?.data?.message || err.message || 'Gagal mengambil data active batch';
+            toast.error(message);
+            set({ loading: false });
+        }
+    },
     getBatches: async (params = {}) => {
         set({ loading: true });
         const { page = 1, limit = 10, q = '' } = params;

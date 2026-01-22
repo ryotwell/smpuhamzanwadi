@@ -50,9 +50,16 @@ export const dokumenList = [
         acceptedFileTypes: ["application/pdf"],
         folder: "ijazah" as AllowedFolders,
     },
+    {
+        label: "Sertifikat Prestasi Jika Ada (PDF/JPG/PNG)",
+        field: "prestasi",
+        hint: "Opsional. PDF/JPG/PNG. Jelas dan terbaca.",
+        acceptedFileTypes: ["application/pdf", "image/jpeg", "image/png", "image/jpg"],
+        folder: "prestasi" as AllowedFolders,
+    },
 ];
 
-export type BerkasFields = Record<"photo" | "kartu_keluarga" | "akta_kelahiran" | "ijazah_skl", string | null>;
+export type BerkasFields = Record<"photo" | "kartu_keluarga" | "akta_kelahiran" | "ijazah_skl" | "prestasi", string | null>;
 
 interface ILabeledSelectProps {
     label: string;
@@ -275,6 +282,7 @@ import { APIPATHS } from "@/lib/constants";
 import { Batch } from "@/types/model";
 import { BiodataFields } from "./biodata-form";
 import { Controller } from "react-hook-form";
+import { useBatchStore } from "@/store/useBatchStore";
 
 const useBatchesList = () => {
     const [batches, setBatches] = React.useState<{ value: string, label: string }[]>([]);

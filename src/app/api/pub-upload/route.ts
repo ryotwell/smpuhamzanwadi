@@ -5,7 +5,7 @@ import { config } from '@/config'
 import crypto from 'crypto'
 
 // Allowed folders
-const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran', 'ijazah'];
+const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran', 'ijazah', 'prestasi'];
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
