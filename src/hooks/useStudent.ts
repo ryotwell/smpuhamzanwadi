@@ -43,6 +43,7 @@ const getDefaultBerkas = (student: Student): BerkasFields => ({
     kartu_keluarga: student?.kartu_keluarga ?? null,
     akta_kelahiran: student?.akta_kelahiran ?? null,
     ijazah_skl: student?.ijazah_skl ?? null,
+    prestasi: student?.prestasi ?? null,
 });
 
 const useStudent = ({ student, formMode = "CREATE" }: IUseStudent) => {
