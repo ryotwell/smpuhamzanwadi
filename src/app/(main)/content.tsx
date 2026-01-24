@@ -130,57 +130,6 @@ export default function Content() {
                 </div>
             </div>
 
-            {/* Section Sambutan Kepala Sekolah */}
-            <section className="max-w-3xl mx-auto mt-24 px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">
-                    Sambutan Kepala Sekolah
-                </h2>
-                <div className="flex flex-col sm:flex-row items-center gap-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-                    <div className="flex-shrink-0 flex items-center justify-center">
-                        <div className="w-32 h-32 rounded-full border-4 border-primary shadow overflow-hidden flex items-center justify-center bg-white dark:bg-gray-900">
-                            <Image
-                                src={config.kepalaSekolahPhoto}
-                                alt={config.kepalaSekolah}
-                                width={128}
-                                height={128}
-                                className="w-full h-full object-cover rounded-full"
-                                style={{ aspectRatio: "1 / 1" }}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-gray-700 dark:text-gray-200 text-lg whitespace-pre-line mb-4">
-                            {config.sambutan?.split(' ').slice(0, 20).join(' ') + (config.sambutan?.split(' ').length > 20 ? '...' : '')}
-                        </p>
-                        <div className="font-semibold text-primary text-lg">{config.kepalaSekolah}</div>
-                        <div className="text-gray-500 dark:text-gray-400 text-base">Kepala Sekolah</div>
-                        <div className="mt-4">
-                            <a
-                                href="/sambutan"
-                                className="inline-block text-primary font-semibold hover:underline text-base"
-                            >
-                                Selengkapnya &rarr;
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {/* Statistik Data Sekolah */}
-                {/* <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 flex flex-col items-center">
-                        <div className="text-4xl font-bold text-primary mb-2">172</div>
-                        <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">Guru &amp; Staf</div>
-                    </div>
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 flex flex-col items-center">
-                        <div className="text-4xl font-bold text-primary mb-2">1588</div>
-                        <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">Siswa</div>
-                    </div>
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 flex flex-col items-center">
-                        <div className="text-4xl font-bold text-primary mb-2">64</div>
-                        <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">Rombel</div>
-                    </div>
-                </div> */}
-            </section>
-
             <div className="relative max-w-3xl mx-auto mt-24 isolate" id="unggulan">
                 <div
                     aria-hidden="true"

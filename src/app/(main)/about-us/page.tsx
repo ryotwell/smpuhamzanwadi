@@ -89,35 +89,6 @@ export default function AboutUsPage() {
                     </div>
                 </section>
 
-                {/* Headmaster Welcome */}
-                <section className="bg-primary/5 rounded-3xl p-8 md:p-12">
-                    <div className="flex flex-col md:flex-row gap-10 items-center">
-                        <div className="flex-shrink-0 relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-xl">
-                            <Image
-                                src={config.kepalaSekolahPhoto}
-                                alt={config.kepalaSekolah}
-                                fill
-                                className="object-cover"
-                            />
-                        </div>
-                        <div className="flex-1 text-center md:text-left">
-                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Sambutan Kepala Sekolah</h2>
-                            <p className="text-primary font-semibold text-lg mb-6">{config.kepalaSekolah}</p>
-                            <div className="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
-                                <p>
-                                    Assalamu'alaikum Warahmatullahi Wabarakatuh.
-                                </p>
-                                <p>
-                                    Selamat datang di website resmi {config.appName}. Kami sangat bersyukur dapat menyapa Anda semua melalui media informasi ini. Website ini kami hadirkan sebagai jembatan komunikasi antara sekolah dengan masyarakat luas, khususnya orang tua siswa dan calon siswa.
-                                </p>
-                                <p>
-                                    {config.appName} terus berkomitmen untuk memberikan layanan pendidikan terbaik. Kami menyadari tantangan zaman yang semakin kompleks menuntut kami untuk terus berinovasi dan meningkatkan kualitas pendidikan. Melalui sinergi antara guru, siswa, dan orang tua, kami yakin dapat melahirkan generasi penerus bangsa yang unggul dan berkarakter.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 {/* Call to Action */}
                 <section className="text-center py-12">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Bergabunglah Bersama Kami</h2>
