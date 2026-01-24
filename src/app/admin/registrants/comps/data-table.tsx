@@ -11,7 +11,7 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, Download, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -427,6 +427,46 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
+
+                {selectedBatchId && (
+                    <Button
+                        variant="outline"
+                        className="ml-auto"
+                        onClick={async () => {
+                            if (!selectedBatchId) return;
+
+                            const promise = axios.get(`${APIPATHS.EXPORTSTUDENTS}/${selectedBatchId}`, {
+                                responseType: 'blob',
+                            });
+
+                            toast.promise(promise, {
+                                loading: 'Downloading...',
+                                success: (response) => {
+                                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    const contentDisposition = response.headers['content-disposition'];
+                                    let fileName = 'students_data.xlsx';
+                                    if (contentDisposition) {
+                                        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                                        if (fileNameMatch && fileNameMatch.length === 2)
+                                            fileName = fileNameMatch[1];
+                                    }
+                                    link.setAttribute('download', fileName);
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    link.remove();
+                                    window.URL.revokeObjectURL(url);
+                                    return 'Export successful';
+                                },
+                                error: 'Failed to export data',
+                            });
+                        }}
+                    >
+                        <Download className="mr-2 h-4 w-4" />
+                        Export Data
+                    </Button>
+                )}
             </div>
             <div className="overflow-hidden rounded-md border">
                 <Table>

@@ -9,6 +9,7 @@ export const APIPATHS = {
     SIGNIN: '/api/v1/user/login',
     PROFILE: '/api/v1/user/profile',
     DASHBOARD: '/api/v1/dashboard/',
+    EXPORTSTUDENTS: '/api/v1/ppdb/data-siswa', // /api/v1/ppdb/data-siswa/:batch_id
 
     FETCHPOSTS: '/api/v1/post/get-all',
     FINDPOST: '/api/v1/post/get',
