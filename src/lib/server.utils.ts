@@ -7,6 +7,9 @@ export const getSessionCookie = async () => {
 
 export const buildHeaders = async () => {
     const sessionCookie = await getSessionCookie();
+
+    console.log({ sessionCookie });
+
     return sessionCookie
         ? { Cookie: `session_token=${sessionCookie}` }
         : {};
