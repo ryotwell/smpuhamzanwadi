@@ -17,7 +17,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (user: User) => void;
+  login: (data: any) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
@@ -25,7 +25,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
-  login: () => { },
+  login: async () => { },
   logout: async () => { },
   loading: true,
 });
@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(data.data);
         setIsAuthenticated(true);
       } catch (error) {
-        // console.error(error);
         setIsAuthenticated(false);
         setUser(null);
       } finally {
@@ -54,8 +53,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-  const login = (user: User) => {
-    setUser(user);
+  const login = async (payload: any) => {
+    const { data } = await api.post(APIPATHS.SIGNIN, payload);
+    setUser(data.data);
     setIsAuthenticated(true);
   };
 

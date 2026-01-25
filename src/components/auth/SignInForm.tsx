@@ -5,11 +5,8 @@ import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
-import api from "@/lib/axios";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { APIPATHS } from "@/lib/constants";
 import { Button } from "../ui/button";
 
 export default function SignInForm() {
@@ -30,11 +27,10 @@ export default function SignInForm() {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.post(APIPATHS.SIGNIN, {
+      await login({
         email,
         password,
       });
-      login(res.data.data);
       router.push("/admin");
     } catch (err: unknown) {
       if (
