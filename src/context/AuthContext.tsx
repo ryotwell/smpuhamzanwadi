@@ -36,27 +36,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const session_token = localStorage.getItem("session_token");
-    if (session_token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${session_token}`;
-      api
-        .get(APIPATHS.PROFILE)
-        .then((res) => {
-          setUser(res.data.data);
-          setIsAuthenticated(true);
-        })
-        .catch(() => {
-          localStorage.removeItem("session_token");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+
+    api.get(APIPATHS.PROFILE)
+      .then((res) => {
+        setUser(res.data.data);
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        console.log("error");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    // const session_token = localStorage.getItem("session_token");
+
+    // if (session_token) {
+    //   api.defaults.headers.common["Authorization"] = `Bearer ${session_token}`;
+    //   api
+    //     .get(APIPATHS.PROFILE)
+    //     .then((res) => {
+    //       setUser(res.data.data);
+    //       setIsAuthenticated(true);
+    //     })
+    //     .catch(() => {
+    //       localStorage.removeItem("session_token");
+    //     })
+    //     .finally(() => {
+    //       setLoading(false);
+    //     });
+    // } else {
+    //   setLoading(false);
+    // }
   }, []);
 
   const login = (user: User, session_token: string) => {
+
+    console.log({ user, session_token });
+
+
     localStorage.setItem("session_token", session_token);
     api.defaults.headers.common["Authorization"] = `Bearer ${session_token}`;
     setUser(user);

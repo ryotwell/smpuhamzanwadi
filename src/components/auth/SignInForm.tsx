@@ -34,6 +34,7 @@ export default function SignInForm() {
         email,
         password,
       });
+      console.log(res.data);
       login(res.data.data, res.data.data.token);
       router.push("/admin");
     } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
