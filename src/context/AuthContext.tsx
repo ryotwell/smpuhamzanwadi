@@ -36,9 +36,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const session_token = localStorage.getItem("session_token");
+    if (session_token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${session_token}`;
       api
         .get(APIPATHS.PROFILE)
         .then((res) => {
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setIsAuthenticated(true);
         })
         .catch(() => {
-          localStorage.removeItem("token");
+          localStorage.removeItem("session_token");
         })
         .finally(() => {
           setLoading(false);
@@ -56,15 +56,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (user: User, token: string) => {
-    localStorage.setItem("token", token);
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const login = (user: User, session_token: string) => {
+    localStorage.setItem("session_token", session_token);
+    api.defaults.headers.common["Authorization"] = `Bearer ${session_token}`;
     setUser(user);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("session_token");
     delete api.defaults.headers.common["Authorization"];
     setUser(null);
     setIsAuthenticated(false);
