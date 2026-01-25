@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 export default async function EditBatchPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    console.log({ batchId: id });
-
     const batch = await getBatch(id);
 
     if (!batch) {

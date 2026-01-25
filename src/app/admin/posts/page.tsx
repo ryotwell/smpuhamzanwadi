@@ -1,8 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import { DataTable } from "./comps/data-table";
-import { getPosts } from "./comps/actions";
-import { Meta } from "@/types/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -13,15 +11,7 @@ export const metadata: Metadata = {
     description: "Admin panel page to manage posts in the SMPU Hamzanwadi website.",
 };
 
-export default async function PostsAdminPage({ searchParams }: { searchParams: Promise<{ page?: string, limit?: string, q?: string }> }) {
-    const params = await searchParams
-
-    const page = Number(params.page) || 1;
-    const limit = Number(params.limit) || 10;
-    const q = params?.q ?? "";
-
-    const posts = await getPosts(page, limit, q);
-
+export default function PostsAdminPage() {
     return (
         <div className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -39,7 +29,7 @@ export default async function PostsAdminPage({ searchParams }: { searchParams: P
 
             <Card>
                 <CardContent>
-                    <DataTable data={posts?.data ?? []} meta={posts?.meta as Meta} />
+                    <DataTable />
                 </CardContent>
             </Card>
         </div>

@@ -272,10 +272,14 @@ export const columns: ColumnDef<Student>[] = [
     },
 ]
 
-export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
+import { useStudentStore } from "@/store/useStudentStore";
+
+export function DataTable() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const q = searchParams.get('q') ?? '';
+    const page = searchParams.get('page') ?? '1';
+    const limit = searchParams.get('limit') ?? '10';
     const batchIdFromParams = searchParams.get('batch') ?? '';
 
     const [query, setQuery] = React.useState(q);
@@ -288,6 +292,12 @@ export function DataTable({ data, meta }: { data: Student[], meta: Meta }) {
         agama: false,
     })
     const [rowSelection, setRowSelection] = React.useState({})
+
+    const { students: data, meta, getStudents, loading } = useStudentStore();
+
+    React.useEffect(() => {
+        getStudents({ page, limit, q, batch: selectedBatchId });
+    }, [page, limit, q, selectedBatchId, getStudents]);
 
     const handleGetBatches = async () => {
         const data = await getBatches(1, 99999)

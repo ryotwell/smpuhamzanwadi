@@ -211,16 +211,26 @@ export const columns: ColumnDef<Post>[] = [
     },
 ]
 
-export function DataTable({ data, meta }: { data: Post[], meta: Meta }) {
+import { usePostStore } from "@/store/usePostStore";
+
+export function DataTable() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const q = searchParams.get('q') ?? '';
+    const page = searchParams.get('page') ?? '1';
+    const limit = searchParams.get('limit') ?? '10';
 
     const [query, setQuery] = React.useState(q);
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+
+    const { posts: data, meta, getPosts } = usePostStore();
+
+    React.useEffect(() => {
+        getPosts({ page: Number(page), limit: Number(limit), q });
+    }, [page, limit, q, getPosts]);
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {

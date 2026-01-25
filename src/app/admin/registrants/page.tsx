@@ -1,23 +1,12 @@
 import type { Metadata } from "next";
 import { DataTable } from "./comps/data-table";
-import { getStudents } from "./actions";
-import { Meta } from "@/types/api";
 
 export const metadata: Metadata = {
     title: "Registrants | Admin",
     description: "Admin panel page to manage registrants data for SMPU Hamzanwadi.",
 };
 
-export default async function RegistrantsAdminPage({ searchParams }: { searchParams: Promise<{ page?: string, limit?: string, q?: string, batch?: string }> }) {
-    const params = await searchParams
-
-    const page = Number(params.page) || 1;
-    const limit = Number(params.limit) || 10;
-    const batch = Number(params.batch);
-    const q = params?.q ?? "";
-
-    const students = await getStudents({ page, limit, q, batch });
-
+export default function RegistrantsAdminPage() {
     return (
         <div className="grid grid-cols-12 gap-4 md:gap-6">
 
@@ -35,7 +24,7 @@ export default async function RegistrantsAdminPage({ searchParams }: { searchPar
                     </div>
 
                     <div className="w-full">
-                        <DataTable data={students?.data ?? []} meta={students?.meta as Meta} />
+                        <DataTable />
                     </div>
                 </div>
             </div>
