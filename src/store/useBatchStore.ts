@@ -97,21 +97,19 @@ export const useBatchStore = create<BatchState>((set, get) => ({
             return false;
         }
     },
-    return false;
-}
-    },
 
-getBatch: async (id) => {
-    set({ loading: true });
-    try {
-        const res = await axios.get(`${APIPATHS.FINDBATCH}/${id}`);
-        set({ loading: false });
-        return res.data?.data || null;
-    } catch (err: any) {
-        const message = err?.response?.data?.message || err.message || 'Gagal mengambil data batch';
-        toast.error(message);
-        set({ loading: false });
-        return null;
-    }
-},
+
+    getBatch: async (id) => {
+        set({ loading: true });
+        try {
+            const res = await axios.get(`${APIPATHS.FINDBATCH}/${id}`);
+            set({ loading: false });
+            return res.data?.data || null;
+        } catch (err: any) {
+            const message = err?.response?.data?.message || err.message || 'Gagal mengambil data batch';
+            toast.error(message);
+            set({ loading: false });
+            return null;
+        }
+    },
 }));
