@@ -278,7 +278,7 @@ export function DataTable() {
                         params.set('page', '1');
                         router.push(`/admin/posts?${params.toString()}`);
                     }}
-                    value={meta.limit.toString()}
+                    value={meta?.limit?.toString() ?? "10"}
                 >
                     <SelectTrigger className="w-[100px] ml-auto">
                         <SelectValue placeholder="Limit" />
@@ -378,10 +378,10 @@ export function DataTable() {
                         size="sm"
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
-                            params.set('page', (meta.page - 1).toString());
+                            params.set('page', ((meta?.page ?? 1) - 1).toString());
                             router.push(`/admin/posts?${params.toString()}`);
                         }}
-                        disabled={meta.page <= 1}
+                        disabled={(meta?.page ?? 1) <= 1}
                     >
                         Previous
                     </Button>
@@ -390,10 +390,10 @@ export function DataTable() {
                         size="sm"
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
-                            params.set('page', (meta.page + 1).toString());
+                            params.set('page', ((meta?.page ?? 1) + 1).toString());
                             router.push(`/admin/posts?${params.toString()}`);
                         }}
-                        disabled={!meta.limit || table.getRowModel().rows.length < meta.limit}
+                        disabled={!meta?.limit || table.getRowModel().rows.length < (meta?.limit ?? 10)}
                     >
                         Next
                     </Button>
