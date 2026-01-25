@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
+      document.cookie = `session_token=${token}; path=/; max-age=86400; SameSite=Lax`;
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       api
         .get(APIPATHS.PROFILE)
@@ -58,6 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = (user: User, token: string) => {
     localStorage.setItem("token", token);
+    document.cookie = `session_token=${token}; path=/; max-age=86400; SameSite=Lax`;
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     setUser(user);
     setIsAuthenticated(true);
@@ -65,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    document.cookie = `session_token=; path=/; max-age=0`;
     delete api.defaults.headers.common["Authorization"];
     setUser(null);
     setIsAuthenticated(false);
