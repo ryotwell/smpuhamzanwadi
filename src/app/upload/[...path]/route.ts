@@ -42,7 +42,7 @@ export async function GET(
         const ext = filePath.match(/\.[^/.]+$/)?.[0]?.toLowerCase() || '';
         const contentType = mimeTypes[ext] || 'application/octet-stream';
 
-        return new NextResponse(fileBuffer, {
+        return new Response(new Uint8Array(fileBuffer), {
             headers: {
                 'Content-Type': contentType,
                 'Cache-Control': 'public, max-age=31536000, immutable',
