@@ -5,7 +5,7 @@ import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
-import axios from "@/lib/axios";
+import api from "@/lib/axios";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -30,15 +30,20 @@ export default function SignInForm() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(APIPATHS.SIGNIN, {
+      const res = await api.post(APIPATHS.SIGNIN, {
         email,
         password,
       });
-      login(res.data.data, res.data.data.token);
+      login(res.data.data);
       router.push("/admin");
-    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        typeof (err as any).response.data?.message === "string"
+      ) {
+        setError((err as any).response.data.message);
       } else {
         setError("Login failed");
       }

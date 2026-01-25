@@ -17,8 +17,8 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (user: User, token: string) => void;
-  logout: () => void;
+  login: (user: User) => void;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -26,7 +26,7 @@ export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
   login: () => { },
-  logout: () => { },
+  logout: async () => { },
   loading: true,
 });
 
@@ -36,36 +36,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      api
-        .get(APIPATHS.PROFILE)
-        .then((res) => {
-          setUser(res.data.data);
-          setIsAuthenticated(true);
-        })
-        .catch(() => {
-          localStorage.removeItem("token");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+    const checkSession = async () => {
+      setLoading(true);
+      try {
+        const { data } = await api.get(APIPATHS.PROFILE);
+        setUser(data.data);
+        setIsAuthenticated(true);
+      } catch (error) {
+        // console.error(error);
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
   }, []);
 
-  const login = (user: User, token: string) => {
-    localStorage.setItem("token", token);
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const login = (user: User) => {
     setUser(user);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    delete api.defaults.headers.common["Authorization"];
+  const logout = async () => {
+    try {
+      await api.post(APIPATHS.LOGOUT);
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
     setUser(null);
     setIsAuthenticated(false);
   };

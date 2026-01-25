@@ -7,6 +7,7 @@ export const PAGES = {
 
 export const APIPATHS = {
     SIGNIN: '/api/v1/user/login',
+    LOGOUT: '/api/v1/user/logout',
     PROFILE: '/api/v1/user/profile',
     DASHBOARD: '/api/v1/dashboard/',
     EXPORTSTUDENTS: '/api/v1/ppdb/data-siswa', // /api/v1/ppdb/data-siswa/:batch_id
