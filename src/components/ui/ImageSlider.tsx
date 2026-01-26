@@ -65,7 +65,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 dark:to-transparent z-20 pointer-events-none" />
             </div>
             {/* Konten */}
-            <div className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-12 flex flex-col items-start text-white dark:text-white">
+            {/* <div className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-12 flex flex-col items-start text-white dark:text-white">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{slide.title}</h2>
                 <p className="mb-6 text-base sm:text-lg font-medium drop-shadow">{slide.desc}</p>
                 <a
@@ -74,7 +74,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
                 >
                     {slide.cta.label}
                 </a>
-            </div>
+            </div> */}
             {/* Tombol navigasi */}
             <button
                 onClick={goToPrev}
