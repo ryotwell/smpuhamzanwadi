@@ -73,8 +73,7 @@ export default function Content() {
                     // poster="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                     poster="/assets/images/hero-image-coba.jpg"
                 >
-                    {/* <source src="/assets/images/hero.mp4" type="video/mp4" /> */}
-                    <source src="hero-coba.MOV" type="video/mp4" />
+                    <source src="/assets/images/hero-3.mp4" type="video/mp4" />
                 </video>
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
