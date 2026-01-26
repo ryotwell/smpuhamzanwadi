@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
+import { Skeleton } from '@/components/ui/skeleton'
 import { config } from '@/config'
 import { Header } from './header'
 import Link from 'next/link'
@@ -16,9 +17,9 @@ import { Curriculum } from '@/types/model'
 import { ArrowRight } from 'lucide-react'
 
 export default function Content() {
-    const { posts, getPosts } = usePostStore()
-    const { curriculums, getCurriculums } = useCurriculumStore()
-    const { facilities, getFacilities } = useFacilityStore()
+    const { posts, getPosts, loading: isPostsLoading } = usePostStore()
+    const { curriculums, getCurriculums, loading: isCurriculumsLoading } = useCurriculumStore()
+    const { facilities, getFacilities, loading: isFacilitiesLoading } = useFacilityStore()
 
     useEffect(() => {
         getPosts({ limit: 3 });
@@ -31,14 +32,14 @@ export default function Content() {
         return curriculums.filter((item) => item.category === category)
     }
 
-    const dynamicUnggulanSlides = getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
+    const dynamicUnggulanSlides = useMemo(() => getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
         image: item.image || "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80",
         title: item.name,
         desc: item.description || "Program unggulan sekolah.",
         cta: { label: "Selengkapnya", href: "#" }
-    }));
+    })), [curriculums]);
 
-    const dynamicKurikulumData = [
+    const dynamicKurikulumData = useMemo(() => [
         {
             id: "ekstrakurikuler",
             category: "Ekstrakurikuler",
@@ -57,7 +58,7 @@ export default function Content() {
                 desc: item.description || "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
             }))
         },
-    ].filter(cat => cat.data.length > 0); // Only show categories with data
+    ].filter(cat => cat.data.length > 0), [curriculums]); // Only show categories with data
 
     return (
         <>
@@ -150,7 +151,13 @@ export default function Content() {
                         Tiga program unggulan {config.appName}: Bahasa Inggris, Pendidikan Karakter, dan Al-Qur&apos;an. Membekali siswa dengan kemampuan global, karakter mulia, dan kecintaan pada Al-Qur&apos;an.
                     </p>
                 </div>
-                <ImageSlider slides={dynamicUnggulanSlides} />
+                {isCurriculumsLoading ? (
+                    <div className="mt-12 w-full aspect-[21/9] rounded-xl overflow-hidden">
+                        <Skeleton className="w-full h-full" />
+                    </div>
+                ) : (
+                    <ImageSlider slides={dynamicUnggulanSlides} />
+                )}
             </div>
 
             {/* Section Kurikulum */}
@@ -162,37 +169,52 @@ export default function Content() {
                     {config.appName} memiliki tiga kategori utama pada Kurikulum: Ekstrakurikuler, Program Unggulan, dan KO-Kulikuler. Setiap kategori berisi kegiatan dan program untuk mendukung bakat, minat, dan kompetensi siswa secara optimal.
                 </p>
                 <div className="space-y-14">
-                    {dynamicKurikulumData.map((kategori) => (
-                        <div key={kategori.id} id={kategori.id}>
-                            <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
-                            <div className="grid gap-8 md:grid-cols-3">
-                                {
-                                    kategori.data.map((item) => (
-                                        <div
-                                            key={item.name}
-                                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
-                                        >
-                                            <div className="h-40 w-full overflow-hidden">
-                                                <Image
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    width={800}
-                                                    height={600}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                />
-                                            </div>
-                                            <div className="p-5">
-                                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                                                    {item.name}
-                                                </h4>
-                                                <p className="text-gray-600 dark:text-gray-300 text-base">{item.desc}</p>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
+                    {isCurriculumsLoading ? (
+                        <div className="grid gap-8 md:grid-cols-3">
+                            {Array(3).fill(0).map((_, i) => (
+                                <div key={i} className="block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900">
+                                    <Skeleton className="h-40 w-full" />
+                                    <div className="p-5 space-y-3">
+                                        <Skeleton className="h-6 w-1/2" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        dynamicKurikulumData.map((kategori) => (
+                            <div key={kategori.id} id={kategori.id}>
+                                <h3 className="text-2xl font-bold mb-4 text-primary">{kategori.category}</h3>
+                                <div className="grid gap-8 md:grid-cols-3">
+                                    {
+                                        kategori.data.map((item) => (
+                                            <div
+                                                key={item.name}
+                                                className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                                            >
+                                                <div className="h-40 w-full overflow-hidden">
+                                                    <Image
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        width={800}
+                                                        height={600}
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                </div>
+                                                <div className="p-5">
+                                                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                                        {item.name}
+                                                    </h4>
+                                                    <p className="text-gray-600 dark:text-gray-300 text-base">{item.desc}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )))}
                 </div >
             </section >
 
@@ -217,28 +239,41 @@ export default function Content() {
                         '2xl:grid-cols-3',
                     ])}
                 >
-                    {facilities.map((fasilitas) => (
-                        <div
-                            key={fasilitas.name}
-                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
-                        >
-                            <div className="h-64 w-full overflow-hidden">
-                                <Image
-                                    src={fasilitas.image || "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80"}
-                                    alt={fasilitas.name}
-                                    width={800}
-                                    height={600}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
+                    {isFacilitiesLoading ? (
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900">
+                                <Skeleton className="h-64 w-full" />
+                                <div className="p-7 space-y-4">
+                                    <Skeleton className="h-8 w-2/3" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-full" />
+                                </div>
                             </div>
-                            <div className="p-7">
-                                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
-                                    {fasilitas.name}
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-lg">{fasilitas.description}</p>
+                        ))
+                    ) : (
+                        facilities.map((fasilitas) => (
+                            <div
+                                key={fasilitas.name}
+                                className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                            >
+                                <div className="h-64 w-full overflow-hidden">
+                                    <Image
+                                        src={fasilitas.image || "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80"}
+                                        alt={fasilitas.name}
+                                        width={800}
+                                        height={600}
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                </div>
+                                <div className="p-7">
+                                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
+                                        {fasilitas.name}
+                                    </h3>
+                                    <p className="text-gray-600 dark:text-gray-300 text-lg">{fasilitas.description}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )))}
                 </div>
             </section >
 
@@ -251,35 +286,49 @@ export default function Content() {
                     Dapatkan update terbaru seputar kegiatan, prestasi, dan informasi penting di {config.appName}.
                 </p>
                 <div className="grid gap-8 md:grid-cols-3">
-                    {posts.map((post) => (
-                        <Link
-                            key={post.slug}
-                            href={`/posts/${post.slug}`}
-                            className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
-                        >
-                            {post.thumbnail && (
-                                <div className="h-48 w-full overflow-hidden">
-                                    <Image
-                                        src={post.thumbnail}
-                                        alt={post.title}
-                                        width={800}
-                                        height={600}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
+                    {isPostsLoading ? (
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900">
+                                <Skeleton className="h-48 w-full" />
+                                <div className="p-5 space-y-3">
+                                    <Skeleton className="h-4 w-1/4" />
+                                    <Skeleton className="h-6 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-full" />
                                 </div>
-                            )}
-                            <div className="p-5">
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{formatDateWithDayName(post.created_at)}</div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                                    {post.title}
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-base mb-4">{post.description}</p>
-                                <span className="inline-block text-primary font-semibold text-base group-hover:underline">
-                                    Baca Selengkapnya &rarr;
-                                </span>
                             </div>
-                        </Link>
-                    ))}
+                        ))
+                    ) : (
+                        posts.map((post) => (
+                            <Link
+                                key={post.slug}
+                                href={`/posts/${post.slug}`}
+                                className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
+                            >
+                                {post.thumbnail && (
+                                    <div className="h-48 w-full overflow-hidden">
+                                        <Image
+                                            src={post.thumbnail}
+                                            alt={post.title}
+                                            width={800}
+                                            height={600}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </div>
+                                )}
+                                <div className="p-5">
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{formatDateWithDayName(post.created_at)}</div>
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                        {post.title}
+                                    </h3>
+                                    <p className="text-gray-600 dark:text-gray-300 text-base mb-4">{post.description}</p>
+                                    <span className="inline-block text-primary font-semibold text-base group-hover:underline">
+                                        Baca Selengkapnya &rarr;
+                                    </span>
+                                </div>
+                            </Link>
+                        )))}
                 </div>
                 <div className="mt-12 text-center">
                     <Button asChild size="lg" variant="outline">
