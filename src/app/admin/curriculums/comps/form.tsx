@@ -103,6 +103,9 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
 
     // Helper functions for image handling
     const getNormalizedImageSrc = (src: string) => {
+
+        return `http://testing-rustfs-dc842c-76-13-21-238.traefik.me/smpuhamzanwadi/${src}`;
+
         try {
             if (typeof window !== "undefined" && src.startsWith(window.location.origin)) {
                 return src.slice(window.location.origin.length);

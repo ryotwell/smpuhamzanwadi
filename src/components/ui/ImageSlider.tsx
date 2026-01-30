@@ -51,8 +51,8 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
             <div className="relative h-[340px] sm:h-[420px] md:h-[500px] transition-all duration-500">
                 {slides.map((slide, idx) => (
                     <Image
-                        key={slide.image + idx}
-                        src={slide.image}
+                        key={idx}
+                        src={`${process.env.NEXT_PUBLIC_S3_IMAGE}/${slide.image}`}
                         alt={slide.title}
                         fill
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}

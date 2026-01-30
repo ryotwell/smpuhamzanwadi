@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'media.istockphoto.com',
       },
+      {
+        protocol: 'http',
+        hostname: 'testing-rustfs-f7557f-76-13-21-238.traefik.me',
+      },
     ],
   },
   turbopack: {

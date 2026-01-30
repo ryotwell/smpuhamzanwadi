@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join, extname } from 'path'
-import { config } from '@/config'
+import { extname } from 'path'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
 import axios from '@/lib/axios'
 import { APIPATHS } from '@/lib/constants'
+import { s3Client } from '@/lib/s3'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
@@ -77,35 +77,48 @@ export async function POST(request: NextRequest) {
         const now = new Date();
         const currentYear = now.getFullYear().toString();
 
-        const uploadDir = join(process.cwd(), 'public', 'upload', currentYear);
-
-        // Ensure subfolder exists
-        await mkdir(uploadDir, { recursive: true });
-
         const randomFilename = generateRandomFilename(file.name);
-        const filePath = join(uploadDir, randomFilename);
+        // S3 Key: year/filename
+        const key = `${currentYear}/${randomFilename}`;
+        const BUCKET_NAME = "smpuhamzanwadi";
 
-        await writeFile(filePath, buffer);
-        console.log(`open ${filePath} to see the uploaded file`);
+        const command = new PutObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: key,
+            Body: buffer,
+            ContentType: file.type,
+            ACL: 'public-read'
+        });
 
-        // For access in frontend/public, include the path starting from /upload/...
-        const publicPath = `/upload/${currentYear}/${randomFilename}`;
+        await s3Client.send(command);
+        console.log(`uploaded to s3: ${key}`);
 
-        const fullUrl = `${config.baseUrl}${publicPath}`;
+        // Construct public URL
+        const publicUrl = `${process.env.S3_ENDPOINT}/${BUCKET_NAME}/${key}`;
+
+        console.log({
+            path: key,
+            fullUrl: publicUrl,
+            name: randomFilename,
+            type: file.type,
+            size: file.size
+        });
+
 
         return NextResponse.json({
             success: true,
             status: 200,
             message: 'File uploaded successfully',
             data: {
-                path: publicPath,
-                fullUrl: fullUrl,
+                path: key,
+                fullUrl: publicUrl,
                 name: randomFilename,
                 type: file.type,
                 size: file.size
             }
         }, { status: 200 })
-    } catch {
+    } catch (error) {
+        console.error("Upload error:", error);
         return NextResponse.json({
             success: false,
             status: 500,
