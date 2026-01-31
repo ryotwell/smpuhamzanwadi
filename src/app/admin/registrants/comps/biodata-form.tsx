@@ -55,12 +55,12 @@ export const BiodataForm = ({
             <Controller
                 control={control}
                 name={name}
-                render={({ field }) => (
+                render={({ field: { onChange, value, ...restField } }) => (
                     <NumberInput
                         id={name}
-                        {...field}
-                        value={field.value as number | undefined}
-                        onValueChange={(val: number | undefined) => field.onChange(val)}
+                        {...restField}
+                        value={value as number | undefined}
+                        onValueChange={(val: number | undefined) => onChange(val)}
                         placeholder={placeholder}
                         min={min}
                     />
