@@ -5,7 +5,7 @@ import { config } from "@/config";
 
 import FileUploader from "@/components/ui/file-uploader";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_STUDENT, Student } from "@/types/model";
+import { Student } from "@/types/model";
 import {
     getAgamaLabel,
     getBloodTypeLabel,
@@ -298,7 +298,7 @@ export default function PPDBPage() {
         setBerkas,
         submitLoading,
         trigger,
-    } = useStudent({ student: DEFAULT_STUDENT as Student, formMode: "PPDB" });
+    } = useStudent({ student: {} as Student, formMode: "PPDB" });
     const { activeBatch, loading } = useBatchStore();
 
     const isExpired = useMemo(() => {
