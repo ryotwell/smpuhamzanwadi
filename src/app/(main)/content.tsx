@@ -6,13 +6,11 @@ import React, { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
 import { config } from '@/config'
-import { Header } from './header'
 import Link from 'next/link'
 import { cn, formatDateWithDayName } from '@/lib/utils'
 import { usePostStore } from '@/store/usePostStore'
 import { useCurriculumStore } from '@/store/useCurriculumStore'
 import { useFacilityStore } from '@/store/useFacilityStore'
-import { Curriculum } from '@/types/model'
 import { ArrowRight } from 'lucide-react'
 
 export default function Content() {
@@ -32,7 +30,7 @@ export default function Content() {
     }
 
     const dynamicUnggulanSlides = getCurriculumsByCategory("PROGRAM UNGGULAN").map(item => ({
-        image: item.image || "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80",
+        image: item.image,
         title: item.name,
         desc: item.description || "Program unggulan sekolah.",
         cta: { label: "Selengkapnya", href: "#" }
@@ -44,7 +42,7 @@ export default function Content() {
             category: "Ekstrakurikuler",
             data: getCurriculumsByCategory("EXTRACURRICULAR").map(item => ({
                 name: item.name,
-                image: item.image || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80", // Fallback image
+                image: item.image,
                 desc: item.description || "Kegiatan kepramukaan untuk membentuk karakter, kepemimpinan, dan kemandirian siswa."
             }))
         },
@@ -53,7 +51,7 @@ export default function Content() {
             category: "KO-Kulikuler",
             data: getCurriculumsByCategory("KO-CULLICULAR").map(item => ({
                 name: item.name,
-                image: item.image || "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
+                image: item.image,
                 desc: item.description || "Kegiatan praktikum laboratorium sains & teknologi bagi pengembangan kompetensi siswa."
             }))
         },
@@ -70,11 +68,9 @@ export default function Content() {
                     muted
                     playsInline
                     className="absolute inset-0 w-full h-full object-cover -z-10"
-                    // poster="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                     poster="/assets/images/hero-image-coba.jpg"
                 >
-                    {/* <source src="/assets/images/hero.mp4" type="video/mp4" /> */}
-                    <source src="hero-coba.MOV" type="video/mp4" />
+                    <source src="/assets/images/hero-3.mp4" type="video/mp4" />
                 </video>
                 {/* Overlay for better text contrast */}
                 <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />

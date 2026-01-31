@@ -133,7 +133,8 @@ export type CurriculumCategory =
 export type Curriculum = {
     id: number;
     name: string;
-    image?: string | null;
+    // image: string | null;
+    image: string;
     category?: CurriculumCategory | null;
     description?: string | null;
     created_at: string;
