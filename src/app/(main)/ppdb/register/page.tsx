@@ -27,7 +27,7 @@ import {
     CardContent,
 } from "@/components/ui/card"
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
-import { showError } from "@/lib/utils";
+import { getCookie, setCookie, showError } from "@/lib/utils";
 import { useBatchStore } from "@/store/useBatchStore";
 
 const steps = [
@@ -280,6 +280,15 @@ function KonfirmasiData({
 export default function PPDBPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [whatsappLink, setWhatsappLink] = useState<string | null>(null);
+
+    useEffect(() => {
+        const registrationSuccess = getCookie("registration_success");
+        if (registrationSuccess === "true") {
+            setCurrentStep(4);
+            const waLink = getCookie("wa_link");
+            if (waLink) setWhatsappLink(waLink);
+        }
+    }, []);
     const {
         berkas,
         control,
@@ -399,9 +408,12 @@ export default function PPDBPage() {
                 if (result) {
                     if (result.data?.batch?.whatsapp_group_link) {
                         setWhatsappLink(result.data.batch.whatsapp_group_link);
+                        setCookie("wa_link", result.data.batch.whatsapp_group_link);
                     } else if (result.data?.whatsapp_group_link) {
                         setWhatsappLink(result.data.whatsapp_group_link);
+                        setCookie("wa_link", result.data.whatsapp_group_link);
                     }
+                    setCookie("registration_success", "true");
                     setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
                 }
             } else {
