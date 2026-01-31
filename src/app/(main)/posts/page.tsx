@@ -72,9 +72,9 @@ export default function PostsPage() {
                                     <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
                                         {post.description}
                                     </p>
-                                    <span className="inline-block text-primary font-semibold text-sm group-hover:underline">
+                                    {/* <span className="inline-block text-primary font-semibold text-sm group-hover:underline">
                                         Baca Selengkapnya &rarr;
-                                    </span>
+                                    </span> */}
                                 </div>
                             </Link>
                         ))}

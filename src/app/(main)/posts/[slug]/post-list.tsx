@@ -22,13 +22,13 @@ export const PostList: FC<IPostListProps> = (props) => {
         <>
             {posts.map((post) => {
                 return (
-                    <Link href={`/posts/${post.slug}`} className="flex" key={post.slug}>
+                    <Link href={`/posts/${post.slug}`} className="flex items-center gap-5 mb-6" key={post.slug}>
                         {post.thumbnail && (
-                            <div className="w-2/6 mr-5">
+                            <div className="w-2/6">
                                 <img
                                     src={post.thumbnail}
                                     alt={post.title}
-                                    className="rounded-lg mb-4 w-full object-cover"
+                                    className="rounded-lg w-full object-cover aspect-video"
                                 />
                             </div>
                         )}

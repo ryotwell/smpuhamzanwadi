@@ -269,9 +269,9 @@ export default function Content() {
                                     {post.title}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-300 text-base mb-4">{post.description}</p>
-                                <span className="inline-block text-primary font-semibold text-base group-hover:underline">
+                                {/* <span className="inline-block text-primary font-semibold text-base group-hover:underline">
                                     Baca Selengkapnya &rarr;
-                                </span>
+                                </span> */}
                             </div>
                         </Link>
                     ))}
