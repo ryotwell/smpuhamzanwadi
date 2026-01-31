@@ -29,6 +29,9 @@ const getNormalizedImageSrc = (src: string) => {
         if (typeof window !== "undefined" && src.startsWith(window.location.origin)) {
             return src.slice(window.location.origin.length);
         }
+        if (src.startsWith('http') || src.startsWith('https')) {
+            return src;
+        }
         if (/^https?:\/\/[^/]+\/upload\//.test(src)) {
             return src.replace(/^https?:\/\/[^/]+/, "");
         }
@@ -42,7 +45,7 @@ const isRemote = (src: string) => {
     if (typeof window !== "undefined") {
         return src.startsWith("http") && !src.includes(window.location.host);
     }
-    return false;
+    return src.startsWith("http");
 };
 
 type UploadResponseData = {

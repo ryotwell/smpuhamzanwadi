@@ -50,16 +50,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
             {/* Gambar */}
             <div className="relative h-[340px] sm:h-[420px] md:h-[500px] transition-all duration-500">
                 {slides.map((slide, idx) => (
-                    <Image
-                        key={slide.image + idx}
-                        src={slide.image}
-                        alt={slide.title}
-                        fill
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        draggable={false}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 100vw"
-                        priority={idx === 0}
-                    />
+                    <img src={slide.image} alt={slide.title} className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`} />
                 ))}
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 dark:to-transparent z-20 pointer-events-none" />

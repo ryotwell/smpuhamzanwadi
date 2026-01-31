@@ -224,7 +224,7 @@ export default function Content() {
                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                         >
                             <div className="h-64 w-full overflow-hidden">
-                                <Image
+                                <img
                                     src={fasilitas.image || "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80"}
                                     alt={fasilitas.name}
                                     width={800}

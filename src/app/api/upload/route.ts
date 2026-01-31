@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join, extname } from 'path'
+import { extname } from 'path'
 import { config } from '@/config'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
 import axios from '@/lib/axios'
 import { APIPATHS } from '@/lib/constants'
+import { s3Client } from '@/lib/s3'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
@@ -73,39 +74,59 @@ export async function POST(request: NextRequest) {
         const bytes = await file.arrayBuffer()
         const buffer = Buffer.from(bytes)
 
-        // Create subfolder based on current year, e.g. "2024"
+        // Create S3 key based on current year like local folder structure
         const now = new Date();
         const currentYear = now.getFullYear().toString();
 
-        const uploadDir = join(process.cwd(), 'public', 'upload', currentYear);
-
-        // Ensure subfolder exists
-        await mkdir(uploadDir, { recursive: true });
-
         const randomFilename = generateRandomFilename(file.name);
-        const filePath = join(uploadDir, randomFilename);
+        // S3 Key: year/filename
+        const key = `${currentYear}/${randomFilename}`;
 
-        await writeFile(filePath, buffer);
-        console.log(`open ${filePath} to see the uploaded file`);
+        // Upload to S3
+        const command = new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: key,
+            Body: buffer,
+            ContentType: file.type,
+            // ACL: 'public-read', // Depends on bucket setting, often not needed if bucket policy is public or using protected URLs
+        });
 
-        // For access in frontend/public, include the path starting from /upload/...
-        const publicPath = `/upload/${currentYear}/${randomFilename}`;
+        await s3Client.send(command);
 
-        const fullUrl = `${config.baseUrl}${publicPath}`;
+        // Construct Public URL
+        // Assume endpoint is like http://host/bucket or http://bucket.host
+        // Based on user provided .env: S3_ENDPOINT=http://... and S3_BUCKET_NAME
+        // If forcePathStyle is true (often for self-hosted S3/MinIO), URL is endpoint/bucket/key
+        // If not, it's bucket.endpoint/key
+
+        // Let's assume standard path style for MinIO/compatible
+        // Remove trailing slash from endpoint if present
+        const endpoint = process.env.S3_ENDPOINT?.replace(/\/$/, '');
+        const bucket = process.env.S3_BUCKET_NAME;
+
+        // Construct full URL
+        const fullUrl = `${endpoint}/${bucket}/${key}`;
+
+        // Return path relative to the bucket or just the key - keeping consistency with frontend expectations might be tricky.
+        // Frontend "preview" logic seems to check if it's absolute URL or relative.
+        // Let's return the full URL as `path` too, or just the key if we want to change frontend logic heavily.
+        // The previous code returned `path: /upload/year/filename` (relative to public).
+        // If we return full URL, frontend might treat it as remote.
 
         return NextResponse.json({
             success: true,
             status: 200,
             message: 'File uploaded successfully',
             data: {
-                path: publicPath,
+                path: fullUrl, // Changing this to full URL for simplicity in frontend handling of "remote"
                 fullUrl: fullUrl,
                 name: randomFilename,
                 type: file.type,
                 size: file.size
             }
         }, { status: 200 })
-    } catch {
+    } catch (err) {
+        console.error("Upload error:", err);
         return NextResponse.json({
             success: false,
             status: 500,

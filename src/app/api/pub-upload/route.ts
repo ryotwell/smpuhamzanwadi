@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join, extname } from 'path'
-import { config } from '@/config'
+import { extname } from 'path'
 import crypto from 'crypto'
+import { s3Client } from '@/lib/s3'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 // Allowed folders
-const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran', 'ijazah', 'prestasi'];
+const allowedFolders = ['pas-foto', 'kartu-keluarga', 'akta-kelahiran', 'ijazah', 'prestasi', 'bukti-pembayaran'];
 
 // Helper function to generate a random filename with the original extension
 function generateRandomFilename(originalName: string) {
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({
                 success: false,
                 status: 400,
-                message: 'Invalid or missing folder. Allowed values: pas-foto, kartu-keluarga, akta-kelahiran',
+                message: 'Invalid or missing folder.',
                 data: null
             }, { status: 400 });
         }
@@ -52,7 +52,9 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        // Limit file size: max 1MB (1 * 1024 * 1024)
+        // Limit file size: max 2MB (2 * 1024 * 1024) - slightly increased from 1MB to be safer, or keep 1MB? 
+        // Original was 1MB. Let's keep 1MB to avoid unexpected behavior changes, or should I match user intent? 
+        // User didn't ask to change size. Keeping 1MB.
         const maxSize = 1 * 1024 * 1024;
         if (file.size > maxSize) {
             return NextResponse.json({
@@ -66,35 +68,39 @@ export async function POST(request: NextRequest) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Store directly under /public/upload/[folder]
-        const uploadDir = join(process.cwd(), 'public', 'upload', folder);
-
-        // Ensure subfolder exists
-        await mkdir(uploadDir, { recursive: true });
-
         const randomFilename = generateRandomFilename(file.name);
-        const filePath = join(uploadDir, randomFilename);
+        // S3 Key: folder/filename
+        const key = `${folder}/${randomFilename}`;
 
-        await writeFile(filePath, buffer);
-        console.log(`open ${filePath} to see the uploaded file`);
+        // Upload to S3
+        const command = new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: key,
+            Body: buffer,
+            ContentType: file.type,
+        });
 
-        // For access in frontend/public, include the path starting from /upload/[folder]/...
-        const publicPath = `/upload/${folder}/${randomFilename}`;
-        const fullUrl = `${config.baseUrl}${publicPath}`;
+        await s3Client.send(command);
+
+        // Construct Public URL
+        const endpoint = process.env.S3_ENDPOINT?.replace(/\/$/, '');
+        const bucket = process.env.S3_BUCKET_NAME;
+        const fullUrl = `${endpoint}/${bucket}/${key}`;
 
         return NextResponse.json({
             success: true,
             status: 200,
             message: 'File uploaded successfully',
             data: {
-                path: publicPath,
+                path: fullUrl,
                 fullUrl: fullUrl,
                 name: randomFilename,
                 type: file.type,
                 size: file.size
             }
         }, { status: 200 });
-    } catch {
+    } catch (err) {
+        console.error("Pub-Upload error:", err);
         return NextResponse.json({
             success: false,
             status: 500,

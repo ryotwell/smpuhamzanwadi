@@ -128,6 +128,9 @@ export default function CreatePostForm({
             if (typeof window !== "undefined" && src.startsWith(window.location.origin)) {
                 return src.slice(window.location.origin.length);
             }
+            if (src.startsWith('http') || src.startsWith('https')) {
+                return src;
+            }
             if (/^https?:\/\/[^/]+\/upload\//.test(src)) {
                 return src.replace(/^https?:\/\/[^/]+/, "");
             }
