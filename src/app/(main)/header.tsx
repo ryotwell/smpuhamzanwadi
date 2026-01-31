@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -84,11 +84,9 @@ export const Header = () => {
                     <div className="flex items-center gap-3 lg:flex-1">
                         <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-3">
                             <span className="sr-only">{config.appName}</span>
-                            <Image
+                            <img
                                 alt={config.appName}
                                 src={config.appLogoPanjang}
-                                width={100}
-                                height={100}
                                 className="h-13 w-auto"
                             />
                         </Link>
@@ -158,11 +156,9 @@ export const Header = () => {
                     <div className="flex items-center justify-between">
                         <Link href="#" className="-m-1.5 p-1.5 flex items-center gap-3">
                             <span className="sr-only">{config.appName}</span>
-                            <Image
+                            <img
                                 alt={config.appName}
                                 src={config.appLogoPanjang}
-                                width={100}
-                                height={100}
                                 className="h-13 w-auto"
                             />
                             {/* <span className="ml-2 text-gray-900 dark:text-white font-semibold text-base">{config.appName}</span> */}

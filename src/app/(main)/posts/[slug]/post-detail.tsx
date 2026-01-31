@@ -1,6 +1,6 @@
 import { formatDate } from "@/lib/utils";
 import { Post } from "@/types/model";
-import Image from "next/image";
+
 import { FC } from "react";
 
 interface IPostDetailProps {
@@ -12,11 +12,9 @@ export const PostDetail: FC<IPostDetailProps> = ({ post }) => {
         <>
             {post.thumbnail ? (
                 <div className="mb-6">
-                    <Image
+                    <img
                         src={post.thumbnail}
                         alt={post.title}
-                        width={800}
-                        height={450}
                         className="w-full h-auto max-h-[400px] object-cover rounded-xl"
                     />
                 </div>

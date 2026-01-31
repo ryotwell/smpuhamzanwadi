@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import React from "react";
 
 interface AvatarProps {
@@ -41,21 +41,17 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <div className={`relative  rounded-full ${sizeClasses[size]}`}>
       {/* Avatar Image */}
-      <Image
-        width="0"
-        height="0"
-        sizes="100vw"
+      <img
         src={src}
         alt={alt}
-        className="object-cover w-full rounded-full"
+        className="object-cover w-full h-full rounded-full"
       />
 
       {/* Status Indicator */}
       {status !== "none" && (
         <span
-          className={`absolute bottom-0 right-0 rounded-full border-[1.5px] border-white dark:border-gray-900 ${
-            statusSizeClasses[size]
-          } ${statusColorClasses[status] || ""}`}
+          className={`absolute bottom-0 right-0 rounded-full border-[1.5px] border-white dark:border-gray-900 ${statusSizeClasses[size]
+            } ${statusColorClasses[status] || ""}`}
         ></span>
       )}
     </div>

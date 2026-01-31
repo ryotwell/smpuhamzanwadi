@@ -12,7 +12,7 @@ import {
     VisibilityState,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
-import Image from "next/image"
+
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -165,21 +165,19 @@ export const columns: ColumnDef<Facility>[] = [
         cell: ({ row }) => {
             const image = row.getValue("image") as string | null | undefined;
             if (!image) return <div className="text-gray-400">-</div>;
-            
-            const imageSrc = image.startsWith('http') 
-                ? image 
-                : image.startsWith('/') 
-                    ? image 
+
+            const imageSrc = image.startsWith('http')
+                ? image
+                : image.startsWith('/')
+                    ? image
                     : `/${image}`;
-            
+
             return (
                 <div className="relative w-16 h-16 rounded overflow-hidden border">
-                    <Image
+                    <img
                         src={imageSrc}
                         alt={row.original.name}
-                        fill
-                        className="object-cover"
-                        unoptimized
+                        className="object-cover w-full h-full"
                     />
                 </div>
             );
@@ -267,7 +265,7 @@ export function DataTable() {
 
     React.useEffect(() => {
         getFacilities({ page, limit, q })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, q])
 
     React.useEffect(() => {

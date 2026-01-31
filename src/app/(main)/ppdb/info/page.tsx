@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { Header } from '../../header'
 import { config } from '@/config'

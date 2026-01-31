@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
@@ -328,7 +328,7 @@ const AppSidebar: React.FC = () => {
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <Image
+              <img
                 className="dark:hidden"
                 src={config.appLogoPanjang}
                 alt="Logo"
@@ -337,7 +337,7 @@ const AppSidebar: React.FC = () => {
               // width={150}
               // height={40}
               />
-              <Image
+              <img
                 className="hidden dark:block"
                 src={config.appLogoPanjangBw}
                 alt="Logo"
@@ -348,7 +348,7 @@ const AppSidebar: React.FC = () => {
               />
             </>
           ) : (
-            <Image
+            <img
               src={config.appLogoPanjang}
               alt="Logo"
               width={32}

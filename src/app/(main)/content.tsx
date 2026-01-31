@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Image from 'next/image'
+
 
 import { Button } from '@/components/ui/button'
 import { ImageSlider } from '@/components/ui/ImageSlider'
@@ -85,11 +85,9 @@ export default function Content() {
                         </div>
                     </Link>
                     <div className="text-center">
-                        <Image
+                        <img
                             src={config.appLogoPanjang}
                             alt={config.appName}
-                            width={500}
-                            height={100}
                             className="w-full"
                         />
                         <p className="mt-8 text-lg font-medium text-pretty text-gray-100 dark:text-gray-200 sm:text-xl/8 drop-shadow">
@@ -174,11 +172,9 @@ export default function Content() {
                                             className="group block rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-900 hover:shadow-xl transition"
                                         >
                                             <div className="h-40 w-full overflow-hidden">
-                                                <Image
+                                                <img
                                                     src={item.image}
                                                     alt={item.name}
-                                                    width={800}
-                                                    height={600}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                 />
                                             </div>
@@ -260,11 +256,9 @@ export default function Content() {
                         >
                             {post.thumbnail && (
                                 <div className="h-48 w-full overflow-hidden">
-                                    <Image
+                                    <img
                                         src={post.thumbnail}
                                         alt={post.title}
-                                        width={800}
-                                        height={600}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                 </div>

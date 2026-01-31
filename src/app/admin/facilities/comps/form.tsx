@@ -1,7 +1,7 @@
 "use client"
 
 import React, { FC, useRef, useState } from "react";
-import Image from "next/image";
+
 
 // --- Validation and form lib imports
 import { Controller } from "react-hook-form";
@@ -189,12 +189,10 @@ export const FacilityForm: FC<IFacilityFormProps> = ({ facility, formMode }) => 
                             </div>
                             <div className="relative w-32 h-32 rounded border overflow-hidden">
                                 {imageSrc && (
-                                    <Image
+                                    <img
                                         src={imageSrc}
                                         alt="Preview"
-                                        fill
-                                        className="object-cover"
-                                        unoptimized
+                                        className="object-cover w-full h-full"
                                     />
                                 )}
                             </div>

@@ -3,7 +3,7 @@ import ThemeTogglerTwo from "@/components/common/ThemeTogglerTwo";
 import { config } from "@/config";
 
 import { ThemeProvider } from "@/context/ThemeContext";
-import Image from "next/image";
+
 import Link from "next/link";
 import React from "react";
 
@@ -22,7 +22,7 @@ export default function AuthLayout({
               <GridShape />
               <div className="flex flex-col items-center max-w-xs">
                 <Link href="/" className="block mb-4">
-                  <Image
+                  <img
                     width={231}
                     height={48}
                     src={config.appLogo}

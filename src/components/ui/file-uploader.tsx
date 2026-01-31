@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import Image from "next/image";
+
 
 export type AllowedFolders = "pas-foto" | "kartu-keluarga" | "akta-kelahiran" | "ijazah";
 
@@ -156,13 +156,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                 <div className="mb-2">
                     {isImageFile(preview) ? (
                         <span className="block max-h-48 overflow-hidden rounded border mb-2 relative aspect-square w-32">
-                            <Image
+                            <img
                                 src={getNormalizedImageSrc(preview)}
                                 alt="preview"
-                                className="object-cover"
-                                fill
-                                sizes="128px"
-                                unoptimized={isRemote(preview)}
+                                className="object-cover w-full h-full"
                             />
                         </span>
                     ) : (

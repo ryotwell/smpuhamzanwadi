@@ -11,7 +11,7 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import axios from "@/lib/axios";
-import Image from "next/image";
+
 import Editor from "../comps/Editor";
 
 // --- Validation and form lib imports
@@ -318,13 +318,10 @@ export default function CreatePostForm({
                                     <div className="mb-2">
                                         <div className="relative w-full max-w-xs mb-2 rounded-lg border overflow-hidden">
                                             <div className="relative aspect-video w-full">
-                                                <Image
+                                                <img
                                                     src={getNormalizedImageSrc(preview)}
                                                     alt="Thumbnail preview"
-                                                    fill
-                                                    className="object-cover"
-                                                    sizes="(max-width: 768px) 100vw, 400px"
-                                                    unoptimized={isRemote(preview)}
+                                                    className="object-cover w-full h-full"
                                                 />
                                             </div>
                                         </div>

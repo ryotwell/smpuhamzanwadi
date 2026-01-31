@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { config } from "@/config";
-import Image from "next/image";
+
 import FileUploader from "@/components/ui/file-uploader";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_STUDENT, Student } from "@/types/model";
@@ -548,7 +548,7 @@ export default function PPDBPage() {
 
             <div className="max-w-2xl mx-auto py-10 px-4">
                 <div className="flex justify-center mb-6">
-                    <Image
+                    <img
                         src={config.appLogoPanjang}
                         alt={config.appName}
                         loading="lazy"

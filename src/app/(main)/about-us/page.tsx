@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
+
 import { Header } from '../header'
 import { config } from '@/config'
 import { Button } from '@/components/ui/button'
@@ -29,11 +29,10 @@ export default function AboutUsPage() {
                 {/* School Profile Section */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl">
-                        <Image
+                        <img
                             src="/assets/images/gedung-sekolah.jpg"
                             alt="Gedung Sekolah"
-                            fill
-                            className="object-cover"
+                            className="object-cover w-full h-full"
                         />
                     </div>
                     <div>

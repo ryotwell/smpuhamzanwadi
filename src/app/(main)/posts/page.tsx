@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { Header } from '../header'
 import { config } from '@/config'
@@ -55,11 +55,9 @@ export default function PostsPage() {
                             >
                                 {post.thumbnail && (
                                     <div className="h-56 w-full overflow-hidden">
-                                        <Image
+                                        <img
                                             src={post.thumbnail}
                                             alt={post.title}
-                                            width={800}
-                                            height={600}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
                                     </div>

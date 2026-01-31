@@ -5,14 +5,14 @@ import { APIPATHS } from "@/lib/constants";
 import { formatDateWithDayName } from "@/lib/utils";
 import { usePostStore } from "@/store/usePostStore";
 import { Post } from "@/types/model";
-import Image from "next/image";
+
 import Link from "next/link";
 import React, { FC } from "react";
 
 interface IPostListProps { };
 
 export const PostList: FC<IPostListProps> = (props) => {
-    const { posts, getPosts }  = usePostStore()
+    const { posts, getPosts } = usePostStore()
 
     React.useEffect(() => {
         getPosts();
@@ -25,11 +25,9 @@ export const PostList: FC<IPostListProps> = (props) => {
                     <Link href={`/posts/${post.slug}`} className="flex" key={post.slug}>
                         {post.thumbnail && (
                             <div className="w-2/6 mr-5">
-                                <Image
+                                <img
                                     src={post.thumbnail}
                                     alt={post.title}
-                                    width={320}
-                                    height={180}
                                     className="rounded-lg mb-4 w-full object-cover"
                                 />
                             </div>

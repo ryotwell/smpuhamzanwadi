@@ -1,7 +1,7 @@
 "use client"
 
 import React, { FC, useRef, useState, useEffect } from "react";
-import Image from "next/image";
+
 
 // --- Validation and form lib imports
 import { Controller, Control, FieldErrors } from "react-hook-form";
@@ -271,13 +271,10 @@ export const CurriculumForm: FC<ICurriculumFormProps> = ({ curriculum, formMode 
                         <div className="mb-2">
                             <div className="relative w-full max-w-xs mb-2 rounded-lg border overflow-hidden">
                                 <div className="relative aspect-video w-full">
-                                    <Image
+                                    <img
                                         src={getNormalizedImageSrc(preview)}
                                         alt="Preview gambar"
-                                        fill
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 100vw, 400px"
-                                        unoptimized={isRemote(preview)}
+                                        className="object-cover w-full h-full"
                                     />
                                 </div>
                             </div>
