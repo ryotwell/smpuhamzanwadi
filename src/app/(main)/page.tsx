@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { config } from '@/config'
 import Content from "./content";
 import { Header } from "./header";
 
