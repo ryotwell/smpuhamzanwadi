@@ -63,21 +63,33 @@ const components = [
 export const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
     const [pathname, setPathname] = React.useState("")
+    const [scrolled, setScrolled] = React.useState(false)
 
     const useReadableText = (path: string) => {
-        if (path === '/') return 'text-muted'
-
-        return 'text-muted-foreground'
+        // Always return high contrast text when scrolled or if we want better visibility against the new background
+        return 'text-gray-900 dark:text-gray-100 hover:text-brand-600 dark:hover:text-brand-400'
     }
 
     React.useEffect(() => {
         if (typeof window !== "undefined") {
             setPathname(window.location.pathname)
+
+            const handleScroll = () => {
+                setScrolled(window.scrollY > 20)
+            }
+
+            handleScroll()
+
+            window.addEventListener('scroll', handleScroll)
+            return () => window.removeEventListener('scroll', handleScroll)
         }
     }, [])
 
     return (
-        <header className="absolute inset-x-0 top-0 z-50">
+        <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
+            ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md"
+            : "bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
+            }`}>
             <nav aria-label="Global" className="flex flex-col gap-0 p-6 lg:px-8">
                 {/* Bar Atas: Logo & tombol mobile/menu */}
                 <div className="flex items-center justify-between">
@@ -119,7 +131,7 @@ export const Header = () => {
                                 <NavigationMenuItem key={item.name}>
                                     <NavigationMenuLink
                                         asChild
-                                        className={`text-sm font-semibold ${useReadableText(pathname)}`}
+                                        className={`text-sm font-semibold transition-colors ${useReadableText(pathname)}`}
                                     >
                                         <Link href={item.href}>
                                             {item.name}
@@ -128,7 +140,7 @@ export const Header = () => {
                                 </NavigationMenuItem>
                             ))}
                             <NavigationMenuItem className="list-none">
-                                <NavigationMenuTrigger className={`text-sm font-semibold ${useReadableText(pathname)} bg-transparent dark:bg-transparent`}>
+                                <NavigationMenuTrigger className={`text-sm font-semibold transition-colors ${useReadableText(pathname)} bg-transparent dark:bg-transparent`}>
                                     Kurikulum
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent className="bg-white dark:bg-gray-900 ring-0">
