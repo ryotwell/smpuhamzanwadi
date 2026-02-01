@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: config.appName,
     images: [
       {
-        url: "/assets/images/seo/smpu-thumbnail-clear.png", // Using the wider logo for social sharing if available, otherwise appLogo
+        url: "https://s3-storage.smpuhamzanwadi.sch.id/prod-smpu/default/seo/smpu-thumbnail-clear.png", // Using the wider logo for social sharing if available, otherwise appLogo
         width: 1200,
         height: 630,
         alt: config.appName,
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: config.appName,
     description: SITE_DESCRIPTION,
-    images: ["/assets/images/seo/smpu-thumbnail-clear.png"],
+    images: ["https://s3-storage.smpuhamzanwadi.sch.id/prod-smpu/default/seo/smpu-thumbnail-clear.png"],
     creator: '@smpuhamzanwadi', // Replace if there is a specific twitter handle in config
   },
   icons: {
