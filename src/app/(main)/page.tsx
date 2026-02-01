@@ -4,8 +4,7 @@ import Content from "./content";
 import { Header } from "./header";
 
 export const metadata: Metadata = {
-    title: `Beranda - ${config.appName}`,
-    description: `Website resmi ${config.appName}`,
+    title: 'Beranda',
 }
 
 export default async function Page() {
