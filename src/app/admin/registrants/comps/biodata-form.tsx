@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { biodataSchema } from "@/schemas/student";
 import { Control, Controller, FieldErrors, useWatch } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
+import { NumberInput } from '@/components/ui/number-input';
 import { JenisKelaminRadio, SelectControls, TanggalLahirPicker } from './form';
 
 export type BiodataFields = z.infer<typeof biodataSchema>;
@@ -46,21 +47,22 @@ export const BiodataForm = ({
     const numberInput = (
         name: keyof BiodataFields,
         label: string,
-        placeholder = ""
+        placeholder = "",
+        min = 0
     ) => (
         <div>
             <div className="mb-1 font-medium text-sm">{label}</div>
             <Controller
                 control={control}
                 name={name}
-                render={({ field }) => (
-                    <Input
+                render={({ field: { onChange, value, ...restField } }) => (
+                    <NumberInput
                         id={name}
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(Number(e.target.value))}
-                        value={field.value as string | number | undefined}
+                        {...restField}
+                        value={value as number | undefined}
+                        onValueChange={(val: number | undefined) => onChange(val)}
                         placeholder={placeholder}
+                        min={min}
                     />
                 )}
             />
