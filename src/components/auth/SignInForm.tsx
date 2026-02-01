@@ -14,8 +14,8 @@ import { Button } from "../ui/button";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("admin@mail.com");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
@@ -111,7 +111,7 @@ export default function SignInForm() {
                   <div className="text-error-500 text-sm">{error}</div>
                 )}
                 <div>
-                  <Button className="w-full" size="sm" disabled={loading} type="submit">
+                  <Button className="w-full" disabled={loading} type="submit">
                     {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
